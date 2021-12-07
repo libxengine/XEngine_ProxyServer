@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 		//启动心跳
 		if (st_ServiceConfig.st_XTime.nSocksTimeOut > 0)
 		{
-			if (!SocketOpt_HeartBeat_InitEx(&xhSocksHeart, st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_TCPHeart))
+			if (!SocketOpt_HeartBeat_InitEx(&xhSocksHeart, st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_SocksHeart))
 			{
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,初始化TCP心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
 		}
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动TCP网络服务器成功,TCP端口:%d,网络IO线程个数:%d"), st_ServiceConfig.nSocksPort, st_ServiceConfig.st_XMax.nIOThread);
 		//绑定网络事件
-		NetCore_TCPXCore_RegisterCallBackEx(xhSocksSocket, Network_Callback_TCPLogin, Network_Callback_TCPRecv, Network_Callback_TCPLeave);
+		NetCore_TCPXCore_RegisterCallBackEx(xhSocksSocket, Network_Callback_SocksLogin, Network_Callback_SocksRecv, Network_Callback_SocksLeave);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,注册TCP网络事件成功"));
 	}
 	else
@@ -140,7 +140,7 @@ int main(int argc, char** argv)
 		//启动心跳
 		if (st_ServiceConfig.st_XTime.nTunnelTimeOut > 0)
 		{
-			if (!SocketOpt_HeartBeat_InitEx(&xhTunnelHeart, st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_HTTPHeart))
+			if (!SocketOpt_HeartBeat_InitEx(&xhTunnelHeart, st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_TunnelHeart))
 			{
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,初始化HTTP心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动HTTP网络服务器成功,HTTP端口:%d,IO:%d"), st_ServiceConfig.nTunnelPort, st_ServiceConfig.st_XMax.nIOThread);
-		NetCore_TCPXCore_RegisterCallBackEx(xhTunnelSocket, Network_Callback_HTTPLogin, Network_Callback_HTTPRecv, Network_Callback_HTTPLeave);
+		NetCore_TCPXCore_RegisterCallBackEx(xhTunnelSocket, Network_Callback_TunnelLogin, Network_Callback_TunnelRecv, Network_Callback_TunnelLeave);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,注册HTTP网络事件成功"));
 	}
 	else

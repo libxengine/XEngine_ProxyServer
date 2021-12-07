@@ -10,47 +10,51 @@
 //    Purpose:     网络IO相关代码
 //    History:
 *********************************************************************/
-//////////////////////////////////////////////////////////////////////////下面是TCP网络IO相关代码处理函数
-BOOL __stdcall Network_Callback_TCPLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+//////////////////////////////////////////////////////////////////////////下面是SOCKS网络IO相关代码处理函数
+BOOL __stdcall Network_Callback_SocksLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
 	//客户端连接后要把客户端插入心跳管理器中才有效
+	ProxyProtocol_SocksCore_Create(lpszClientAddr);
 	SocketOpt_HeartBeat_InsertAddrEx(xhSocksHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("TCP客户端:%s,连接到服务器"), lpszClientAddr);
 	return TRUE;
 }
-void __stdcall Network_Callback_TCPRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
+void __stdcall Network_Callback_SocksRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
 {
 	//需要激活一次
+	XEngine_SocksTask_Handle(lpszClientAddr, lpszRecvMsg, nMsgLen);
 	SocketOpt_HeartBeat_ActiveAddrEx(xhSocksHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _T("TCP客户端:%s,投递数据包到组包队列成功,大小:%d"), lpszClientAddr, nMsgLen);
 }
-void __stdcall Network_Callback_TCPLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+void __stdcall Network_Callback_SocksLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
 	//交给指定函数来处理客户端离开消息
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, FALSE);
 }
-void __stdcall Network_Callback_TCPHeart(LPCSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
+void __stdcall Network_Callback_SocksHeart(LPCSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
 {
 	//同上
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, TRUE);
 }
-//////////////////////////////////////////////////////////////////////////下面是HTTP网络IO相关代码处理函数
-BOOL __stdcall Network_Callback_HTTPLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+//////////////////////////////////////////////////////////////////////////下面是Tunnel网络IO相关代码处理函数
+BOOL __stdcall Network_Callback_TunnelLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
+	ProxyProtocol_TunnelCore_Create(lpszClientAddr);
 	SocketOpt_HeartBeat_InsertAddrEx(xhTunnelHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("HTTP客户端:%s,连接到服务器"), lpszClientAddr);
 	return TRUE;
 }
-void __stdcall Network_Callback_HTTPRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
+void __stdcall Network_Callback_TunnelRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
 {
+	XEngine_TunnelTask_Handle(lpszClientAddr, lpszRecvMsg, nMsgLen);
 	SocketOpt_HeartBeat_ActiveAddrEx(xhTunnelHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _T("HTTP客户端:%s,投递数据包到组包队列成功,大小:%d"), lpszClientAddr, nMsgLen);
 }
-void __stdcall Network_Callback_HTTPLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+void __stdcall Network_Callback_TunnelLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, FALSE);
 }
-void __stdcall Network_Callback_HTTPHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
+void __stdcall Network_Callback_TunnelHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, TRUE);
 }
@@ -70,6 +74,7 @@ void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, BOOL bHeart)
 			//同上
 			SocketOpt_HeartBeat_DeleteAddrEx(xhSocksHeart, lpszClientAddr);
 		}
+		ProxyProtocol_SocksCore_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("TCP客户端:%s,离开服务器"), lpszClientAddr);
 	}
 	else if (XENGINE_CLIENT_NETTYPE_TUNNEL == nIPProto)
@@ -82,6 +87,7 @@ void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, BOOL bHeart)
 		{
 			SocketOpt_HeartBeat_DeleteAddrEx(xhTunnelHeart, lpszClientAddr);
 		}
+		ProxyProtocol_TunnelCore_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("HTTP客户端:%s,离开服务器"), lpszClientAddr);
 	}
 	else

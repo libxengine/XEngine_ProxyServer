@@ -25,6 +25,8 @@ using namespace std;
 #include <XEngine_Include/XEngine_Core/NetCore_Error.h>
 #include <XEngine_Include/XEngine_HelpComponents/XLog_Define.h>
 #include <XEngine_Include/XEngine_HelpComponents/XLog_Error.h>
+#include <XEngine_Include/XEngine_RfcComponents/ProxyProtocol_Define.h>
+#include <XEngine_Include/XEngine_RfcComponents/ProxyProtocol_Error.h>
 //加载项目相关头文件
 #include "../XEngine_UserProtocol.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Define.h"
@@ -75,5 +77,6 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 #pragma comment(lib,"XEngine_BaseLib/XEngine_BaseLib.lib")
 #pragma comment(lib,"XEngine_Core/XEngine_Core.lib")
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_XLog.lib")
+#pragma comment(lib,"XEngine_RfcComponents/RfcComponents_ProxyProtocol.lib")
 #pragma comment(lib,"Ws2_32.lib")
 #endif
