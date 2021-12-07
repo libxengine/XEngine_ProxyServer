@@ -28,5 +28,10 @@ typedef enum
 ///////////////////////////////////////////////////////////////////////////
 #pragma pack(push)
 #pragma pack(1)
-//添加自己的消息数据结构
+typedef struct  
+{
+	TCHAR tszIPAddr[128];
+	ENUM_RFCCOMPONENTS_PROXY_STATUS enStatus;
+	SOCKET hSocket;
+}PROXYPROTOCOL_CLIENTINFO;
 #pragma pack(pop)

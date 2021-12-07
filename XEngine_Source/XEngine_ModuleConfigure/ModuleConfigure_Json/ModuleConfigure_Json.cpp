@@ -118,5 +118,14 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XLog.nMaxSize = st_JsonXLog["MaxSize"].asInt();
 	pSt_ServerConfig->st_XLog.nMaxCount = st_JsonXLog["MaxCount"].asInt();
 	pSt_ServerConfig->st_XLog.nLogLeave = st_JsonXLog["LogLeave"].asInt();
+
+	if (st_JsonRoot["XSocks"].empty() || (1 != st_JsonRoot["XSocks"].size()))
+	{
+		Config_IsErrorOccur = TRUE;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XSOCK;
+		return FALSE;
+	}
+	Json::Value st_JsonXSocks = st_JsonRoot["XSocks"];
+	pSt_ServerConfig->st_XSocks.nAuthType = st_JsonXSocks["nAuthType"].asInt();
 	return TRUE;
 }

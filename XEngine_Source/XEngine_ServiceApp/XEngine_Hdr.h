@@ -23,10 +23,14 @@ using namespace std;
 #include <XEngine_Include/XEngine_BaseLib/BaseLib_Error.h>
 #include <XEngine_Include/XEngine_Core/NetCore_Define.h>
 #include <XEngine_Include/XEngine_Core/NetCore_Error.h>
+#include <XEngine_Include/XEngine_Core/NetXApi_Define.h>
+#include <XEngine_Include/XEngine_Core/NetXApi_Error.h>
 #include <XEngine_Include/XEngine_HelpComponents/XLog_Define.h>
 #include <XEngine_Include/XEngine_HelpComponents/XLog_Error.h>
 #include <XEngine_Include/XEngine_RfcComponents/ProxyProtocol_Define.h>
 #include <XEngine_Include/XEngine_RfcComponents/ProxyProtocol_Error.h>
+#include <XEngine_Include/XEngine_Client/XClient_Define.h>
+#include <XEngine_Include/XEngine_Client/XClient_Error.h>
 //加载项目相关头文件
 #include "../XEngine_UserProtocol.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Define.h"
@@ -76,7 +80,9 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 #endif
 #pragma comment(lib,"XEngine_BaseLib/XEngine_BaseLib.lib")
 #pragma comment(lib,"XEngine_Core/XEngine_Core.lib")
+#pragma comment(lib,"XEngine_Core/XEngine_NetXApi.lib")
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_XLog.lib")
 #pragma comment(lib,"XEngine_RfcComponents/RfcComponents_ProxyProtocol.lib")
+#pragma comment(lib,"XEngine_Client/XClient_Socket.lib")
 #pragma comment(lib,"Ws2_32.lib")
 #endif

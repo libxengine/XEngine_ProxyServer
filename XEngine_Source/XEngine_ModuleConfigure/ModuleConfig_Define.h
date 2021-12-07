@@ -37,6 +37,10 @@ typedef struct tag_XEngine_ServiceConfig
 		int nMaxCount;                        //最大日志个数
 		int nLogLeave;                        //日志等级
 	}st_XLog;
+	struct  
+	{
+		int nAuthType;
+	}st_XSocks;
 }XENGINE_SERVICECONFIG;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数定义
