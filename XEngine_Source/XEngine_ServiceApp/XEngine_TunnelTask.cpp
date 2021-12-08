@@ -22,11 +22,11 @@ BOOL XEngine_TunnelTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, in
 		int nLen = 0;
 		int nIPPort = 0;
 		BOOL bProxy = TRUE;
-		TCHAR tszIPAddr[MAX_PATH];
+		TCHAR tszIPAddr[1024];
 		TCHAR tszAuthInfo[MAX_PATH];
 		TCHAR tszMsgBuffer[MAX_PATH];
 
-		memset(tszIPAddr, '\0', MAX_PATH);
+		memset(tszIPAddr, '\0', sizeof(tszIPAddr));
 		memset(tszAuthInfo, '\0', MAX_PATH);
 		memset(tszMsgBuffer, '\0', MAX_PATH);
 		if (!ProxyProtocol_TunnelCore_Parse(lpszClientAddr, lpszMsgBuffer, nMsgLen, tszIPAddr, &nIPPort, tszAuthInfo, &bProxy))
@@ -121,6 +121,6 @@ XHTHREAD CALLBACK XEngine_TunnelTask_Thread(LPCTSTR lpszClientAddr)
 		}
 		XEngine_Network_Send(st_ProxyClient.tszIPAddr, tszMsgBuffer, nMsgLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
 	}
-	XClient_TCPSelect_Close(st_ProxyClient.hSocket);
+	XEngine_Network_Close(tszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, XENGINE_CLIENT_CLOSE_SERVICE);
 	return 0;
 }
