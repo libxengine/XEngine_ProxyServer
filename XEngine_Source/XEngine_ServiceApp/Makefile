@@ -1,11 +1,11 @@
 CC = g++ -Wall
 RELEASE = 0
 UNICODE = 0  
-LOADBIN = -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Core -L /usr/local/lib/XEngine_Release/XEngine_HelpComponents -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -L ../XEngine_ModuleConfigure
-LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_ManagePool -lHelpComponents_XLog -lHelpComponents_Packets -lRfcComponents_HttpServer -lXEngine_ModuleConfigure
+LOADBIN = -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Core -L /usr/local/lib/XEngine_Release/XEngine_HelpComponents -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -L /usr/local/lib/XEngine_Release/XEngine_Client -L /usr/local/lib/XEngine_Release/XEngine_NetHelp -L ../XEngine_ModuleConfigure
+LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_ManagePool -lXEngine_NetXApi -lHelpComponents_XLog -lRfcComponents_ProxyProtocol -lXClient_Socket -lNetHelp_APIHelp -lXEngine_ModuleConfigure
 LIBEX = -static-libgcc -ldl -lrt -lpthread
 LOADSO = -Wl,-rpath=./,--disable-new-dtags
-LIBINCLUDE = XEngine_Configure.o XEngine_Network.o XEngine_TCPTask.o XEngine_HTTPTask.o XEngine_ServiceApp.o
+LIBINCLUDE = XEngine_Configure.o XEngine_Network.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ServiceApp.o
 
 ifeq ($(RELEASE),1)
 FLAGS = -c -O2 
@@ -28,10 +28,10 @@ XEngine_Configure.o:./XEngine_Configure.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) ./XEngine_Configure.cpp
 XEngine_Network.o:./XEngine_Network.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) ./XEngine_Network.cpp 
-XEngine_TCPTask.o:./XEngine_TCPTask.cpp
-	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) ./XEngine_TCPTask.cpp
-XEngine_HTTPTask.o:./XEngine_HTTPTask.cpp
-	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) ./XEngine_HTTPTask.cpp
+XEngine_SocksTask.o:./XEngine_SocksTask.cpp
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) ./XEngine_SocksTask.cpp
+XEngine_TunnelTask.o:./XEngine_TunnelTask.cpp
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) ./XEngine_TunnelTask.cpp
 		
 XEngine_ServiceApp.o:./XEngine_ServiceApp.cpp             
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) ./XEngine_ServiceApp.cpp   
