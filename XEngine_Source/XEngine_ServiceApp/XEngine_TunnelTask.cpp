@@ -73,11 +73,13 @@ BOOL XEngine_TunnelTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, in
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("Tunnel客户端:%s,创建客户端连接失败,连接到服务器:%s:%d,错误:%lX"), lpszClientAddr, tszConnectAddr, nIPPort, ProxyProtocol_GetLastError());
 			return FALSE;
 		}
-		std::thread pSTDThread(XEngine_TunnelTask_Thread, lpszClientAddr);
-		pSTDThread.detach();
+		//设置属于
 		st_ProxyClient.enStatus = ENUM_RFCCOMPONENTS_PROXY_STATUS_FORWARD;
 		_tcscpy(st_ProxyClient.tszIPAddr, lpszClientAddr);
 		ProxyProtocol_TunnelCore_SetInfo(lpszClientAddr, &st_ProxyClient, sizeof(PROXYPROTOCOL_CLIENTINFO));
+		//启动线程
+		std::thread pSTDThread(XEngine_TunnelTask_Thread, lpszClientAddr);
+		pSTDThread.detach();
 		//判断是代理还是非代理协议
 		if (bProxy)
 		{
