@@ -29,12 +29,12 @@ void __stdcall Network_Callback_SocksRecv(LPCTSTR lpszClientAddr, SOCKET hSocket
 void __stdcall Network_Callback_SocksLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
 	//交给指定函数来处理客户端离开消息
-	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, FALSE);
+	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, XENGINE_CLIENT_CLOSE_NETWORK);
 }
 void __stdcall Network_Callback_SocksHeart(LPCSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
 {
 	//同上
-	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, TRUE);
+	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, XENGINE_CLIENT_CLOSE_HEARTBEAT);
 }
 //////////////////////////////////////////////////////////////////////////下面是Tunnel网络IO相关代码处理函数
 BOOL __stdcall Network_Callback_TunnelLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
@@ -52,43 +52,65 @@ void __stdcall Network_Callback_TunnelRecv(LPCTSTR lpszClientAddr, SOCKET hSocke
 }
 void __stdcall Network_Callback_TunnelLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
-	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, FALSE);
+	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, XENGINE_CLIENT_CLOSE_NETWORK);
 }
 void __stdcall Network_Callback_TunnelHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
 {
-	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, TRUE);
+	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, XENGINE_CLIENT_CLOSE_HEARTBEAT);
 }
 //////////////////////////////////////////////////////////////////////////网络IO关闭操作
-void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, BOOL bHeart)
+void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, int nCloseType)
 {
 	if (XENGINE_CLIENT_NETTYPE_SOCKS == nIPProto)
 	{
 		//先关闭网络和心跳,他们主动回调的数据我们可以不用主动调用关闭
-		if (bHeart)
+		if (XENGINE_CLIENT_CLOSE_NETWORK == nCloseType)
+		{
+			SocketOpt_HeartBeat_DeleteAddrEx(xhSocksHeart, lpszClientAddr);
+		}
+		else if (XENGINE_CLIENT_CLOSE_HEARTBEAT == nCloseType)
 		{
 			//心跳超时属于主动关闭,所以要主动调用网络关闭
 			NetCore_TCPXCore_CloseForClientEx(xhSocksSocket, lpszClientAddr);
 		}
 		else
 		{
-			//同上
+			//主动关闭
 			SocketOpt_HeartBeat_DeleteAddrEx(xhSocksHeart, lpszClientAddr);
+			NetCore_TCPXCore_CloseForClientEx(xhSocksSocket, lpszClientAddr);
+		}
+		PROXYPROTOCOL_CLIENTINFO st_ProxyClient;
+		memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
+		if (ProxyProtocol_SocksCore_GetInfo(lpszClientAddr, &st_ProxyClient))
+		{
+			XClient_TCPSelect_Close(st_ProxyClient.hSocket);
 		}
 		ProxyProtocol_SocksCore_Delete(lpszClientAddr);
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("SOCKS客户端:%s,离开服务器"), lpszClientAddr);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("SOCKS客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
 	else if (XENGINE_CLIENT_NETTYPE_TUNNEL == nIPProto)
 	{
-		if (bHeart)
+		if (XENGINE_CLIENT_CLOSE_NETWORK == nCloseType)
+		{
+			SocketOpt_HeartBeat_DeleteAddrEx(xhTunnelHeart, lpszClientAddr);
+		}
+		else if (XENGINE_CLIENT_CLOSE_HEARTBEAT == nCloseType)
 		{
 			NetCore_TCPXCore_CloseForClientEx(xhTunnelSocket, lpszClientAddr);
 		}
 		else
 		{
 			SocketOpt_HeartBeat_DeleteAddrEx(xhTunnelHeart, lpszClientAddr);
+			NetCore_TCPXCore_CloseForClientEx(xhTunnelSocket, lpszClientAddr);
+		}
+		PROXYPROTOCOL_CLIENTINFO st_ProxyClient;
+		memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
+		if (ProxyProtocol_TunnelCore_GetInfo(lpszClientAddr, &st_ProxyClient))
+		{
+			XClient_TCPSelect_Close(st_ProxyClient.hSocket);
 		}
 		ProxyProtocol_TunnelCore_Delete(lpszClientAddr);
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Tunnel客户端:%s,离开服务器"), lpszClientAddr);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Tunnel客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
 	else
 	{
