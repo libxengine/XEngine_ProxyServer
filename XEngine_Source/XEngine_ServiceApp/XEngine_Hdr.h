@@ -13,6 +13,9 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #endif
 using namespace std;
 //加载XEngine头文件
@@ -67,7 +70,10 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 //网络类型定义
 #define XENGINE_CLIENT_NETTYPE_SOCKS 1
 #define XENGINE_CLIENT_NETTYPE_TUNNEL 2
-
+//关闭模式
+#define XENGINE_CLIENT_CLOSE_NETWORK 1
+#define XENGINE_CLIENT_CLOSE_HEARTBEAT 2
+#define XENGINE_CLIENT_CLOSE_SERVICE 3
 
 //连接库
 #ifdef _WINDOWS
