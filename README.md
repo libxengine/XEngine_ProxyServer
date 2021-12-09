@@ -1,5 +1,5 @@
 [中文](README.md) ||  [English](README.en.md)  
-# XEngine_MQService
+# XEngine_ProxyServer
 本仓库有开发和主分支,如果要使用,请使用master分支下的代码  
 
 ## 介绍
@@ -17,6 +17,7 @@ c c++ Socks5 Proxy Service HTTP Tunnel Proxy Service
 4. 操作日志
 5. 加密通信(planning)  
 6. 负载均衡(planning)  
+7. 自定义证书代理协议(planning)  
 
 ## 安装教程
 

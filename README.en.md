@@ -1,4 +1,5 @@
 # XEngine_ProxyServer
+we have a development and a master branch. If you want to use it, please use the code under the master branch
 
 #### Description
 c c++ SOCKS5代理服务 HTTP Tunnel隧道代理服务  
@@ -16,6 +17,7 @@ this software support following features
 4. operator log  
 5. encrypt Communication(planning)  
 6. load balanc(planning)  
+7. custom cert proxy protocol(planning)  
 
 ## install
 
