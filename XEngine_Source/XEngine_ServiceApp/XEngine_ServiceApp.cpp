@@ -25,6 +25,7 @@ void ServiceApp_Stop(int signo)
 		SocketOpt_HeartBeat_DestoryEx(xhTunnelHeart);
 		//销毁日志资源
 		HelpComponents_XLog_Destroy(xhLog);
+		ModuleAuthorize_User_Destory();
 	}
 #ifdef _WINDOWS
 	WSACleanup();
@@ -68,6 +69,12 @@ int main(int argc, char** argv)
 	WSADATA st_WSAData;
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
+
+#if XENGINE_VERSION_BIT < 7270001001
+	printf("版本号过低,无法继续,按任意键退出!\n");
+	getchar();
+	return 0;
+#endif
 	bIsRun = TRUE;
 	LPCTSTR lpszLogFile = _T("./XEngine_Log/XEngine_ServiceApp.Log");
 	HELPCOMPONENTS_XLOG_CONFIGURE st_XLogConfig;
@@ -102,6 +109,20 @@ int main(int argc, char** argv)
 	//设置日志打印级别
 	HelpComponents_XLog_SetLogPriority(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化日志系统成功"));
+
+	if (st_ServiceConfig.st_XAuth.bAuth >0)
+	{
+		if (!ModuleAuthorize_User_Init(st_ServiceConfig.st_XAuth.tszAuthFile))
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,启用用户验证服务失败,错误：%lX"), ModuleAuthorize_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启用用户验证服务,用户列表地址:%s"), st_ServiceConfig.st_XAuth.tszAuthFile);
+	}
+	else
+	{
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,没有启用用户验证服务"));
+	}
 	//启动Socks服务相关代码
 	if (st_ServiceConfig.nSocksPort > 0)
 	{
@@ -184,6 +205,7 @@ XENGINE_SERVICEAPP_EXIT:
 		SocketOpt_HeartBeat_DestoryEx(xhTunnelHeart);
 		//销毁日志资源
 		HelpComponents_XLog_Destroy(xhLog);
+		ModuleAuthorize_User_Destory();
 	}
 #ifdef _WINDOWS
 	WSACleanup();
