@@ -39,8 +39,9 @@ typedef struct tag_XEngine_ServiceConfig
 	}st_XLog;
 	struct  
 	{
-		int nAuthType;
-	}st_XSocks;
+		int bAuth;                            //是否启用验证,大于0启用
+		TCHAR tszAuthFile[MAX_PATH];          //验证地址
+	}st_XAuth;
 }XENGINE_SERVICECONFIG;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数定义

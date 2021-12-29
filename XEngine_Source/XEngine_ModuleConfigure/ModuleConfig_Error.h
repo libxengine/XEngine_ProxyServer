@@ -16,4 +16,4 @@
 #define ERROR_MODULE_CONFIGURE_JSON_XMAX 0xA0004                     //∂¡»°XMAX≈‰÷√ ß∞‹ 
 #define ERROR_MODULE_CONFIGURE_JSON_XTIME 0xA0005                    //∂¡»°XTIME≈‰÷√ ß∞‹
 #define ERROR_MODULE_CONFIGURE_JSON_XLOG 0xA0006                     //∂¡»°XLOG≈‰÷√ ß∞‹
-#define ERROR_MODULE_CONFIGURE_JSON_XSOCK 0xA0007                
+#define ERROR_MODULE_CONFIGURE_JSON_XAUTH 0xA0007                

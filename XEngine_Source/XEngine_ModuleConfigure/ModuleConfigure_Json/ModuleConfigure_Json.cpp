@@ -119,13 +119,14 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XLog.nMaxCount = st_JsonXLog["MaxCount"].asInt();
 	pSt_ServerConfig->st_XLog.nLogLeave = st_JsonXLog["LogLeave"].asInt();
 
-	if (st_JsonRoot["XSocks"].empty() || (1 != st_JsonRoot["XSocks"].size()))
+	if (st_JsonRoot["XAuth"].empty() || (2 != st_JsonRoot["XAuth"].size()))
 	{
 		Config_IsErrorOccur = TRUE;
-		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XSOCK;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XAUTH;
 		return FALSE;
 	}
-	Json::Value st_JsonXSocks = st_JsonRoot["XSocks"];
-	pSt_ServerConfig->st_XSocks.nAuthType = st_JsonXSocks["nAuthType"].asInt();
+	Json::Value st_JsonXAuth = st_JsonRoot["XAuth"];
+	pSt_ServerConfig->st_XAuth.bAuth = st_JsonXAuth["bAuth"].asInt();
+	_tcscpy(pSt_ServerConfig->st_XAuth.tszAuthFile, st_JsonXAuth["tszAuthFile"].asCString());
 	return TRUE;
 }
