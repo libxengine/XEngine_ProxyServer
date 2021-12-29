@@ -137,7 +137,14 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 
 				APIHelp_Domain_GetInfo(tszClientAddr, &st_APIUrl, &enDomainType);
 				memset(tszClientAddr, '\0', sizeof(tszClientAddr));
-				_stprintf(tszClientAddr, _T("%s.%s"), st_APIUrl.tszSubDomain, st_APIUrl.tszMainDomain);
+				if (_tcslen(st_APIUrl.tszSubDomain) > 0)
+				{
+					_stprintf(tszClientAddr, _T("%s.%s"), st_APIUrl.tszSubDomain, st_APIUrl.tszMainDomain);
+				}
+				else
+				{
+					_stprintf(tszClientAddr, _T("%s"), st_APIUrl.tszMainDomain);
+				}
 
 				if (!NetXApi_Socket_DomainToAddr(tszClientAddr, &ppszListAddr, &nListCount))
 				{
