@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
 	bIsRun = TRUE;
-	LPCTSTR lpszLogFile = _T("./XEngine_Log/XEngine_MQServiceApp.Log");
+	LPCTSTR lpszLogFile = _T("./XEngine_Log/XEngine_ServiceApp.Log");
 	HELPCOMPONENTS_XLOG_CONFIGURE st_XLogConfig;
 
 	memset(&st_XLogConfig, '\0', sizeof(HELPCOMPONENTS_XLOG_CONFIGURE));
