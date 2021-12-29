@@ -1,0 +1,8 @@
+LIBRARY
+
+EXPORTS
+	ModuleAuthorize_GetLastError
+
+	ModuleAuthorize_User_Init
+	ModuleAuthorize_User_Destory
+	ModuleAuthorize_User_Exist
