@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <memory>
+#include <list>
 using namespace std;
 #include <XEngine_Include/XEngine_CommHdr.h>
 #include <XEngine_Include/XEngine_Types.h>

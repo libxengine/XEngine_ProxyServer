@@ -108,7 +108,7 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XTime.nSocksTimeOut = st_JsonXTime["nSocksTimeOut"].asInt();
 	pSt_ServerConfig->st_XTime.nTunnelTimeOut = st_JsonXTime["nTunnelTimeOut"].asInt();
 
-	if (st_JsonRoot["XLog"].empty() || (3 != st_JsonRoot["XLog"].size()))
+	if (st_JsonRoot["XLog"].empty() || (4 != st_JsonRoot["XLog"].size()))
 	{
 		Config_IsErrorOccur = TRUE;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XLOG;
@@ -118,6 +118,7 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XLog.nMaxSize = st_JsonXLog["MaxSize"].asInt();
 	pSt_ServerConfig->st_XLog.nMaxCount = st_JsonXLog["MaxCount"].asInt();
 	pSt_ServerConfig->st_XLog.nLogLeave = st_JsonXLog["LogLeave"].asInt();
+	_tcscpy(pSt_ServerConfig->st_XLog.tszLogFile, st_JsonXLog["tszLogFile"].asCString());
 
 	if (st_JsonRoot["XAuth"].empty() || (2 != st_JsonRoot["XAuth"].size()))
 	{
@@ -128,5 +129,18 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 	Json::Value st_JsonXAuth = st_JsonRoot["XAuth"];
 	pSt_ServerConfig->st_XAuth.bAuth = st_JsonXAuth["bAuth"].asInt();
 	_tcscpy(pSt_ServerConfig->st_XAuth.tszAuthFile, st_JsonXAuth["tszAuthFile"].asCString());
+
+	if (st_JsonRoot["XVer"].empty() || (2 != st_JsonRoot["XVer"].size()))
+	{
+		Config_IsErrorOccur = TRUE;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XVER;
+		return FALSE;
+	}
+	pSt_ServerConfig->st_XVer.pStl_ListVer = new list<string>;
+	Json::Value st_JsonXVer = st_JsonRoot["XVer"];
+	for (unsigned int i = 0; i < st_JsonXVer.size(); i++)
+	{
+		pSt_ServerConfig->st_XVer.pStl_ListVer->push_back(st_JsonXVer[i].asCString());
+	}
 	return TRUE;
 }
