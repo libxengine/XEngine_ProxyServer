@@ -39,6 +39,11 @@ BOOL XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 		{
 			pSt_Configure->bDeamon = _ttoi(argv[i + 1]);
 		}
+		else if (0 == _tcscmp("-v", argv[i]))
+		{
+			printf("XEngine版本:%s,服务版本;%s", XENGINE_VERSION_STR, st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str());
+			return FALSE;
+		}
 	}
 
 	return TRUE;

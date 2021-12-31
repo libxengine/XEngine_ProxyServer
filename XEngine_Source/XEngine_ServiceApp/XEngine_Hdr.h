@@ -6,6 +6,8 @@
 #include <signal.h>
 #include <errno.h>
 #include <thread>
+#include <list>
+#include <string>
 #ifdef _WINDOWS
 #include <Windows.h>
 #include <tchar.h>
@@ -26,6 +28,8 @@ using namespace std;
 #include <XEngine_Include/XEngine_BaseLib/BaseLib_Error.h>
 #include <XEngine_Include/XEngine_Core/NetCore_Define.h>
 #include <XEngine_Include/XEngine_Core/NetCore_Error.h>
+#include <XEngine_Include/XEngine_Core/OPenSsl_Define.h>
+#include <XEngine_Include/XEngine_Core/OPenSsl_Error.h>
 #include <XEngine_Include/XEngine_Core/NetXApi_Define.h>
 #include <XEngine_Include/XEngine_Core/NetXApi_Error.h>
 #include <XEngine_Include/XEngine_NetHelp/APIHelp_Define.h>
@@ -40,6 +44,8 @@ using namespace std;
 #include "../XEngine_UserProtocol.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Define.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Error.h"
+#include "../XEngine_ModuleAuthorize/ModuleAuth_Define.h"
+#include "../XEngine_ModuleAuthorize/ModuleAuth_Error.h"
 //加载自己的头文件
 #include "XEngine_Configure.h"
 #include "XEngine_Network.h"
@@ -79,15 +85,19 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 #ifdef _WINDOWS
 #ifdef _WIN64
 #pragma comment(lib,"../x64/Release/XEngine_ModuleConfigure.lib")
+#pragma comment(lib,"../x64/Release/XEngine_ModuleAuthorize.lib")
 #else
 #ifdef _DEBUG
 #pragma comment(lib,"../Debug/XEngine_ModuleConfigure.lib")
+#pragma comment(lib,"../Debug/XEngine_ModuleAuthorize.lib")
 #else
 #pragma comment(lib,"../Release/XEngine_ModuleConfigure.lib")
+#pragma comment(lib,"../Release/XEngine_ModuleAuthorize.lib")
 #endif
 #endif
 #pragma comment(lib,"XEngine_BaseLib/XEngine_BaseLib.lib")
 #pragma comment(lib,"XEngine_Core/XEngine_Core.lib")
+#pragma comment(lib,"XEngine_Core/XEngine_OPenSsl.lib")
 #pragma comment(lib,"XEngine_Core/XEngine_NetXApi.lib")
 #pragma comment(lib,"XEngine_NetHelp/NetHelp_APIHelp.lib")
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_XLog.lib")

@@ -4,15 +4,18 @@ UNICODE = 0
 FLAGS = RELEASE=$(RELEASE)
 #要编译的模块
 MODULE_CONFIGURE_PATH = ./XEngine_ModuleConfigure
+MODULE_AUTHORIZE_PATH = ./XEngine_ModuleAuthorize
 APP_SERVICE_PATH = ./XEngine_ServiceApp
 
-XENGINE_MODULES = libXEngine_ModuleConfigure.so XEngine_ServiceApp.exe 
+XENGINE_MODULES = libXEngine_ModuleConfigure.so libXEngine_ModuleAuthorize.so XEngine_ServiceApp.exe 
 
 .PHONY:MakeAll 
 MakeAll:$(XENGINE_MODULES)
 
 libXEngine_ModuleConfigure.so:
 	make -C $(MODULE_CONFIGURE_PATH) $(FLAGS)
+libXEngine_ModuleAuthorize.so:
+	make -C $(MODULE_AUTHORIZE_PATH) $(FLAGS)
 	
 XEngine_ServiceApp.exe:
 	make -C $(APP_SERVICE_PATH) $(FLAGS)

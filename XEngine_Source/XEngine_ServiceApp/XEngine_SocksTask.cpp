@@ -48,7 +48,7 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 			_tcscat(tszAuthBuffer, tszTmpBuffer);
 			_tcscat(tszAuthBuffer, _T(" "));
 			//服务器是否支持
-			if (st_ServiceConfig.st_XSocks.nAuthType == enListAuths[i])
+			if (st_ServiceConfig.st_XAuth.bAuth == enListAuths[i])
 			{
 				bFoundAuth = TRUE;
 			}
@@ -57,18 +57,18 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 		{
 			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_NOAUTH);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("SOCKS客户端:%s,解析验证协议成功,但是验证类型不支持,客户端的支持验证:%s,服务器支持的验证:%d"), lpszClientAddr, tszAuthBuffer, st_ServiceConfig.st_XSocks.nAuthType);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("SOCKS客户端:%s,解析验证协议成功,但是验证类型不支持,客户端的支持验证:%s,服务器支持的验证:%d"), lpszClientAddr, tszAuthBuffer, st_ServiceConfig.st_XAuth.bAuth);
 			return FALSE;
 		}
-		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, st_ServiceConfig.st_XSocks.nAuthType);
+		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, st_ServiceConfig.st_XAuth.bAuth);
 		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 		//如果是匿名,不会有ENUM_RFCCOMPONENTS_PROXY_STATUS_AUTH步骤
-		if (ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_ANONYMOUS == st_ServiceConfig.st_XSocks.nAuthType)
+		if (ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_ANONYMOUS == st_ServiceConfig.st_XAuth.bAuth)
 		{
 			//跳过
 			ProxyProtocol_SocksCore_SetStatus(lpszClientAddr, ENUM_RFCCOMPONENTS_PROXY_STATUS_USER);
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("SOCKS客户端:%s,解析验证协议成功,支持的验证类型:%s,使用的验证类型:%d"), lpszClientAddr, tszAuthBuffer, st_ServiceConfig.st_XSocks.nAuthType);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("SOCKS客户端:%s,解析验证协议成功,支持的验证类型:%s,使用的验证类型:%d"), lpszClientAddr, tszAuthBuffer, st_ServiceConfig.st_XAuth.bAuth);
 	}
 	else if (ENUM_RFCCOMPONENTS_PROXY_STATUS_AUTH == enSocksStatus)
 	{
@@ -86,16 +86,23 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("SOCKS客户端:%s,用户登录验证失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 			return FALSE;
 		}
-		if (enProxyAuth != st_ServiceConfig.st_XSocks.nAuthType)
+		if (enProxyAuth != st_ServiceConfig.st_XAuth.bAuth)
 		{
 			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_FAILED);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("SOCKS客户端:%s,用户登录验证失败,客户端发送的验证类型不支持"), lpszClientAddr);
 			return FALSE;
 		}
+		if (!ModuleAuthorize_User_Exist(tszUserName, tszUserPass))
+		{
+			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_FAILED);
+			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("SOCKS客户端:%s,用户登录验证失败,用户名:%s,或者密码:%s 不正确"), lpszClientAddr, tszUserPass, tszUserPass);
+			return FALSE;
+		}
 		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_SUCCESS);
 		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("SOCKS客户端:%s,用户登录验证成功,使用的验证类型:%d"), lpszClientAddr, enProxyAuth);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("SOCKS客户端:%s,用户登录验证成功,使用的验证类型:%d,用户名:%s"), lpszClientAddr, enProxyAuth, tszUserName);
 	}
 	else if (ENUM_RFCCOMPONENTS_PROXY_STATUS_USER == enSocksStatus)
 	{
@@ -137,7 +144,14 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 
 				APIHelp_Domain_GetInfo(tszClientAddr, &st_APIUrl, &enDomainType);
 				memset(tszClientAddr, '\0', sizeof(tszClientAddr));
-				_stprintf(tszClientAddr, _T("%s.%s"), st_APIUrl.tszSubDomain, st_APIUrl.tszMainDomain);
+				if (_tcslen(st_APIUrl.tszSubDomain) > 0)
+				{
+					_stprintf(tszClientAddr, _T("%s.%s"), st_APIUrl.tszSubDomain, st_APIUrl.tszMainDomain);
+				}
+				else
+				{
+					_stprintf(tszClientAddr, _T("%s"), st_APIUrl.tszMainDomain);
+				}
 
 				if (!NetXApi_Socket_DomainToAddr(tszClientAddr, &ppszListAddr, &nListCount))
 				{

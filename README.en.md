@@ -13,7 +13,7 @@ This software is a standard proxy server that supports Socks5 and HTTP tunnel pr
 this software support following features  
 1. SOCKS5 proxy  
 2. Tunnel proxy  
-3. support Permission Validation(planning)  
+3. support Permission Validation  
 4. operator log  
 5. encrypt Communication(planning)  
 6. load balanc(planning)  
@@ -23,7 +23,7 @@ this software support following features
 
 #### Requirements  
 support system above windows 7sp1 and linux(ubuntu20.04,centos8)  
-XEngine need V7.23 or above  
+XEngine need V7.27 or above  
 vcpkg need 2021.05.11 or above  
 
 #### Windows

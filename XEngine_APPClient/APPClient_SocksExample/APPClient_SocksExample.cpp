@@ -62,9 +62,8 @@ int main(int argc, char** argv)
 	ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH enServerAuth;
 	ProxyProtocol_SocksClient_AuthParse(tszMsgBuffer, &enServerAuth);
 	printf("接受服务器返回数据,内容:%d\n", enServerAuth);
-	//////////////////////////////////////////////////////////////////////////登录 匿名登录不需要
-	/*
-	ProxyProtocol_SocksClient_LoginPacket(tszMsgBuffer, &nMsgLen);
+	//////////////////////////////////////////////////////////////////////////登录 匿名登录注释下面的代码
+	ProxyProtocol_SocksClient_LoginPacket(tszMsgBuffer, &nMsgLen, "123123aa", "123123");
 	if (!XClient_TCPSelect_SendMsg(m_Socket, tszMsgBuffer, nMsgLen))
 	{
 		printf("发送投递失败！\n");
@@ -85,7 +84,7 @@ int main(int argc, char** argv)
 	else
 	{
 		printf("login failed\n");
-	}*/
+	}
 	//////////////////////////////////////////////////////////////////////////连接
 	ProxyProtocol_SocksClient_ConnectPacket(tszMsgBuffer, &nMsgLen, "www.xyry.org", 80, ENUM_RFCCOMPONENTS_PROXYSOCKS_COMMAND_CONNECT, ENUM_RFCCOMPONENTS_PROXYSOCKS_IPADDR_DOMAIN);
 	if (!XClient_TCPSelect_SendMsg(m_Socket, tszMsgBuffer, nMsgLen))
