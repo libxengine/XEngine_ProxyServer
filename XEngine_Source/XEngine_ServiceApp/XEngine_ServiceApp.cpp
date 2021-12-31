@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
 
-#if XENGINE_VERSION_BIT < 7260001001
+#if XENGINE_VERSION_BIT < 7270001001
 	printf("版本号过低,无法继续,按任意键退出!\n");
 	getchar();
 	return 0;
@@ -80,10 +80,6 @@ int main(int argc, char** argv)
 
 	memset(&st_XLogConfig, '\0', sizeof(HELPCOMPONENTS_XLOG_CONFIGURE));
 	memset(&st_ServiceConfig, '\0', sizeof(XENGINE_SERVICECONFIG));
-
-	st_XLogConfig.XLog_MaxBackupFile = 10;
-	st_XLogConfig.XLog_MaxSize = 1024000;
-	_tcscpy(st_XLogConfig.tszFileName, st_ServiceConfig.st_XLog.tszLogFile);
 
 	signal(SIGINT, ServiceApp_Stop);
 	signal(SIGTERM, ServiceApp_Stop);
@@ -99,6 +95,9 @@ int main(int argc, char** argv)
 		ServiceApp_Deamon();
 	}
 	//初始日志
+	st_XLogConfig.XLog_MaxBackupFile = 10;
+	st_XLogConfig.XLog_MaxSize = 1024000;
+	_tcscpy(st_XLogConfig.tszFileName, st_ServiceConfig.st_XLog.tszLogFile);
 	xhLog = HelpComponents_XLog_Init(HELPCOMPONENTS_XLOG_OUTTYPE_STD | HELPCOMPONENTS_XLOG_OUTTYPE_FILE, &st_XLogConfig);
 	if (NULL == xhLog)
 	{
