@@ -33,14 +33,20 @@ typedef struct tag_XEngine_ServiceConfig
 	}st_XTime;                                //次数*时间=超时
 	struct
 	{
+		TCHAR tszLogFile[MAX_PATH];           //日志保存路径
 		int nMaxSize;                         //最大日志大小
 		int nMaxCount;                        //最大日志个数
 		int nLogLeave;                        //日志等级
 	}st_XLog;
 	struct  
 	{
-		int nAuthType;
-	}st_XSocks;
+		int bAuth;                            //是否启用验证,大于0启用
+		TCHAR tszAuthFile[MAX_PATH];          //验证地址
+	}st_XAuth;
+	struct  
+	{
+		list<string>* pStl_ListVer;
+	}st_XVer;
 }XENGINE_SERVICECONFIG;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数定义

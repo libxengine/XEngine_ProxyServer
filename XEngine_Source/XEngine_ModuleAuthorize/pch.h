@@ -11,29 +11,28 @@
 // 添加要在此处预编译的标头
 #include "framework.h"
 #include <tchar.h>
-#include <json/json.h>
 #else
-#ifdef _CENTOS
-#include <json/json.h>
-#else
-#include <jsoncpp/json/json.h>
-#endif
+
 #endif
 #endif //PCH_H
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <memory>
-#include <list>
-using namespace std;
+#include <string>
+#include <unordered_map>
 #include <XEngine_Include/XEngine_CommHdr.h>
 #include <XEngine_Include/XEngine_Types.h>
-#include "ModuleConfig_Define.h"
-#include "ModuleConfig_Error.h"
+#include <XEngine_Include/XEngine_ProtocolHdr.h>
+#include "ModuleAuth_Define.h"
+#include "ModuleAuth_Error.h"
+using namespace std;
+#ifdef _UNICODE
+typedef std::wstring tstring;
+#else
+typedef std::string tstring;
+#endif
 /********************************************************************
-//    Created:     2021/12/02  16:07:58
-//    File Name:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_ModuleConfigure\pch.h
-//    File Path:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_ModuleConfigure
+//    Created:     2021/12/29  10:27:12
+//    File Name:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleAuthorize\pch.h
+//    File Path:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleAuthorize
 //    File Base:   pch
 //    File Ext:    h
 //    Project:     XEngine(网络通信引擎)
@@ -41,5 +40,5 @@ using namespace std;
 //    Purpose:     公用头文件
 //    History:
 *********************************************************************/
-extern BOOL Config_IsErrorOccur;
-extern DWORD Config_dwErrorCode;
+extern BOOL Authorize_IsErrorOccur;
+extern DWORD Authorize_dwErrorCode;

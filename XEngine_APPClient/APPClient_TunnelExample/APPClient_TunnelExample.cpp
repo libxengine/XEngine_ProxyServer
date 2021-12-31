@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
 	SOCKET m_Socket;
-	LPCTSTR lpszServiceAddr = _T("192.168.1.12");
+	LPCTSTR lpszServiceAddr = _T("127.0.0.1");
 	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5401))
 	{
 		printf("连接失败！错误:%lX\n", XClient_GetLastError());
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 	TCHAR tszMsgBuffer[2048];
 	memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
 
-	ProxyProtocol_TunnelClient_Packet(tszMsgBuffer, &nMsgLen, "www.xyry.org:80");
+	ProxyProtocol_TunnelClient_Packet(tszMsgBuffer, &nMsgLen, "www.xyry.org:80", "MTIzMTIzYWE6MTIzMTIz");
 	if (!XClient_TCPSelect_SendMsg(m_Socket, tszMsgBuffer, nMsgLen))
 	{
 		printf("发送投递失败！\n");

@@ -124,7 +124,7 @@ BOOL XEngine_Network_Send(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMs
 	if (XENGINE_CLIENT_NETTYPE_SOCKS == nIPProto)
 	{
 		//发送数据给指定客户端
-		if (!NetCore_TCPXCore_SendEx(xhSocksSocket, lpszClientAddr, lpszMsgBuffer, nMsgLen))
+		if (!NetCore_TCPXCore_SendEx(xhSocksSocket, lpszClientAddr, lpszMsgBuffer, nMsgLen, 1, 1))
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("SOCKS客户端:%s,发送数据失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
 			return FALSE;
@@ -134,7 +134,7 @@ BOOL XEngine_Network_Send(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMs
 	}
 	else if (XENGINE_CLIENT_NETTYPE_TUNNEL == nIPProto)
 	{
-		if (!NetCore_TCPXCore_SendEx(xhTunnelSocket, lpszClientAddr, lpszMsgBuffer, nMsgLen))
+		if (!NetCore_TCPXCore_SendEx(xhTunnelSocket, lpszClientAddr, lpszMsgBuffer, nMsgLen, 1, 1))
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("Tunnel客户端:%s,发送数据失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
 			return FALSE;

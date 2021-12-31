@@ -38,6 +38,28 @@ BOOL XEngine_TunnelTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, in
 		}
 		TCHAR tszConnectAddr[128];
 		memset(tszConnectAddr, '\0', sizeof(tszConnectAddr));
+		if (st_ServiceConfig.st_XAuth.bAuth > 0)
+		{
+			TCHAR tszUser[128];
+			TCHAR tszPass[128];
+
+			memset(tszUser, '\0', sizeof(tszUser));
+			memset(tszPass, '\0', sizeof(tszPass));
+			if (!OPenSsl_Help_BasicDecoder(tszAuthInfo, tszUser, tszPass))
+			{
+				ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 401);
+				XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("Tunnel客户端:%s,失败无法继续,错误:%lX"), lpszClientAddr, OPenSsl_GetLastError());
+				return FALSE;
+			}
+			if (!ModuleAuthorize_User_Exist(tszUser, tszPass))
+			{
+				ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 401);
+				XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("Tunnel客户端:%s,验证用户名:%s,密码:%s 失败,错误:%lX"), lpszClientAddr, tszUser, tszPass);
+				return FALSE;
+			}
+		}
 		//是否为IP地址
 		if (BaseLib_OperatorIPAddr_IsIPV4Addr(tszIPAddr))
 		{
@@ -54,13 +76,20 @@ BOOL XEngine_TunnelTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, in
 
 			APIHelp_Domain_GetInfo(tszIPAddr, &st_APIUrl, &enDomainType);
 			memset(tszIPAddr, '\0', sizeof(tszIPAddr));
-			_stprintf(tszIPAddr, _T("%s.%s"), st_APIUrl.tszSubDomain, st_APIUrl.tszMainDomain);
+			if (_tcslen(st_APIUrl.tszSubDomain) > 0)
+			{
+				_stprintf(tszIPAddr, _T("%s.%s"), st_APIUrl.tszSubDomain, st_APIUrl.tszMainDomain);
+			}
+			else
+			{
+				_stprintf(tszIPAddr, _T("%s"), st_APIUrl.tszMainDomain);
+			}
 
 			if (!NetXApi_Socket_DomainToAddr(tszIPAddr, &ppszListAddr, &nListCount))
 			{
 				ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 500);
 				XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("Tunnel客户端:%s,解析域名失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("Tunnel客户端:%s,解析域名:%s,失败,错误:%lX"), lpszClientAddr, tszIPAddr, ProxyProtocol_GetLastError());
 				return FALSE;
 			}
 			_tcscpy(tszConnectAddr, ppszListAddr[0]);   //随便选择一个IP地址

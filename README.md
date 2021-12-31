@@ -13,7 +13,7 @@ c c++ Socks5 Proxy Service HTTP Tunnel Proxy Service
 此软件支持以下特性  
 1. SOCKS5代理  
 2. Tunnel代理  
-3. 权限验证(planning)  
+3. 权限验证  
 4. 操作日志
 5. 加密通信(planning)  
 6. 负载均衡(planning)  
@@ -23,7 +23,7 @@ c c++ Socks5 Proxy Service HTTP Tunnel Proxy Service
 
 #### 版本需求
 支持WINDOWS 7SP1和LINUX(UBUNT20.04,CENTOS8)以上系统  
-XEngine版本需要V7.26或者以上版本  
+XEngine版本需要V7.27或者以上版本  
 vcpkg 需要2021.05.11以上版本  
 
 #### Windows
