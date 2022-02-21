@@ -1,16 +1,16 @@
-#pragma once
+ï»¿#pragma once
 /********************************************************************
 //    Created:     2021/12/29  10:29:54
 //    File Name:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleAuthorize\ModuleAuth_Error.h
 //    File Path:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleAuthorize
 //    File Base:   ModuleAuth_Error
 //    File Ext:    h
-//    Project:     XEngine(ÍøÂçÍ¨ĞÅÒıÇæ)
+//    Project:     XEngine(ç½‘ç»œé€šä¿¡å¼•æ“)
 //    Author:      qyt
-//    Purpose:     µ¼³ö´íÎó
+//    Purpose:     å¯¼å‡ºé”™è¯¯
 //    History:
 *********************************************************************/
-#define ERROR_MODULE_AUTHORIZE_USER_PARAMENT 0xA0001                 //²ÎÊı´íÎó
-#define ERROR_MODULE_AUTHORIZE_USER_OPENFILE 0xA0002                 //´ò¿ªÎÄ¼şÊ§°Ü
-#define ERROR_MODULE_AUTHORIZE_USER_NOTFOUND 0xA0003                 //Ã»ÓĞÕÒµ½
-#define ERROR_MODULE_AUTHORIZE_USER_PASSWORD 0xA0004                 //ÃÜÂë´íÎó
+#define ERROR_MODULE_AUTHORIZE_USER_PARAMENT 0xA0001                 //å‚æ•°é”™è¯¯
+#define ERROR_MODULE_AUTHORIZE_USER_OPENFILE 0xA0002                 //æ‰“å¼€æ–‡ä»¶å¤±è´¥
+#define ERROR_MODULE_AUTHORIZE_USER_NOTFOUND 0xA0003                 //æ²¡æœ‰æ‰¾åˆ°
+#define ERROR_MODULE_AUTHORIZE_USER_PASSWORD 0xA0004                 //å¯†ç é”™è¯¯

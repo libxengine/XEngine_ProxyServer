@@ -1,20 +1,20 @@
-#pragma once
+ï»¿#pragma once
 /********************************************************************
 //    Created:     2021/12/02  16:15:47
 //    File Name:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_ModuleConfigure\ModuleConfig_Error.h
 //    File Path:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_ModuleConfigure
 //    File Base:   ModuleConfig_Error
 //    File Ext:    h
-//    Project:     XEngine(ÍøÂçÍ¨ÐÅÒýÇæ)
+//    Project:     XEngine(ç½‘ç»œé€šä¿¡å¼•æ“Ž)
 //    Author:      qyt
-//    Purpose:     ÅäÖÃÄ£¿éµ¼³ö´íÎó
+//    Purpose:     é…ç½®æ¨¡å—å¯¼å‡ºé”™è¯¯
 //    History:
 *********************************************************************/
-#define ERROR_MODULE_CONFIGURE_JSON_PARAMENT 0xA0001                 //²ÎÊý´íÎó
-#define ERROR_MODULE_CONFIGURE_JSON_OPENFILE 0xA0002                 //´ò¿ªÎÄ¼þÊ§°Ü
-#define ERROR_MODULE_CONFIGURE_JSON_PARSE 0xA0003                    //½âÎöJSONÊ§°Ü
-#define ERROR_MODULE_CONFIGURE_JSON_XMAX 0xA0004                     //¶ÁÈ¡XMAXÅäÖÃÊ§°Ü 
-#define ERROR_MODULE_CONFIGURE_JSON_XTIME 0xA0005                    //¶ÁÈ¡XTIMEÅäÖÃÊ§°Ü
-#define ERROR_MODULE_CONFIGURE_JSON_XLOG 0xA0006                     //¶ÁÈ¡XLOGÅäÖÃÊ§°Ü
-#define ERROR_MODULE_CONFIGURE_JSON_XAUTH 0xA0007                    //Ã»ÓÐÑéÖ¤ÅäÖÃ
-#define ERROR_MODULE_CONFIGURE_JSON_XVER 0xA0008                     //Ã»ÓÐ°æ±¾ÅäÖÃ
+#define ERROR_MODULE_CONFIGURE_JSON_PARAMENT 0xA0001                 //å‚æ•°é”™è¯¯
+#define ERROR_MODULE_CONFIGURE_JSON_OPENFILE 0xA0002                 //æ‰“å¼€æ–‡ä»¶å¤±è´¥
+#define ERROR_MODULE_CONFIGURE_JSON_PARSE 0xA0003                    //è§£æžJSONå¤±è´¥
+#define ERROR_MODULE_CONFIGURE_JSON_XMAX 0xA0004                     //è¯»å–XMAXé…ç½®å¤±è´¥ 
+#define ERROR_MODULE_CONFIGURE_JSON_XTIME 0xA0005                    //è¯»å–XTIMEé…ç½®å¤±è´¥
+#define ERROR_MODULE_CONFIGURE_JSON_XLOG 0xA0006                     //è¯»å–XLOGé…ç½®å¤±è´¥
+#define ERROR_MODULE_CONFIGURE_JSON_XAUTH 0xA0007                    //æ²¡æœ‰éªŒè¯é…ç½®
+#define ERROR_MODULE_CONFIGURE_JSON_XVER 0xA0008                     //æ²¡æœ‰ç‰ˆæœ¬é…ç½®

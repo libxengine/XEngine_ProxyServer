@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "ModuleAuthorize_User.h"
 /********************************************************************
 //    Created:     2021/12/29  10:24:25
@@ -6,9 +6,9 @@
 //    File Path:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleAuthorize\ModuleAuthorize_User
 //    File Base:   ModuleAuthorize_User
 //    File Ext:    cpp
-//    Project:     XEngine(ÍøÂçÍ¨ÐÅÒýÇæ)
+//    Project:     XEngine(ç½‘ç»œé€šä¿¡å¼•æ“Ž)
 //    Author:      qyt
-//    Purpose:     ÓÃ»§ÑéÖ¤
+//    Purpose:     ç”¨æˆ·éªŒè¯
 //    History:
 *********************************************************************/
 CModuleAuthorize_User::CModuleAuthorize_User()
@@ -20,20 +20,20 @@ CModuleAuthorize_User::~CModuleAuthorize_User()
 
 }
 //////////////////////////////////////////////////////////////////////////
-//                        ¹«ÓÃº¯Êý
+//                        å…¬ç”¨å‡½æ•°
 //////////////////////////////////////////////////////////////////////////
 /********************************************************************
-º¯ÊýÃû³Æ£ºModuleAuthorize_User_Init
-º¯Êý¹¦ÄÜ£º³õÊ¼»¯ÊÚÈ¨»á»°¹ÜÀíÆ÷
- ²ÎÊý.Ò»£ºlpszAuthFile
-  In/Out£ºIn
-  ÀàÐÍ£º³£Á¿×Ö·ûÖ¸Õë
-  ¿É¿Õ£ºN
-  ÒâË¼£ºÊäÈëÊÚÈ¨ÎÄ¼þµØÖ·
-·µ»ØÖµ
-  ÀàÐÍ£ºÂß¼­ÐÍ
-  ÒâË¼£ºÊÇ·ñ³É¹¦
-±¸×¢£º
+å‡½æ•°åç§°ï¼šModuleAuthorize_User_Init
+å‡½æ•°åŠŸèƒ½ï¼šåˆå§‹åŒ–æŽˆæƒä¼šè¯ç®¡ç†å™¨
+ å‚æ•°.ä¸€ï¼šlpszAuthFile
+  In/Outï¼šIn
+  ç±»åž‹ï¼šå¸¸é‡å­—ç¬¦æŒ‡é’ˆ
+  å¯ç©ºï¼šN
+  æ„æ€ï¼šè¾“å…¥æŽˆæƒæ–‡ä»¶åœ°å€
+è¿”å›žå€¼
+  ç±»åž‹ï¼šé€»è¾‘åž‹
+  æ„æ€ï¼šæ˜¯å¦æˆåŠŸ
+å¤‡æ³¨ï¼š
 *********************************************************************/
 BOOL CModuleAuthorize_User::ModuleAuthorize_User_Init(LPCTSTR lpszAuthFile)
 {
@@ -80,12 +80,12 @@ BOOL CModuleAuthorize_User::ModuleAuthorize_User_Init(LPCTSTR lpszAuthFile)
 	return TRUE;
 }
 /************************************************************************
-º¯ÊýÃû³Æ£ºModuleAuthorize_User_Destory
-º¯Êý¹¦ÄÜ£ºÏú»ÙÊÚÈ¨¹ÜÀíÆ÷
-·µ»ØÖµ
-  ÀàÐÍ£ºÂß¼­ÐÍ
-  ÒâË¼£ºÊÇ·ñÏú»Ù³É¹¦
-±¸×¢£º
+å‡½æ•°åç§°ï¼šModuleAuthorize_User_Destory
+å‡½æ•°åŠŸèƒ½ï¼šé”€æ¯æŽˆæƒç®¡ç†å™¨
+è¿”å›žå€¼
+  ç±»åž‹ï¼šé€»è¾‘åž‹
+  æ„æ€ï¼šæ˜¯å¦é”€æ¯æˆåŠŸ
+å¤‡æ³¨ï¼š
 ************************************************************************/
 BOOL CModuleAuthorize_User::ModuleAuthorize_User_Destory()
 {
@@ -95,22 +95,22 @@ BOOL CModuleAuthorize_User::ModuleAuthorize_User_Destory()
 	return TRUE;
 }
 /********************************************************************
-º¯ÊýÃû³Æ£ºModuleAuthorize_User_Exist
-º¯Êý¹¦ÄÜ£ºÊÇ·ñÑéÖ¤Í¨¹ý
- ²ÎÊý.Ò»£ºlpszUser
-  In/Out£ºIn
-  ÀàÐÍ£º³£Á¿×Ö·ûÖ¸Õë
-  ¿É¿Õ£ºN
-  ÒâË¼£ºÊäÈëÓÃ»§Ãû
- ²ÎÊý.¶þ£ºlpszPass
-  In/Out£ºIn
-  ÀàÐÍ£º³£Á¿×Ö·ûÖ¸Õë
-  ¿É¿Õ£ºN
-  ÒâË¼£ºÊäÈëÃÜÂë
-·µ»ØÖµ
-  ÀàÐÍ£ºÂß¼­ÐÍ
-  ÒâË¼£ºÊÇ·ñ³É¹¦
-±¸×¢£º
+å‡½æ•°åç§°ï¼šModuleAuthorize_User_Exist
+å‡½æ•°åŠŸèƒ½ï¼šæ˜¯å¦éªŒè¯é€šè¿‡
+ å‚æ•°.ä¸€ï¼šlpszUser
+  In/Outï¼šIn
+  ç±»åž‹ï¼šå¸¸é‡å­—ç¬¦æŒ‡é’ˆ
+  å¯ç©ºï¼šN
+  æ„æ€ï¼šè¾“å…¥ç”¨æˆ·å
+ å‚æ•°.äºŒï¼šlpszPass
+  In/Outï¼šIn
+  ç±»åž‹ï¼šå¸¸é‡å­—ç¬¦æŒ‡é’ˆ
+  å¯ç©ºï¼šN
+  æ„æ€ï¼šè¾“å…¥å¯†ç 
+è¿”å›žå€¼
+  ç±»åž‹ï¼šé€»è¾‘åž‹
+  æ„æ€ï¼šæ˜¯å¦æˆåŠŸ
+å¤‡æ³¨ï¼š
 *********************************************************************/
 BOOL CModuleAuthorize_User::ModuleAuthorize_User_Exist(LPCTSTR lpszUser, LPCTSTR lpszPass)
 {

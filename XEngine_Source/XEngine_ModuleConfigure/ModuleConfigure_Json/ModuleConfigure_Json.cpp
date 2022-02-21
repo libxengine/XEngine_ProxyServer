@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "ModuleConfigure_Json.h"
 /********************************************************************
 //    Created:     2021/12/02  16:14:11
@@ -6,9 +6,9 @@
 //    File Path:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_ModuleConfigure\ModuleConfigure_Json
 //    File Base:   ModuleConfigure_Json
 //    File Ext:    cpp
-//    Project:     XEngine(ÍøÂçÍ¨ĞÅÒıÇæ)
+//    Project:     XEngine(ç½‘ç»œé€šä¿¡å¼•æ“)
 //    Author:      qyt
-//    Purpose:     JSONÅäÖÃ¶ÁĞ´ÊµÏÖ
+//    Purpose:     JSONé…ç½®è¯»å†™å®ç°
 //    History:
 *********************************************************************/
 CModuleConfigure_Json::CModuleConfigure_Json()
@@ -20,25 +20,25 @@ CModuleConfigure_Json::~CModuleConfigure_Json()
 
 }
 //////////////////////////////////////////////////////////////////////////
-//                        ¹«ÓÃº¯Êı
+//                        å…¬ç”¨å‡½æ•°
 //////////////////////////////////////////////////////////////////////////
 /********************************************************************
-º¯ÊıÃû³Æ£ºModuleConfigure_Json_File
-º¯Êı¹¦ÄÜ£º¶ÁÈ¡JSONÅäÖÃÎÄ¼ş
- ²ÎÊı.Ò»£ºlpszConfigFile
-  In/Out£ºIn
-  ÀàĞÍ£º³£Á¿×Ö·ûÖ¸Õë
-  ¿É¿Õ£ºN
-  ÒâË¼£ºÊäÈëÒª¶ÁÈ¡µÄÅäÖÃÎÄ¼ş
- ²ÎÊı.¶ş£ºpSt_ServerConfig
-  In/Out£ºOut
-  ÀàĞÍ£ºÊı¾İ½á¹¹Ö¸Õë
-  ¿É¿Õ£ºN
-  ÒâË¼£ºÊä³ö·şÎñÅäÖÃĞÅÏ¢
-·µ»ØÖµ
-  ÀàĞÍ£ºÂß¼­ĞÍ
-  ÒâË¼£ºÊÇ·ñ³É¹¦
-±¸×¢£º
+å‡½æ•°åç§°ï¼šModuleConfigure_Json_File
+å‡½æ•°åŠŸèƒ½ï¼šè¯»å–JSONé…ç½®æ–‡ä»¶
+ å‚æ•°.ä¸€ï¼šlpszConfigFile
+  In/Outï¼šIn
+  ç±»å‹ï¼šå¸¸é‡å­—ç¬¦æŒ‡é’ˆ
+  å¯ç©ºï¼šN
+  æ„æ€ï¼šè¾“å…¥è¦è¯»å–çš„é…ç½®æ–‡ä»¶
+ å‚æ•°.äºŒï¼špSt_ServerConfig
+  In/Outï¼šOut
+  ç±»å‹ï¼šæ•°æ®ç»“æ„æŒ‡é’ˆ
+  å¯ç©ºï¼šN
+  æ„æ€ï¼šè¾“å‡ºæœåŠ¡é…ç½®ä¿¡æ¯
+è¿”å›å€¼
+  ç±»å‹ï¼šé€»è¾‘å‹
+  æ„æ€ï¼šæ˜¯å¦æˆåŠŸ
+å¤‡æ³¨ï¼š
 *********************************************************************/
 BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XENGINE_SERVICECONFIG* pSt_ServerConfig)
 {
@@ -53,7 +53,7 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 	Json::Value st_JsonRoot;
 	JSONCPP_STRING st_JsonError;
 	Json::CharReaderBuilder st_JsonBuilder;
-	//¶ÁÈ¡ÅäÖÃÎÄ¼şËùÓĞÄÚÈİµ½»º³åÇø
+	//è¯»å–é…ç½®æ–‡ä»¶æ‰€æœ‰å†…å®¹åˆ°ç¼“å†²åŒº
 	FILE* pSt_File = _tfopen(lpszConfigFile, _T("rb"));
 	if (NULL == pSt_File)
 	{
@@ -73,7 +73,7 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 		nCount += nRet;
 	}
 	fclose(pSt_File);
-	//¿ªÊ¼½âÎöÅäÖÃÎÄ¼ş
+	//å¼€å§‹è§£æé…ç½®æ–‡ä»¶
 	std::unique_ptr<Json::CharReader> const pSt_JsonReader(st_JsonBuilder.newCharReader());
 	if (!pSt_JsonReader->parse(tszMsgBuffer, tszMsgBuffer + nCount, &st_JsonRoot, &st_JsonError))
 	{
