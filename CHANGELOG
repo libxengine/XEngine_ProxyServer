@@ -1,0 +1,37 @@
+XEngine_ProxyServer V1.1.0.1001
+
+添加:用户验证模块
+添加:SOCKS和TUNNEL支持用户基本验证
+添加:日志文件路径设置
+添加:验证文件列表
+修改:配置文件socks修改为验证
+优化:当发送消息给客户端的时候可以超时了
+修复:没有子域名,域名无法解析的问题
+修复:LINUX构建错误
+修复:vscopy文件拷贝问题
+删除:多余的协议定义
+
+added:user authorize module
+added:socks and tunnel user authorize
+added:log set file address
+added:version list information
+modify:configure modify socks to auth
+improved:can be timeout when send message to client
+fixed:no have subdomain,The domain name cannot be resolved
+fixed:build error on linux
+fixed:vscopy file
+delete:Redundant protocol definitions
+======================================================================================
+XEngine_ProxyServer V1.0.0.1001
+
+支持:HTTP隧道匿名代理
+支持:SOCKS5隧道匿名代理
+支持:配置模块
+支持:心跳超时
+支持:日志管理
+
+Support: HTTP tunnel anonymous proxy
+Support: SOCKS5 tunnel anonymous proxy
+Support: configuration module
+Support: Heartbeat timeout
+Support: log management
