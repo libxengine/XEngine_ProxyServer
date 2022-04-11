@@ -3,15 +3,20 @@ UNICODE = 0
 #编译的选项参数
 FLAGS = RELEASE=$(RELEASE)
 #要编译的模块
+THIRDPART_MODULE_JSONCPP = ./XEngine_ThirdPart/jsoncpp
+
 MODULE_CONFIGURE_PATH = ./XEngine_ModuleConfigure
 MODULE_AUTHORIZE_PATH = ./XEngine_ModuleAuthorize
 APP_SERVICE_PATH = ./XEngine_ServiceApp
 
-XENGINE_MODULES = libXEngine_ModuleConfigure.so libXEngine_ModuleAuthorize.so XEngine_ServiceApp.exe 
+XENGINE_MODULES = libjsoncpp.so libXEngine_ModuleConfigure.so libXEngine_ModuleAuthorize.so XEngine_ServiceApp.exe 
 
 .PHONY:MakeAll 
 MakeAll:$(XENGINE_MODULES)
 
+libjsoncpp.so:
+	make -C $(THIRDPART_MODULE_JSONCPP) $(FLAGS)
+	
 libXEngine_ModuleConfigure.so:
 	make -C $(MODULE_CONFIGURE_PATH) $(FLAGS)
 libXEngine_ModuleAuthorize.so:
