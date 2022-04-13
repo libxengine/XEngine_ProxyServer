@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 /********************************************************************
 //    Created:     2021/12/03  14:16:27
 //    File Name:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_UserProtocol.h
 //    File Path:   D:\XEngine_ServiceApp\XEngine_Source
 //    File Base:   XEngine_UserProtocol
 //    File Ext:    h
-//    Project:     XEngine(ÍøÂçÍ¨ĞÅÒıÇæ)
+//    Project:     XEngine(ç½‘ç»œé€šä¿¡å¼•æ“)
 //    Author:      qyt
-//    Purpose:     ÓÃ»§×Ô¶¨ÒåĞ­ÒéÍ·
+//    Purpose:     ç”¨æˆ·è‡ªå®šä¹‰åè®®å¤´
 //    History:
 *********************************************************************/
 ///////////////////////////////////////////////////////////////////////////
-//                          µ¼³öµÄÊı¾İ½á¹¹
+//                          å¯¼å‡ºçš„æ•°æ®ç»“æ„
 ///////////////////////////////////////////////////////////////////////////
 #pragma pack(push)
 #pragma pack(1)

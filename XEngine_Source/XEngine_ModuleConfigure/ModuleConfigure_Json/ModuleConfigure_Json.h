@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 /********************************************************************
 //    Created:     2021/12/02  16:08:16
 //    File Name:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_ModuleConfigure\ModuleConfigure_Json\ModuleConfigure_Json.h
 //    File Path:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_ModuleConfigure\ModuleConfigure_Json
 //    File Base:   ModuleConfigure_Json
 //    File Ext:    h
-//    Project:     XEngine(ÍøÂçÍ¨ĞÅÒıÇæ)
+//    Project:     XEngine(ç½‘ç»œé€šä¿¡å¼•æ“)
 //    Author:      qyt
-//    Purpose:     JSONÅäÖÃÎÄ¼ş¶ÁĞ´
+//    Purpose:     JSONé…ç½®æ–‡ä»¶è¯»å†™
 //    History:
 *********************************************************************/
 

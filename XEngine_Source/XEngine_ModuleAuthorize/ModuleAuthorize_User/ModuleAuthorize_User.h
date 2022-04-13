@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 /********************************************************************
 //    Created:     2021/12/29  10:23:14
 //    File Name:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleAuthorize\ModuleAuthorize_User\ModuleAuthorize_User.h
 //    File Path:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleAuthorize\ModuleAuthorize_User
 //    File Base:   ModuleAuthorize_User
 //    File Ext:    h
-//    Project:     XEngine(ÍøÂçÍ¨ĞÅÒıÇæ)
+//    Project:     XEngine(ç½‘ç»œé€šä¿¡å¼•æ“)
 //    Author:      qyt
-//    Purpose:     ÓÃ»§ÑéÖ¤
+//    Purpose:     ç”¨æˆ·éªŒè¯
 //    History:
 *********************************************************************/
 

@@ -1,8 +1,12 @@
 CC = g++ -Wall
 RELEASE = 0
 UNICODE = 0  
-LOADBIN = -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Core -L /usr/local/lib/XEngine_Release/XEngine_HelpComponents -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -L /usr/local/lib/XEngine_Release/XEngine_Client -L /usr/local/lib/XEngine_Release/XEngine_NetHelp -L ../XEngine_ModuleConfigure -L ../XEngine_ModuleAuthorize
-LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_OPenSsl -lXEngine_ManagePool -lXEngine_NetXApi -lHelpComponents_XLog -lRfcComponents_ProxyProtocol -lXClient_Socket -lNetHelp_APIHelp -lXEngine_ModuleConfigure -lXEngine_ModuleAuthorize
+LOADBIN = -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Core -L /usr/local/lib/XEngine_Release/XEngine_HelpComponents -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -L /usr/local/lib/XEngine_Release/XEngine_Client -L /usr/local/lib/XEngine_Release/XEngine_NetHelp  \
+          -L ../XEngine_ThirdPart/jsoncpp \
+          -L ../XEngine_ModuleConfigure -L ../XEngine_ModuleAuthorize
+LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_OPenSsl -lXEngine_ManagePool -lXEngine_NetXApi -lHelpComponents_XLog -lRfcComponents_ProxyProtocol -lXClient_Socket -lNetHelp_APIHelp \
+      -ljsoncpp \
+      -lXEngine_ModuleConfigure -lXEngine_ModuleAuthorize
 LIBEX = -static-libgcc -ldl -lrt -lpthread
 LOADSO = -Wl,-rpath=./,--disable-new-dtags
 LIBINCLUDE = XEngine_Configure.o XEngine_Network.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ServiceApp.o
