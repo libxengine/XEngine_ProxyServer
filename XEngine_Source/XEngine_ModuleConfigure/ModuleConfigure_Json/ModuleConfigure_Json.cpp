@@ -130,7 +130,7 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XAuth.bAuth = st_JsonXAuth["bAuth"].asInt();
 	_tcscpy(pSt_ServerConfig->st_XAuth.tszAuthFile, st_JsonXAuth["tszAuthFile"].asCString());
 
-	if (st_JsonRoot["XVer"].empty() || (2 != st_JsonRoot["XVer"].size()))
+	if (st_JsonRoot["XVer"].empty())
 	{
 		Config_IsErrorOccur = TRUE;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XVER;
