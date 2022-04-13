@@ -3,7 +3,7 @@ RELEASE = 0
 UNICODE = 0
 INCLUDE = -I ./
 LOADBIN = 
-LIB = -ljsoncpp
+LIB = 
 LIBEX = -static-libgcc -lrt -ldl -lpthread
 LOADSO = -Wl,-rpath=
 LIBINCLUDE = ModuleAuthorize_User.o pch.o

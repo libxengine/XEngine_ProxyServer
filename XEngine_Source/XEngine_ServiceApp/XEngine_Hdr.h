@@ -8,7 +8,7 @@
 #include <thread>
 #include <list>
 #include <string>
-#ifdef _WINDOWS
+#ifdef _MSC_BUILD
 #include <Windows.h>
 #include <tchar.h>
 #else
@@ -82,7 +82,7 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 #define XENGINE_CLIENT_CLOSE_SERVICE 3
 
 //连接库
-#ifdef _WINDOWS
+#ifdef _MSC_BUILD
 #ifdef _WIN64
 #pragma comment(lib,"../x64/Release/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleAuthorize.lib")
