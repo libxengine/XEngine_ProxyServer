@@ -1,3 +1,11 @@
+XEngine_ProxyServer V1.2.0.1001
+
+添加:jsoncpp模块到项目
+修改:VS2019到VS2022
+
+added:jsoncpp module
+modify:up vs2019 to vs2022
+======================================================================================
 XEngine_ProxyServer V1.1.0.1001
 
 添加:用户验证模块
