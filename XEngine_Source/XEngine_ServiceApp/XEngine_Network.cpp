@@ -83,9 +83,9 @@ void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, int nCloseType)
 		memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
 		if (ProxyProtocol_SocksCore_GetInfo(lpszClientAddr, &st_ProxyClient))
 		{
-			XClient_TCPSelect_Close(st_ProxyClient.hSocket);
+			st_ProxyClient.bClose = TRUE;
+			ProxyProtocol_SocksCore_SetInfo(lpszClientAddr, &st_ProxyClient, sizeof(PROXYPROTOCOL_CLIENTINFO));
 		}
-		ProxyProtocol_SocksCore_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("SOCKS客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
 	else if (XENGINE_CLIENT_NETTYPE_TUNNEL == nIPProto)
@@ -107,9 +107,9 @@ void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, int nCloseType)
 		memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
 		if (ProxyProtocol_TunnelCore_GetInfo(lpszClientAddr, &st_ProxyClient))
 		{
-			XClient_TCPSelect_Close(st_ProxyClient.hSocket);
+			st_ProxyClient.bClose = TRUE;
+			ProxyProtocol_TunnelCore_SetInfo(lpszClientAddr, &st_ProxyClient, sizeof(PROXYPROTOCOL_CLIENTINFO));
 		}
-		ProxyProtocol_TunnelCore_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Tunnel客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
 	else

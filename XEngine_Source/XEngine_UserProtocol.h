@@ -20,6 +20,6 @@ typedef struct
 	TCHAR tszIPAddr[128];
 	ENUM_RFCCOMPONENTS_PROXY_STATUS enStatus;
 	SOCKET hSocket;
-	BOOL bConnect;
+	BOOL bClose;
 }PROXYPROTOCOL_CLIENTINFO;
 #pragma pack(pop)
