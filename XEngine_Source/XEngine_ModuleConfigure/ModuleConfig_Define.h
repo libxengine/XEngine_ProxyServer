@@ -19,6 +19,7 @@ typedef struct tag_XEngine_ServiceConfig
 	BOOL bDeamon;                             //是否以守护进程启动,LINUX有效
 	int nSocksPort;                           //Socks端口,<=0不启用
 	int nTunnelPort;                          //Tunnel服务端口
+	int nForwardPort;                         //数据转发端口
 	struct
 	{
 		int nMaxClient;                       //最大客户端个数
@@ -30,6 +31,7 @@ typedef struct tag_XEngine_ServiceConfig
 		int nTimeCheck;                       //检测次数
 		int nSocksTimeOut;                    //TCP超时时间
 		int nTunnelTimeOut;                   //HTTP超时时间
+		int nForwardTimeOut;                  //转发超时时间
 	}st_XTime;                                //次数*时间=超时
 	struct
 	{

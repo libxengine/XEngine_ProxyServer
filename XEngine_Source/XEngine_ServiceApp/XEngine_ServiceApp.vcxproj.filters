@@ -30,6 +30,9 @@
     <ClCompile Include="XEngine_TunnelTask.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="XEngine_Forward.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XEngine_Hdr.h">
@@ -45,6 +48,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="XEngine_TunnelTask.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XEngine_Forward.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
