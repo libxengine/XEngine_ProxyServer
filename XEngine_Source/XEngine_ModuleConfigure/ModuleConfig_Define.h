@@ -25,6 +25,7 @@ typedef struct tag_XEngine_ServiceConfig
 		int nMaxClient;                       //最大客户端个数
 		int nMaxQueue;                        //最大队列个数
 		int nIOThread;                        //网络IO线程数
+		int nForwardThread;                   //转发服务
 	}st_XMax;
 	struct
 	{
