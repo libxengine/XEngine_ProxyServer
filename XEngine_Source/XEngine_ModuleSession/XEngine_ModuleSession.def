@@ -1,0 +1,10 @@
+LIBRARY
+
+EXPORTS
+	ModuleSession_GetLastError
+	
+	ModuleSession_Forward_Insert
+	ModuleSession_Forward_List
+	ModuleSession_Forward_Bind
+	ModuleSession_Forward_Delete
+	ModuleSession_Forward_Get
