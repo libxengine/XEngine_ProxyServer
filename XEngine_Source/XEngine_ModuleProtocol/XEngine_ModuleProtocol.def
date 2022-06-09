@@ -1,0 +1,8 @@
+LIBRARY
+
+EXPORTS
+	ModuleProtocol_GetLastError
+
+	ModuleProtocol_Packet_ForwardList
+
+	ModuleProtocol_Parse_ForwardBind
