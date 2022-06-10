@@ -50,12 +50,16 @@ using namespace std;
 #include "../XEngine_ModuleConfigure/ModuleConfig_Error.h"
 #include "../XEngine_ModuleAuthorize/ModuleAuth_Define.h"
 #include "../XEngine_ModuleAuthorize/ModuleAuth_Error.h"
+#include "../XEngine_ModuleSession/ModuleSession_Define.h"
+#include "../XEngine_ModuleSession/ModuleSession_Error.h"
+#include "../XEngine_ModuleProtocol/ModuleProtocol_Define.h"
+#include "../XEngine_ModuleProtocol/ModuleProtocol_Error.h"
 //加载自己的头文件
 #include "XEngine_Configure.h"
 #include "XEngine_Network.h"
 #include "XEngine_SocksTask.h"
 #include "XEngine_TunnelTask.h"
-#include "XEngine_Forward.h"
+#include "XEngine_ForwardTask.h"
 /********************************************************************
 //    Created:     2021/12/02  16:34:41
 //    File Name:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_ServiceApp\XEngine_Hdr.h
@@ -92,18 +96,39 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 #define XENGINE_CLIENT_CLOSE_HEARTBEAT 2
 #define XENGINE_CLIENT_CLOSE_SERVICE 3
 
+typedef struct
+{
+	TCHAR tszIPAddr[128];
+	ENUM_RFCCOMPONENTS_PROXY_STATUS enStatus;
+	SOCKET hSocket;
+	BOOL bClose;
+}PROXYPROTOCOL_CLIENTINFO;
+
 //连接库
 #ifdef _MSC_BUILD
 #ifdef _WIN64
+#ifdef _DEBUG
+#pragma comment(lib,"../x64/Debug/XEngine_ModuleConfigure.lib")
+#pragma comment(lib,"../x64/Debug/XEngine_ModuleAuthorize.lib")
+#pragma comment(lib,"../x64/Debug/XEngine_ModuleSession.lib")
+#pragma comment(lib,"../x64/Debug/XEngine_ModuleProtocol.lib")
+#else
 #pragma comment(lib,"../x64/Release/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleAuthorize.lib")
+#pragma comment(lib,"../x64/Release/XEngine_ModuleSession.lib")
+#pragma comment(lib,"../x64/Release/XEngine_ModuleProtocol.lib")
+#endif
 #else
 #ifdef _DEBUG
 #pragma comment(lib,"../Debug/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../Debug/XEngine_ModuleAuthorize.lib")
+#pragma comment(lib,"../Debug/XEngine_ModuleSession.lib")
+#pragma comment(lib,"../Debug/XEngine_ModuleProtocol.lib")
 #else
 #pragma comment(lib,"../Release/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../Release/XEngine_ModuleAuthorize.lib")
+#pragma comment(lib,"../Release/XEngine_ModuleSession.lib")
+#pragma comment(lib,"../Release/XEngine_ModuleProtocol.lib")
 #endif
 #endif
 #pragma comment(lib,"XEngine_BaseLib/XEngine_BaseLib.lib")
