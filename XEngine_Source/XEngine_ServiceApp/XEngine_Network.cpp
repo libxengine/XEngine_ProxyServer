@@ -67,6 +67,22 @@ BOOL __stdcall Network_Callback_ForwardLogin(LPCTSTR lpszClientAddr, SOCKET hSoc
 }
 void __stdcall Network_Callback_ForwardRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
 {
+	TCHAR tszDstAddr[128];
+	memset(tszDstAddr, '\0', sizeof(tszDstAddr));
+
+	if (ModuleSession_Forward_Get(lpszClientAddr, tszDstAddr))
+	{
+		//如果有转发,直接转发
+		XEngine_Network_Send(tszDstAddr, lpszRecvMsg, nMsgLen, XENGINE_CLIENT_NETTYPE_FORWARD);
+	}
+	else
+	{
+		//没有绑定转发,投递到包中处理
+		if (!HelpComponents_Datas_PostEx(xhForwardPacket, lpszClientAddr, lpszRecvMsg, nMsgLen))
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("Forward客户端:%s,投递数据包失败,大小:%d,错误:%lX"), lpszClientAddr, nMsgLen, Packets_GetLastError());
+		}
+	}
 	SocketOpt_HeartBeat_ActiveAddrEx(xhForwardHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _T("Forward客户端:%s,投递数据包到组包队列成功,大小:%d"), lpszClientAddr, nMsgLen);
 }
@@ -146,6 +162,14 @@ void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, int nCloseType)
 		{
 			SocketOpt_HeartBeat_DeleteAddrEx(xhForwardHeart, lpszClientAddr);
 			NetCore_TCPXCore_CloseForClientEx(xhForwardSocket, lpszClientAddr);
+		}
+		TCHAR tszClientAddr[128];
+		memset(tszClientAddr, '\0', sizeof(tszClientAddr));
+		ModuleSession_Forward_Delete(lpszClientAddr, tszClientAddr);
+
+		if (_tcslen(tszClientAddr) > 0)
+		{
+			XEngine_Network_Close(tszClientAddr, XENGINE_CLIENT_NETTYPE_FORWARD, XENGINE_CLIENT_CLOSE_SERVICE);
 		}
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Forward客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
