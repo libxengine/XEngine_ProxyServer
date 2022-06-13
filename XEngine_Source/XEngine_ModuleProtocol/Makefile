@@ -1,12 +1,12 @@
 CC = g++ -Wall -std=c++17 -fPIC
 RELEASE = 0
 UNICODE = 0
-INCLUDE = -I ./
-LOADBIN = 
-LIB = 
+INCLUDE = -I ./ -I ../XEngine_ThirdPart/jsoncpp
+LOADBIN = -L ../XEngine_ThirdPart/jsoncpp
+LIB = -ljsoncpp
 LIBEX = -ldl -lpthread
-LOADSO = -Wl,-rpath=
-LIBINCLUDE = ModuleSession_Forward.o pch.o
+LOADSO = -Wl,-rpath=./,--disable-new-dtags
+LIBINCLUDE = ModuleProtocol_Packet.o ModuleProtocol_Parse.o pch.o
 
 ifeq ($(RELEASE),1)
 FLAGS = -c -O2 
@@ -24,18 +24,20 @@ endif
 
 
 all:$(LIBINCLUDE)
-	$(CC) $(DEBUG) $(LIBINCLUDE) -o libXEngine_ModuleSession.so -shared -fPIC $(LOADBIN) $(LIB) $(LIBEX) $(LOADSO)
+	$(CC) $(DEBUG) $(LIBINCLUDE) -o libXEngine_ModuleProtocol.so -shared -fPIC $(LOADBIN) $(LIB) $(LIBEX) $(LOADSO)
 
-ModuleSession_Forward.o:./ModuleSession_Forward/ModuleSession_Forward.cpp             
-	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(INCLUDE) ./ModuleSession_Forward/ModuleSession_Forward.cpp 
-						              
+ModuleProtocol_Packet.o:./ModuleProtocol_Packet/ModuleProtocol_Packet.cpp             
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(INCLUDE) ./ModuleProtocol_Packet/ModuleProtocol_Packet.cpp 
+ModuleProtocol_Parse.o:./ModuleProtocol_Parse/ModuleProtocol_Parse.cpp             
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(INCLUDE) ./ModuleProtocol_Parse/ModuleProtocol_Parse.cpp 
+
 pch.o:./pch.cpp                 		       	    
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(INCLUDE) ./pch.cpp
 
 
 InstallAll:InstallSo 
-InstallSo:./libXEngine_ModuleSession.so
-	cp ./libXEngine_ModuleSession.so ../../XEngine_Release/libXEngine_ModuleSession.so
+InstallSo:./libXEngine_ModuleProtocol.so
+	cp ./libXEngine_ModuleProtocol.so ../../XEngine_Release/libXEngine_ModuleProtocol.so
 
 
 CleanAll:CleanObj CleanMk
