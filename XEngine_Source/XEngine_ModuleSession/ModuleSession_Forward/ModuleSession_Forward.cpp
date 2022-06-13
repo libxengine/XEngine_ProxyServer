@@ -51,6 +51,14 @@ BOOL CModuleSession_Forward::ModuleSession_Forward_Insert(LPCTSTR lpszAddr)
 	_tcscpy(st_Forward.tszSrcAddr, lpszAddr);
 
 	st_Locker.lock();
+	unordered_map<tstring, SESSION_FORWARD>::const_iterator stl_MapIterator = stl_MapSession.find(lpszAddr);
+	if (stl_MapIterator != stl_MapSession.end())
+	{
+		Session_IsErrorOccur = TRUE;
+		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_EXIST;
+		st_Locker.unlock();
+		return FALSE;
+	}
 	stl_MapSession.insert(make_pair(lpszAddr, st_Forward));
 	st_Locker.unlock();
 	return TRUE;

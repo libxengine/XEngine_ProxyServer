@@ -76,7 +76,6 @@ BOOL CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(TCHAR* ptszMsgBuf
 	st_JsonRoot["Array"] = st_JsonArray;
 
 	pSt_ProtocolHdr->unPacketSize = st_JsonRoot.toStyledString().length();
-	pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LISTREP;
 
 	*pInt_Len = pSt_ProtocolHdr->unPacketSize;
 	memcpy(ptszMsgBuffer, pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR));

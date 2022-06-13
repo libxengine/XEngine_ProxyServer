@@ -71,10 +71,20 @@ BOOL XEngine_Forward_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int n
 		{
 			int nListCount = 0;
 			TCHAR** pptszListAddr;
-			ModuleSession_Forward_List(&pptszListAddr, &nListCount, lpszClientAddr);
-			ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, pSt_ProtocolHdr, &pptszListAddr, nListCount);
-			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_FORWARD);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Forward客户端：%s，请求可用转发列表成功"), lpszClientAddr);
+
+			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LISTREP;
+			if (ModuleSession_Forward_List(&pptszListAddr, &nListCount, lpszClientAddr))
+			{
+				ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, pSt_ProtocolHdr, &pptszListAddr, nListCount);
+				XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_FORWARD);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Forward客户端：%s，请求可用转发列表成功"), lpszClientAddr);
+			}
+			else
+			{
+				pSt_ProtocolHdr->unPacketSize = 0;
+				XEngine_Network_Send(lpszClientAddr, (LPCTSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Forward客户端：%s，请求可用转发列表失败,错误;%lx"), lpszClientAddr, ModuleSession_GetLastError());
+			}
 		}
 		else if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREQ == pSt_ProtocolHdr->unOperatorCode)
 		{

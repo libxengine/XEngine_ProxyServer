@@ -14,3 +14,4 @@
 #define ERROR_MODULE_SESSION_FORWARD_NOTFOUND 0xC0002                 //没有找到
 #define ERROR_MODULE_SESSION_FORWARD_BIND 0xC0003                     //已经绑定
 #define ERROR_MODULE_SESSION_FORWARD_NOTFORWARD 0xC0004               //没有转发
+#define ERROR_MODULE_SESSION_FORWARD_EXIST 0xC0005                    //已经存在
