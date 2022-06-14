@@ -77,7 +77,7 @@ BOOL CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(TCHAR* ptszMsgBuf
 
 	pSt_ProtocolHdr->unPacketSize = st_JsonRoot.toStyledString().length();
 
-	*pInt_Len = pSt_ProtocolHdr->unPacketSize;
+	*pInt_Len = sizeof(XENGINE_PROTOCOLHDR) + pSt_ProtocolHdr->unPacketSize;
 	memcpy(ptszMsgBuffer, pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR));
 	memcpy(ptszMsgBuffer + sizeof(XENGINE_PROTOCOLHDR), st_JsonRoot.toStyledString().c_str(), pSt_ProtocolHdr->unPacketSize);
 	return TRUE;
