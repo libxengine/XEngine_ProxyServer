@@ -1,3 +1,27 @@
+XEngine_ProxyServer V1.3.0.1001
+
+添加:会话转发模块
+添加:协议转发模块
+添加:转发处理框架代码
+添加:转发配置字段
+添加:转发线程数配置
+修改:验证模块错误定义
+修改:移动客户端接口到新的地方
+修改:获取xengine版本的方法
+优化:线程处理代码
+修正:客户端离开后多次打印日志
+
+added:forward of session module
+added:forward of protocol module
+added:forward process code of the framework
+added:configure of forward field
+added:thread number of the forward for configure
+modify:error code for auth
+modify:move client strtuct to new dir
+modify:get xengine ver method
+improved:thread process
+fixed:mulit print client log of leave
+======================================================================================
 XEngine_ProxyServer V1.2.0.1001
 
 添加:jsoncpp模块到项目
