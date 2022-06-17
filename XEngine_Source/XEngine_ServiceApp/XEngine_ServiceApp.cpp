@@ -8,6 +8,11 @@ XNETHANDLE xhSocksHeart = 0;
 
 XNETHANDLE xhTunnelSocket = 0;
 XNETHANDLE xhTunnelHeart = 0;
+
+XNETHANDLE xhForwardSocket = 0;
+XNETHANDLE xhForwardHeart = 0;
+XNETHANDLE xhForwardPool = 0;
+XHANDLE xhForwardPacket = NULL;
 //配置文件
 XENGINE_SERVICECONFIG st_ServiceConfig;
 
@@ -23,6 +28,11 @@ void ServiceApp_Stop(int signo)
 		//销毁Tunnel资源
 		NetCore_TCPXCore_DestroyEx(xhTunnelSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhTunnelHeart);
+		//销毁Forward资源
+		HelpComponents_Packets_Destory(xhForwardPacket);
+		NetCore_TCPXCore_DestroyEx(xhForwardSocket);
+		SocketOpt_HeartBeat_DestoryEx(xhForwardHeart);
+		ManagePool_Thread_NQDestroy(xhForwardPool);
 		//销毁日志资源
 		HelpComponents_XLog_Destroy(xhLog);
 		ModuleAuthorize_User_Destory();
@@ -184,8 +194,65 @@ int main(int argc, char** argv)
 	{
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Tunnel消息服务没有被启用"));
 	}
+	//启动转发协议服务
+	if (st_ServiceConfig.nForwardPort > 0)
+	{
+		//组包器
+		xhForwardPacket = HelpComponents_Datas_Init(st_ServiceConfig.st_XMax.nMaxQueue, st_ServiceConfig.st_XMax.nForwardThread);
+		if (NULL == xhForwardPacket)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("初始化Forward组包器失败，错误：%lX"), Packets_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中，启动Forward组包器成功"));
+		//启动心跳
+		if (st_ServiceConfig.st_XTime.nForwardTimeOut > 0)
+		{
+			if (!SocketOpt_HeartBeat_InitEx(&xhForwardHeart, st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_ForwardHeart))
+			{
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,初始化Forward心跳服务失败,错误：%lX"), NetCore_GetLastError());
+				goto XENGINE_SERVICEAPP_EXIT;
+			}
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化Forward心跳服务成功,句柄:%llu,时间:%d,次数:%d"), xhForwardHeart, st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
+		}
+		else
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Forward心跳服务被设置为不启用"));
+		}
+		//网络
+		if (!NetCore_TCPXCore_StartEx(&xhForwardSocket, st_ServiceConfig.nForwardPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread))
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,启动Forward网络服务器失败,错误：%lX"), NetCore_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Forward网络服务器成功,Forward端口:%d,IO:%d"), st_ServiceConfig.nForwardPort, st_ServiceConfig.st_XMax.nIOThread);
+		NetCore_TCPXCore_RegisterCallBackEx(xhForwardSocket, Network_Callback_ForwardLogin, Network_Callback_ForwardRecv, Network_Callback_ForwardLeave);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,注册Forward网络事件成功"));
+		//任务池
+		THREADPOOL_PARAMENT** ppSt_ListParam;
+		BaseLib_OperatorMemory_Malloc((XPPPMEM)&ppSt_ListParam, st_ServiceConfig.st_XMax.nForwardThread, sizeof(THREADPOOL_PARAMENT));
+		for (int i = 0; i < st_ServiceConfig.st_XMax.nForwardThread; i++)
+		{
+			int* pInt_Pos = new int;
 
-	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("所有服务成功启动,服务运行中,XEngine版本:%s,服务版本;%s,发行次数:%d。。。"), XENGINE_VERSION_STR, st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str(), st_ServiceConfig.st_XVer.pStl_ListVer->size());
+			*pInt_Pos = i;
+			ppSt_ListParam[i]->lParam = pInt_Pos;
+			ppSt_ListParam[i]->fpCall_ThreadsTask = XEngine_Forward_Thread;
+		}
+		if (!ManagePool_Thread_NQCreate(&xhForwardPool, &ppSt_ListParam, st_ServiceConfig.st_XMax.nForwardThread))
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Forward线程池服务失败，错误：%lX"), ManagePool_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中，启动Forward线程池服务成功,启动个数:%d"), st_ServiceConfig.st_XMax.nForwardThread);
+	}
+	else
+	{
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Forward服务没有被启用"));
+	}
+
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("所有服务成功启动,服务运行中,XEngine版本:%s,服务版本;%s,发行次数:%d。。。"), BaseLib_OperatorVer_XGetStr(), st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str(), st_ServiceConfig.st_XVer.pStl_ListVer->size());
+
 	while (bIsRun)
 	{
 		std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -201,6 +268,11 @@ XENGINE_SERVICEAPP_EXIT:
 		//销毁Tunnel资源
 		NetCore_TCPXCore_DestroyEx(xhTunnelSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhTunnelHeart);
+		//销毁Forward资源
+		HelpComponents_Packets_Destory(xhForwardPacket);
+		NetCore_TCPXCore_DestroyEx(xhForwardSocket);
+		SocketOpt_HeartBeat_DestoryEx(xhForwardHeart);
+		ManagePool_Thread_NQDestroy(xhForwardPool);
 		//销毁日志资源
 		HelpComponents_XLog_Destroy(xhLog);
 		ModuleAuthorize_User_Destory();

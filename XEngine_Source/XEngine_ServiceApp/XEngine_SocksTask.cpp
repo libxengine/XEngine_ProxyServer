@@ -173,7 +173,7 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 		_tcscpy(st_ProxyClient.tszIPAddr, lpszClientAddr);
 		ProxyProtocol_SocksCore_SetInfo(lpszClientAddr, &st_ProxyClient, sizeof(PROXYPROTOCOL_CLIENTINFO));
 		//创建转发线程
-		std::thread pSTDThread(XEngine_SocksTask_Thread, lpszClientAddr);
+		std::thread pSTDThread(XEngine_SocksTask_Thread, lpszClientAddr, st_ProxyClient.hSocket);
 		pSTDThread.detach();
 		//回复结果
 		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_SUCCESS);
@@ -196,29 +196,31 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 	}
 	return TRUE;
 }
-XHTHREAD CALLBACK XEngine_SocksTask_Thread(LPCTSTR lpszClientAddr)
+XHTHREAD CALLBACK XEngine_SocksTask_Thread(LPCTSTR lpszClientAddr, SOCKET hSocket)
 {
-	TCHAR tszClientAddr[128];
-	PROXYPROTOCOL_CLIENTINFO st_ProxyClient;
-
-	memset(tszClientAddr, '\0', sizeof(tszClientAddr));
-	_tcscpy(tszClientAddr, lpszClientAddr);
+	TCHAR tszMsgBuffer[4096];
 	while (1)
 	{
 		int nMsgLen = 4096;
-		TCHAR tszMsgBuffer[4096];
-
-		memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
-		if (!ProxyProtocol_SocksCore_GetInfo(tszClientAddr, &st_ProxyClient))
+		if (!XClient_TCPSelect_RecvMsg(hSocket, tszMsgBuffer, &nMsgLen, FALSE))
 		{
 			break;
 		}
-		if (!XClient_TCPSelect_RecvMsg(st_ProxyClient.hSocket, tszMsgBuffer, &nMsgLen, FALSE))
-		{
-			break;
-		}
-		XEngine_Network_Send(st_ProxyClient.tszIPAddr, tszMsgBuffer, nMsgLen, XENGINE_CLIENT_NETTYPE_SOCKS);
+		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nMsgLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 	}
-	XEngine_Network_Close(tszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, XENGINE_CLIENT_CLOSE_SERVICE);
+	//退出处理
+	PROXYPROTOCOL_CLIENTINFO st_ProxyClient;
+	memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
+	if (ProxyProtocol_SocksCore_GetInfo(lpszClientAddr, &st_ProxyClient))
+	{
+		ProxyProtocol_SocksCore_Delete(lpszClientAddr);
+		//是主动关闭的还是被动触发的
+		if (!st_ProxyClient.bClose)
+		{
+			//主动关闭,需要调用
+			XClient_TCPSelect_Close(st_ProxyClient.hSocket);
+			XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, XENGINE_CLIENT_CLOSE_SERVICE);
+		}
+	}
 	return 0;
 }

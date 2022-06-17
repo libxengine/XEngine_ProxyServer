@@ -9,6 +9,7 @@ copy /y "%XEngine_Lib64%\x64\XEngine_NetHelp\NetHelp_APIHelp.dll" "./"
 copy /y "%XEngine_Lib64%\x64\XEngine_Client\XClient_Socket.dll" "./"
 
 copy /y "%XEngine_Lib64%\x64\XEngine_HelpComponents\HelpComponents_XLog.dll" "./"
+copy /y "%XEngine_Lib64%\x64\XEngine_HelpComponents\HelpComponents_Packets.dll" "./"
 copy /y "%XEngine_Lib64%\x64\XEngine_RfcComponents\RfcComponents_ProxyProtocol.dll" "./"
 
 copy /y "%XEngine_Lib64%\x64\XEngine_SystemSdk\XEngine_ProcFile.dll" "./"

@@ -20,6 +20,11 @@ BOOL __stdcall Network_Callback_TunnelLogin(LPCTSTR lpszClientAddr, SOCKET hSock
 void __stdcall Network_Callback_TunnelRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam);
 void __stdcall Network_Callback_TunnelLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam);
 void __stdcall Network_Callback_TunnelHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam);
+//Forward相关
+BOOL __stdcall Network_Callback_ForwardLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam);
+void __stdcall Network_Callback_ForwardRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam);
+void __stdcall Network_Callback_ForwardLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam);
+void __stdcall Network_Callback_ForwardHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam);
 //关闭与发送
 void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, int nCloseType);
 BOOL XEngine_Network_Send(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMsgLen, int nIPProto);

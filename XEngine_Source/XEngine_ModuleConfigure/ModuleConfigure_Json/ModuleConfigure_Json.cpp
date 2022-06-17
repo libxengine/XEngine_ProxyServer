@@ -85,8 +85,9 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 	pSt_ServerConfig->bDeamon = st_JsonRoot["bDeamon"].asInt();
 	pSt_ServerConfig->nSocksPort = st_JsonRoot["nSocksPort"].asInt();
 	pSt_ServerConfig->nTunnelPort = st_JsonRoot["nTunnelPort"].asInt();
+	pSt_ServerConfig->nForwardPort = st_JsonRoot["nForwardPort"].asInt();
 
-	if (st_JsonRoot["XMax"].empty() || (3 != st_JsonRoot["XMax"].size()))
+	if (st_JsonRoot["XMax"].empty() || (4 != st_JsonRoot["XMax"].size()))
 	{
 		Config_IsErrorOccur = TRUE;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XMAX;
@@ -96,8 +97,9 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XMax.nMaxClient = st_JsonXMax["nMaxClient"].asInt();
 	pSt_ServerConfig->st_XMax.nMaxQueue = st_JsonXMax["nMaxQueue"].asInt();
 	pSt_ServerConfig->st_XMax.nIOThread = st_JsonXMax["nIOThread"].asInt();
+	pSt_ServerConfig->st_XMax.nForwardThread = st_JsonXMax["nForwardThread"].asInt();
 
-	if (st_JsonRoot["XTime"].empty() || (3 != st_JsonRoot["XTime"].size()))
+	if (st_JsonRoot["XTime"].empty() || (4 != st_JsonRoot["XTime"].size()))
 	{
 		Config_IsErrorOccur = TRUE;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XTIME;
@@ -107,6 +109,7 @@ BOOL CModuleConfigure_Json::ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XTime.nTimeCheck = st_JsonXTime["nTimeCheck"].asInt();
 	pSt_ServerConfig->st_XTime.nSocksTimeOut = st_JsonXTime["nSocksTimeOut"].asInt();
 	pSt_ServerConfig->st_XTime.nTunnelTimeOut = st_JsonXTime["nTunnelTimeOut"].asInt();
+	pSt_ServerConfig->st_XTime.nForwardTimeOut = st_JsonXTime["nForwardTimeOut"].asInt();
 
 	if (st_JsonRoot["XLog"].empty() || (4 != st_JsonRoot["XLog"].size()))
 	{
