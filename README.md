@@ -1,10 +1,11 @@
 [中文](README.md) ||  [English](README.en.md)  
 # XEngine_ProxyServer
 本仓库有开发和主分支,如果要使用,请使用master分支下的代码  
+只要仓库不是在暂停状态,那么就会有人一直维护和开发,请放心使用  
 
 ## 介绍
-c c++ SOCKS5代理服务 HTTP Tunnel隧道代理服务  
-c c++ Socks5 Proxy Service HTTP Tunnel Proxy Service  
+c c++ SOCKS5代理服务 HTTP Tunnel隧道代理服务 tcp转发服务  
+c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service  
 
 ## 软件架构
 此软件基于XEngine开发.采用C/C++作为开发语言  
@@ -12,12 +13,13 @@ c c++ Socks5 Proxy Service HTTP Tunnel Proxy Service
 ## 软件特性
 此软件支持以下特性  
 1. SOCKS5代理  
-2. Tunnel代理  
-3. 权限验证  
-4. 操作日志
-5. 加密通信(planning)  
-6. 负载均衡(planning)  
-7. 自定义证书代理协议(planning)  
+2. Tunnel代理 
+3. 数据转发服务 
+4. 权限验证  
+5. 操作日志
+6. 加密通信(planning)  
+7. 负载均衡(planning)  
+8. 自定义证书代理协议(planning)  
 
 ## 安装教程
 

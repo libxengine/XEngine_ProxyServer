@@ -1,9 +1,10 @@
 # XEngine_ProxyServer
-we have a development and a master branch. If you want to use it, please use the code under the master branch
+we have a development and a master branch. If you want to use it, please use the code under the master branch  
+As long as the repository is not in suspended state, we will maintain and develop it all the time, please use it with confidence  
 
 #### Description
-c c++ SOCKS5代理服务 HTTP Tunnel隧道代理服务  
-c c++ Socks5 Proxy Service HTTP Tunnel Proxy Service  
+c c++ SOCKS5代理服务 HTTP Tunnel隧道代理服务 tcp转发服务  
+c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service  
 
 #### Software Architecture
 the software developed based on xengine,using c/c++ development  
@@ -13,11 +14,12 @@ This software is a standard proxy server that supports Socks5 and HTTP tunnel pr
 this software support following features  
 1. SOCKS5 proxy  
 2. Tunnel proxy  
-3. support Permission Validation  
-4. operator log  
-5. encrypt Communication(planning)  
-6. load balanc(planning)  
-7. custom cert proxy protocol(planning)  
+3. forward proxy
+4. support Permission Validation  
+5. operator log  
+6. encrypt Communication(planning)  
+7. load balanc(planning)  
+8. custom cert proxy protocol(planning)  
 
 ## install
 
