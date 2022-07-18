@@ -1,3 +1,11 @@
+XEngine_ProxyServer V1.3.1.1001
+
+修改:现在支持MACOS系统了
+更新:匹配XEngine 7.38版本
+
+modify:support macos now
+update:match xengine v7.38 version
+======================================================================================
 XEngine_ProxyServer V1.3.0.1001
 
 添加:会话转发模块
