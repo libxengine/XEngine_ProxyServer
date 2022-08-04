@@ -74,16 +74,16 @@ using namespace std;
 extern BOOL bIsRun;
 extern XLOG xhLog;
 //Socks服务器
-extern XNETHANDLE xhSocksSocket;
-extern XNETHANDLE xhSocksHeart;
+extern XHANDLE xhSocksSocket;
+extern XHANDLE xhSocksHeart;
 //Tunnel服务器
-extern XNETHANDLE xhTunnelSocket;
-extern XNETHANDLE xhTunnelHeart;
+extern XHANDLE xhTunnelSocket;
+extern XHANDLE xhTunnelHeart;
 //Forward服务器
-extern XNETHANDLE xhForwardSocket;
-extern XNETHANDLE xhForwardHeart;
-extern XNETHANDLE xhForwardPool;
+extern XHANDLE xhForwardSocket;
+extern XHANDLE xhForwardHeart;
 extern XHANDLE xhForwardPacket;
+extern XNETHANDLE xhForwardPool;
 //配置文件
 extern XENGINE_SERVICECONFIG st_ServiceConfig;
 

@@ -3,16 +3,16 @@
 BOOL bIsRun = FALSE;
 XLOG xhLog = NULL;
 
-XNETHANDLE xhSocksSocket = 0;
-XNETHANDLE xhSocksHeart = 0;
+XHANDLE xhSocksSocket = NULL;
+XHANDLE xhSocksHeart = NULL;
 
-XNETHANDLE xhTunnelSocket = 0;
-XNETHANDLE xhTunnelHeart = 0;
+XHANDLE xhTunnelSocket = NULL;
+XHANDLE xhTunnelHeart = NULL;
 
-XNETHANDLE xhForwardSocket = 0;
-XNETHANDLE xhForwardHeart = 0;
-XNETHANDLE xhForwardPool = 0;
+XHANDLE xhForwardSocket = NULL;
+XHANDLE xhForwardHeart = NULL;
 XHANDLE xhForwardPacket = NULL;
+XNETHANDLE xhForwardPool = 0;
 //配置文件
 XENGINE_SERVICECONFIG st_ServiceConfig;
 
@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
 
-#if XENGINE_VERSION_BIT < 7270001001
+#if XENGINE_VERSION_BIT < 7370001001
 	printf("版本号过低,无法继续,按任意键退出!\n");
 	getchar();
 	return 0;
@@ -137,19 +137,21 @@ int main(int argc, char** argv)
 		//启动心跳
 		if (st_ServiceConfig.st_XTime.nSocksTimeOut > 0)
 		{
-			if (!SocketOpt_HeartBeat_InitEx(&xhSocksHeart, st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_SocksHeart))
+			xhSocksHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_SocksHeart);
+			if (NULL == xhSocksHeart)
 			{
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,初始化Socks心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
 			}
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化Socks心跳服务成功,句柄:%llu,时间:%d,次数:%d"), xhSocksHeart, st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化Socks心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
 		}
 		else
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Socks心跳服务被设置为不启用"));
 		}
 		//启动网络
-		if (!NetCore_TCPXCore_StartEx(&xhSocksSocket, st_ServiceConfig.nSocksPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread))
+		xhSocksSocket = NetCore_TCPXCore_StartEx(st_ServiceConfig.nSocksPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread);
+		if (NULL == xhSocksSocket)
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,启动Socks网络服务器失败,错误：%lX"), NetCore_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
@@ -169,19 +171,21 @@ int main(int argc, char** argv)
 		//启动心跳
 		if (st_ServiceConfig.st_XTime.nTunnelTimeOut > 0)
 		{
-			if (!SocketOpt_HeartBeat_InitEx(&xhTunnelHeart, st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_TunnelHeart))
+			xhTunnelHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_TunnelHeart);
+			if (NULL == xhTunnelHeart)
 			{
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,初始化Tunnel心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
 			}
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化Tunnel心跳服务成功,句柄:%llu,时间:%d,次数:%d"), xhTunnelHeart, st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化Tunnel心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
 		}
 		else
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Tunnel心跳服务被设置为不启用"));
 		}
 		//网络
-		if (!NetCore_TCPXCore_StartEx(&xhTunnelSocket, st_ServiceConfig.nTunnelPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread))
+		xhTunnelSocket = NetCore_TCPXCore_StartEx(st_ServiceConfig.nTunnelPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread);
+		if (NULL == xhTunnelSocket)
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,启动Tunnel网络服务器失败,错误：%lX"), NetCore_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
@@ -208,19 +212,21 @@ int main(int argc, char** argv)
 		//启动心跳
 		if (st_ServiceConfig.st_XTime.nForwardTimeOut > 0)
 		{
-			if (!SocketOpt_HeartBeat_InitEx(&xhForwardHeart, st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_ForwardHeart))
+			xhForwardHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_ForwardHeart);
+			if (NULL == xhForwardHeart)
 			{
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,初始化Forward心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
 			}
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化Forward心跳服务成功,句柄:%llu,时间:%d,次数:%d"), xhForwardHeart, st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化Forward心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
 		}
 		else
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Forward心跳服务被设置为不启用"));
 		}
 		//网络
-		if (!NetCore_TCPXCore_StartEx(&xhForwardSocket, st_ServiceConfig.nForwardPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread))
+		xhForwardSocket = NetCore_TCPXCore_StartEx(st_ServiceConfig.nForwardPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread);
+		if (NULL == xhForwardSocket)
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,启动Forward网络服务器失败,错误：%lX"), NetCore_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
@@ -253,7 +259,7 @@ int main(int argc, char** argv)
 
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("所有服务成功启动,服务运行中,XEngine版本:%s,服务版本;%s,发行次数:%d。。。"), BaseLib_OperatorVer_XGetStr(), st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str(), st_ServiceConfig.st_XVer.pStl_ListVer->size());
 
-	while (bIsRun)
+	while (TRUE)
 	{
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}

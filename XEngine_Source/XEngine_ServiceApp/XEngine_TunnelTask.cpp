@@ -95,7 +95,7 @@ BOOL XEngine_TunnelTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, in
 			_tcscpy(tszConnectAddr, ppszListAddr[0]);   //随便选择一个IP地址
 			BaseLib_OperatorMemory_Free((XPPPMEM)&ppszListAddr, nListCount);
 		}
-		if (!XClient_TCPSelect_Create(&st_ProxyClient.hSocket, tszConnectAddr, nIPPort, AF_INET, 1))
+		if (!XClient_TCPSelect_Create(&st_ProxyClient.hSocket, tszConnectAddr, nIPPort, 1))
 		{
 			ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 500);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);

@@ -15,9 +15,6 @@ copy /y "%XEngine_Lib32%\XEngine_RfcComponents\RfcComponents_ProxyProtocol.dll" 
 copy /y "%XEngine_Lib32%\XEngine_SystemSdk\XEngine_ProcFile.dll" "./"
 copy /y "%XEngine_Lib32%\XEngine_SystemSdk\XEngine_SystemApi.dll" "./"
 
-copy /y "%XEngine_Lib32%\XEngine_SystemSdk\XEngine_ProcFile.dll" "./"
-copy /y "%XEngine_Lib32%\XEngine_SystemSdk\XEngine_SystemApi.dll" "./"
-
 copy /y "%XEngine_Lib32%\XEngine_LibEx\libcrypto-3.dll" "./"
 copy /y "%XEngine_Lib32%\XEngine_LibEx\libssl-3.dll" "./"
 copy /y "%XEngine_Lib32%\XEngine_LibEx\libcurl.dll" "./"
