@@ -1,19 +1,30 @@
 CC = g++ -Wall -std=c++17 -fPIC
+SHAREFLAG = -shared
+SHAREDLL = so
 RELEASE = 0
 UNICODE = 0
 INCLUDE = -I ./
 LOADBIN = 
 LIB = 
-LIBEX = -static-libgcc -lrt -ldl -lpthread
+LIBEX = -ldl -lpthread
 LOADSO = -Wl,-rpath=
 LIBINCLUDE = ModuleAuthorize_User.o pch.o
+
+ifeq ($(shell uname),Darwin)
+	SHAREDLL = dylib
+	SHAREFLAG = -dynamiclib
+	LOADSO = 
+else
+	SHAREDLL = so
+	SHAREFLAG = -shared
+endif
 
 ifeq ($(RELEASE),1)
 FLAGS = -c -O2 
 DEBUG = 
 else
-FLAGS = -c -lc_p
-DEBUG = -g -pg 
+FLAGS = -c
+DEBUG = -g
 endif
 
 ifeq ($(UNICODE),1)
@@ -24,7 +35,7 @@ endif
 
 
 all:$(LIBINCLUDE)
-	$(CC) $(DEBUG) $(LIBINCLUDE) -o libXEngine_ModuleAuthorize.so -shared -fPIC $(LOADBIN) $(LIB) $(LIBEX) $(LOADSO)
+	$(CC) $(DEBUG) $(LIBINCLUDE) -o libXEngine_ModuleAuthorize.$(SHAREDLL) $(SHAREFLAG) -fPIC $(LOADBIN) $(LIB) $(LIBEX) $(LOADSO)
 
 ModuleAuthorize_User.o:./ModuleAuthorize_User/ModuleAuthorize_User.cpp             
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(INCLUDE) ./ModuleAuthorize_User/ModuleAuthorize_User.cpp 
@@ -34,12 +45,12 @@ pch.o:./pch.cpp
 
 
 InstallAll:InstallSo 
-InstallSo:./libXEngine_ModuleAuthorize.so
-	cp ./libXEngine_ModuleAuthorize.so ../../XEngine_Release/libXEngine_ModuleAuthorize.so
+InstallSo:./libXEngine_ModuleAuthorize.$(SHAREDLL)
+	cp ./libXEngine_ModuleAuthorize.$(SHAREDLL) ../../XEngine_Release/libXEngine_ModuleAuthorize.$(SHAREDLL)
 
 
 CleanAll:CleanObj CleanMk
 CleanObj:                                               
 	rm *.o
 CleanMk:                             
-	rm *.so                        
+	rm *.$(SHAREDLL)                        
