@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
 
-#if XENGINE_VERSION_BIT < 7270001001
+#if XENGINE_VERSION_BIT < 7370001001
 	printf("版本号过低,无法继续,按任意键退出!\n");
 	getchar();
 	return 0;
