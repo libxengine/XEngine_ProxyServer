@@ -30,7 +30,7 @@ UNICODE =
 endif
 
 all:$(LIBINCLUDE)
-	$(CC) $(DEBUG) $(LIBINCLUDE) -o XEngine_ServiceApp $(LOADBIN) $(LIB) $(LIBEX) $(LOADSO)
+	$(CC) $(DEBUG) $(LIBINCLUDE) -o XEngine_ProxyService $(LOADBIN) $(LIB) $(LIBEX) $(LOADSO)
   
 XEngine_Configure.o:./XEngine_Configure.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) ./XEngine_Configure.cpp
@@ -48,12 +48,12 @@ XEngine_ServiceApp.o:./XEngine_ServiceApp.cpp
 
 
 InstallAll:InstallApp
-InstallApp:./XEngine_ServiceApp
-	cp -f ./XEngine_ServiceApp ../../XEngine_Release/XEngine_ServiceApp
+InstallApp:./XEngine_ProxyService
+	cp -f ./XEngine_ProxyService ../../XEngine_Release/XEngine_ProxyService
 
 CleanAll:CleanObj CleanMk
 CleanObj:                                              
 	rm *.o
 CleanMk:                                  
-	rm XEngine_ServiceApp     
+	rm XEngine_ProxyService
 	       
