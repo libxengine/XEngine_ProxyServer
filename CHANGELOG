@@ -1,10 +1,16 @@
 XEngine_ProxyServer V1.3.1.1001
 
-修改:现在支持MACOS系统了
 更新:匹配XEngine 7.38版本
+修改:现在支持MACOS系统了
+修改:linux和mac的构建名称
+修正:日志句柄打印错误
+修正:某些时候退出崩溃的问题
 
-modify:support macos now
 update:match xengine v7.38 version
+modify:support macos now
+modify:linux and mac build name
+fixed:handle log printf is incorrent
+fixed:sometime is crashed when program exit
 ======================================================================================
 XEngine_ProxyServer V1.3.0.1001
 
