@@ -12,7 +12,7 @@ XHANDLE xhTunnelHeart = NULL;
 XHANDLE xhForwardSocket = NULL;
 XHANDLE xhForwardHeart = NULL;
 XHANDLE xhForwardPacket = NULL;
-XNETHANDLE xhForwardPool = 0;
+XHANDLE xhForwardPool = NULL;
 //配置文件
 XENGINE_SERVICECONFIG st_ServiceConfig;
 
@@ -245,7 +245,8 @@ int main(int argc, char** argv)
 			ppSt_ListParam[i]->lParam = pInt_Pos;
 			ppSt_ListParam[i]->fpCall_ThreadsTask = XEngine_Forward_Thread;
 		}
-		if (!ManagePool_Thread_NQCreate(&xhForwardPool, &ppSt_ListParam, st_ServiceConfig.st_XMax.nForwardThread))
+		xhForwardPool = ManagePool_Thread_NQCreate(&ppSt_ListParam, st_ServiceConfig.st_XMax.nForwardThread);
+		if (NULL == xhForwardPool)
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Forward线程池服务失败，错误：%lX"), ManagePool_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;

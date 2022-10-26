@@ -83,7 +83,7 @@ extern XHANDLE xhTunnelHeart;
 extern XHANDLE xhForwardSocket;
 extern XHANDLE xhForwardHeart;
 extern XHANDLE xhForwardPacket;
-extern XNETHANDLE xhForwardPool;
+extern XHANDLE xhForwardPool;
 //配置文件
 extern XENGINE_SERVICECONFIG st_ServiceConfig;
 
