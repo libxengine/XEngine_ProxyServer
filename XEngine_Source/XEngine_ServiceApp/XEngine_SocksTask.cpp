@@ -202,7 +202,7 @@ XHTHREAD CALLBACK XEngine_SocksTask_Thread(LPCTSTR lpszClientAddr, SOCKET hSocke
 	while (1)
 	{
 		int nMsgLen = 4096;
-		if (!XClient_TCPSelect_RecvMsg(hSocket, tszMsgBuffer, &nMsgLen, FALSE))
+		if (!XClient_TCPSelect_RecvMsg(hSocket, tszMsgBuffer, &nMsgLen))
 		{
 			break;
 		}
