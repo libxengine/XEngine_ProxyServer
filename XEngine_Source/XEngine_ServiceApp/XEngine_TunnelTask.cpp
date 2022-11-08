@@ -120,7 +120,7 @@ BOOL XEngine_TunnelTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, in
 			//非代理协议直接发送数据
 			XClient_TCPSelect_SendMsg(st_ProxyClient.hSocket, lpszMsgBuffer, nMsgLen);
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Tunnel客户端:%s,创建隧道代理服务成功,连接到服务器:%s:%d"), lpszClientAddr, tszConnectAddr, nIPPort);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Tunnel客户端:%s,创建隧道代理服务成功,连接到服务器:%s:%d,代理模式:%s"), lpszClientAddr, tszConnectAddr, nIPPort, bProxy ? "代理" : "直连");
 	}
 	else
 	{
@@ -132,28 +132,28 @@ BOOL XEngine_TunnelTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, in
 XHTHREAD CALLBACK XEngine_TunnelTask_Thread(LPCTSTR lpszClientAddr, SOCKET hSocket)
 {
 	TCHAR tszMsgBuffer[4096];
+	TCHAR tszClientAddr[128];
+
+	memset(tszClientAddr, '\0', sizeof(tszClientAddr));
+	_tcscpy(tszClientAddr, lpszClientAddr);
+
 	while (1)
 	{
 		int nMsgLen = 4096;
-		if (!XClient_TCPSelect_RecvMsg(hSocket, tszMsgBuffer, &nMsgLen, FALSE))
+		if (!XClient_TCPSelect_RecvMsg(hSocket, tszMsgBuffer, &nMsgLen))
 		{
 			break;
 		}
-		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nMsgLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
-	}
-	//退出处理
-	PROXYPROTOCOL_CLIENTINFO st_ProxyClient;
-	memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
-	if (ProxyProtocol_TunnelCore_GetInfo(lpszClientAddr, &st_ProxyClient))
-	{
-		ProxyProtocol_TunnelCore_Delete(lpszClientAddr);
-		//是主动关闭的还是被动触发的
-		if (!st_ProxyClient.bClose)
+		if (!XEngine_Network_Send(tszClientAddr, tszMsgBuffer, nMsgLen, XENGINE_CLIENT_NETTYPE_TUNNEL))
 		{
-			//主动关闭,需要调用
-			XClient_TCPSelect_Close(hSocket);
-			XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, XENGINE_CLIENT_CLOSE_SERVICE);
+			break;
 		}
 	}
+	//退出处理
+	XClient_TCPSelect_Close(hSocket);
+	ProxyProtocol_TunnelCore_Delete(tszClientAddr);
+	NetCore_TCPXCore_CloseForClientEx(xhTunnelSocket, tszClientAddr);
+	SocketOpt_HeartBeat_DeleteAddrEx(xhTunnelHeart, tszClientAddr);
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Tunnel客户端:%s,离开服务器,客户端主动断开"), tszClientAddr);
 	return 0;
 }
