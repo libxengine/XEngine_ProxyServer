@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 	nMsgLen = 2048;
 	memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
 
-	if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen, FALSE))
+	if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen))
 	{
 		printf("接受数据失败！\n");
 		return 0;
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
 
 	nMsgLen = 2048;
 	memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
-	if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen, FALSE))
+	if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen))
 	{
 		printf("接受数据失败！\n");
 		return 0;
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 	}
 	nMsgLen = 2048;
 	memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
-	if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen, FALSE))
+	if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen))
 	{
 		printf("接受数据失败！\n");
 		return 0;
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 	{
 		nMsgLen = 2048;
 		memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
-		if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen, FALSE))
+		if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen))
 		{
 			break;
 		}

@@ -31,6 +31,7 @@ int main(int argc, char** argv)
 #endif
 	SOCKET m_Socket;
 	LPCTSTR lpszServiceAddr = _T("127.0.0.1");
+
 	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5401))
 	{
 		printf("连接失败！错误:%lX\n", XClient_GetLastError());
@@ -50,7 +51,7 @@ int main(int argc, char** argv)
 	nMsgLen = 2048;
 	memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
 
-	if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen, FALSE))
+	if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen))
 	{
 		printf("接受数据失败！\n");
 		return 0;
@@ -68,7 +69,7 @@ int main(int argc, char** argv)
 	{
 		nMsgLen = 2048;
 		memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
-		if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen, FALSE))
+		if (!XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen))
 		{
 			break;
 		}
