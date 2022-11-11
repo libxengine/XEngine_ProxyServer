@@ -150,7 +150,7 @@ int main(int argc, char** argv)
 
 				memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
 
-				if (XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen, FALSE))
+				if (XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen))
 				{
 					printf("%s\n", tszMsgBuffer);
 				}

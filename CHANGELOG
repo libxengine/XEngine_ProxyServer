@@ -1,3 +1,13 @@
+XEngine_ProxyServer V1.4.0.1001
+
+更新:匹配XEngine 7.43版本
+修改:使用新的方式来关闭客户端
+修正:当客户端关闭某些时候回崩溃的问题
+
+update:match xengine v7.43
+modify:use the new way to close the client
+fixed:crashed when client is closed
+======================================================================================
 XEngine_ProxyServer V1.3.1.1001
 
 更新:匹配XEngine 7.38版本
