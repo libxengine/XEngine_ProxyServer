@@ -199,6 +199,11 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 XHTHREAD CALLBACK XEngine_SocksTask_Thread(LPCTSTR lpszClientAddr, SOCKET hSocket)
 {
 	TCHAR tszMsgBuffer[4096];
+	TCHAR tszClientAddr[128];
+
+	memset(tszClientAddr, '\0', sizeof(tszClientAddr));
+	_tcscpy(tszClientAddr, lpszClientAddr);
+
 	while (1)
 	{
 		int nMsgLen = 4096;
@@ -206,21 +211,14 @@ XHTHREAD CALLBACK XEngine_SocksTask_Thread(LPCTSTR lpszClientAddr, SOCKET hSocke
 		{
 			break;
 		}
-		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nMsgLen, XENGINE_CLIENT_NETTYPE_SOCKS);
-	}
-	//退出处理
-	PROXYPROTOCOL_CLIENTINFO st_ProxyClient;
-	memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
-	if (ProxyProtocol_SocksCore_GetInfo(lpszClientAddr, &st_ProxyClient))
-	{
-		ProxyProtocol_SocksCore_Delete(lpszClientAddr);
-		//是主动关闭的还是被动触发的
-		if (!st_ProxyClient.bClose)
+		if (!XEngine_Network_Send(tszClientAddr, tszMsgBuffer, nMsgLen, XENGINE_CLIENT_NETTYPE_SOCKS))
 		{
-			//主动关闭,需要调用
-			XClient_TCPSelect_Close(st_ProxyClient.hSocket);
-			XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, XENGINE_CLIENT_CLOSE_SERVICE);
+			break;
 		}
 	}
+	//退出处理
+	XClient_TCPSelect_Close(hSocket);
+	SocketOpt_HeartBeat_ForceOutAddrEx(xhSocksHeart, tszClientAddr);
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Socks客户端:%s,离开服务器,客户端主动断开"), tszClientAddr);
 	return 0;
 }

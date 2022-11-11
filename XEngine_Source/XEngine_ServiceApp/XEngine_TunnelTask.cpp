@@ -151,9 +151,7 @@ XHTHREAD CALLBACK XEngine_TunnelTask_Thread(LPCTSTR lpszClientAddr, SOCKET hSock
 	}
 	//退出处理
 	XClient_TCPSelect_Close(hSocket);
-	ProxyProtocol_TunnelCore_Delete(tszClientAddr);
-	NetCore_TCPXCore_CloseForClientEx(xhTunnelSocket, tszClientAddr);
-	SocketOpt_HeartBeat_DeleteAddrEx(xhTunnelHeart, tszClientAddr);
+	SocketOpt_HeartBeat_ForceOutAddrEx(xhTunnelHeart, tszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Tunnel客户端:%s,离开服务器,客户端主动断开"), tszClientAddr);
 	return 0;
 }
