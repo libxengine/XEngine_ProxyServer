@@ -12,4 +12,4 @@
 *********************************************************************/
 //任务处理相关函数,处理包的内容
 BOOL XEngine_TunnelTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMsgLen);
-XHTHREAD CALLBACK XEngine_TunnelTask_Thread(LPCTSTR lpszClientAddr, SOCKET hSocket);
+void CALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, SOCKET hSocket, ENUM_NETCLIENT_TCPEVENTS enTCPClientEvents, LPCSTR lpszMsgBuffer, int nLen, LPVOID lParam);

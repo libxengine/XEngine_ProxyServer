@@ -8,6 +8,7 @@ XHANDLE xhSocksHeart = NULL;
 
 XHANDLE xhTunnelSocket = NULL;
 XHANDLE xhTunnelHeart = NULL;
+XHANDLE xhTunnelClient = NULL;
 
 XHANDLE xhForwardSocket = NULL;
 XHANDLE xhForwardHeart = NULL;
@@ -193,6 +194,14 @@ int main(int argc, char** argv)
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Tunnel网络服务器成功,Tunnel端口:%d,IO:%d"), st_ServiceConfig.nTunnelPort, st_ServiceConfig.st_XMax.nIOThread);
 		NetCore_TCPXCore_RegisterCallBackEx(xhTunnelSocket, Network_Callback_TunnelLogin, Network_Callback_TunnelRecv, Network_Callback_TunnelLeave);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,注册Tunnel网络事件成功"));
+		//客户端
+		xhTunnelClient = XClient_TCPSelect_StartEx(XEngine_Tunnel_CBRecv);
+		if (NULL == xhTunnelClient)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Tunnel客户端服务失败，错误：%lX"), XClient_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中，启动Tunnel客户端服务成功"));
 	}
 	else
 	{
