@@ -5,6 +5,7 @@ XLOG xhLog = NULL;
 
 XHANDLE xhSocksSocket = NULL;
 XHANDLE xhSocksHeart = NULL;
+XHANDLE xhSocksClient = NULL;
 
 XHANDLE xhTunnelSocket = NULL;
 XHANDLE xhTunnelHeart = NULL;
@@ -26,6 +27,7 @@ void ServiceApp_Stop(int signo)
 		//销毁Socks资源
 		NetCore_TCPXCore_DestroyEx(xhSocksSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhSocksHeart);
+		XClient_TCPSelect_StopEx(xhSocksClient);
 		//销毁Tunnel资源
 		NetCore_TCPXCore_DestroyEx(xhTunnelSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhTunnelHeart);
@@ -162,6 +164,14 @@ int main(int argc, char** argv)
 		//绑定网络事件
 		NetCore_TCPXCore_RegisterCallBackEx(xhSocksSocket, Network_Callback_SocksLogin, Network_Callback_SocksRecv, Network_Callback_SocksLeave);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,注册Socks网络事件成功"));
+		//客户端
+		xhSocksClient = XClient_TCPSelect_StartEx(XEngine_Socks_CBRecv);
+		if (NULL == xhSocksClient)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Socks客户端服务失败，错误：%lX"), XClient_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中，启动Socks客户端服务成功"));
 	}
 	else
 	{
@@ -282,6 +292,7 @@ XENGINE_SERVICEAPP_EXIT:
 		//销毁Socks资源
 		NetCore_TCPXCore_DestroyEx(xhSocksSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhSocksHeart);
+		XClient_TCPSelect_StopEx(xhSocksClient);
 		//销毁Tunnel资源
 		NetCore_TCPXCore_DestroyEx(xhTunnelSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhTunnelHeart);

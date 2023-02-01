@@ -127,7 +127,7 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 			//连接类型,IP还是域名,没有IPV6环境.不好测试
 			if (ENUM_RFCCOMPONENTS_PROXYSOCKS_IPADDR_IPV4 == enIPType)
 			{
-				if (!XClient_TCPSelect_Create(&st_ProxyClient.hSocket, tszClientAddr, nPort, 1))
+				if (!XClient_TCPSelect_InsertEx(xhSocksClient, tszClientAddr, nPort))
 				{
 					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("SOCKS客户端:%s,创建客户端连接失败,连接到服务器:%s:%d,错误:%lX"), lpszClientAddr, tszClientAddr, nPort, ProxyProtocol_GetLastError());
 					return FALSE;
@@ -161,7 +161,7 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 				memset(tszClientAddr, '\0', sizeof(tszClientAddr));
 				_tcscpy(tszClientAddr, ppszListAddr[0]);   //随便选择一个IP地址
 				BaseLib_OperatorMemory_Free((XPPPMEM)&ppszListAddr, nListCount);
-				if (!XClient_TCPSelect_Create(&st_ProxyClient.hSocket, tszClientAddr, nPort, 1))
+				if (!XClient_TCPSelect_InsertEx(xhSocksClient, tszClientAddr, nPort))
 				{
 					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("SOCKS客户端:%s,创建客户端连接失败,连接到服务器:%s:%d,错误:%lX"), lpszClientAddr, tszClientAddr, nPort, ProxyProtocol_GetLastError());
 					return FALSE;
@@ -172,9 +172,6 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 		st_ProxyClient.enStatus = ENUM_RFCCOMPONENTS_PROXY_STATUS_FORWARD;
 		_tcscpy(st_ProxyClient.tszIPAddr, lpszClientAddr);
 		ProxyProtocol_SocksCore_SetInfo(lpszClientAddr, &st_ProxyClient, sizeof(PROXYPROTOCOL_CLIENTINFO));
-		//创建转发线程
-		std::thread pSTDThread(XEngine_SocksTask_Thread, lpszClientAddr, st_ProxyClient.hSocket);
-		pSTDThread.detach();
 		//回复结果
 		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_SUCCESS);
 		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
@@ -187,7 +184,7 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 		memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
 		if (ProxyProtocol_SocksCore_GetInfo(lpszClientAddr, &st_ProxyClient))
 		{
-			XClient_TCPSelect_SendMsg(st_ProxyClient.hSocket, lpszMsgBuffer, nMsgLen);
+			XClient_TCPSelect_SendEx(xhSocksClient, st_ProxyClient.xhClient, lpszMsgBuffer, &nMsgLen);
 		}
 		else
 		{
@@ -196,29 +193,31 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 	}
 	return TRUE;
 }
-XHTHREAD CALLBACK XEngine_SocksTask_Thread(LPCTSTR lpszClientAddr, SOCKET hSocket)
+
+void CALLBACK XEngine_Socks_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, SOCKET hSocket, ENUM_NETCLIENT_TCPEVENTS enTCPClientEvents, LPCSTR lpszMsgBuffer, int nLen, LPVOID lParam)
 {
-	TCHAR tszMsgBuffer[4096];
-	TCHAR tszClientAddr[128];
-
-	memset(tszClientAddr, '\0', sizeof(tszClientAddr));
-	_tcscpy(tszClientAddr, lpszClientAddr);
-
-	while (1)
+	int nListCount = 0;
+	PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;
+	ProxyProtocol_SocksCore_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
+	for (int i = 0; i < nListCount; i++)
 	{
-		int nMsgLen = 4096;
-		if (!XClient_TCPSelect_RecvMsg(hSocket, tszMsgBuffer, &nMsgLen))
+		if (xhClient == ppSt_ClientList[i]->xhClient)
 		{
-			break;
-		}
-		if (!XEngine_Network_Send(tszClientAddr, tszMsgBuffer, nMsgLen, XENGINE_CLIENT_NETTYPE_SOCKS))
-		{
+			if (ENUM_XENGINE_XCLIENT_SOCKET_TCP_EVENT_RECV == enTCPClientEvents)
+			{
+				if (!XEngine_Network_Send(ppSt_ClientList[i]->tszIPAddr, lpszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS))
+				{
+					SocketOpt_HeartBeat_ForceOutAddrEx(xhSocksHeart, ppSt_ClientList[i]->tszIPAddr);
+				}
+			}
+			else if (ENUM_XENGINE_XCLIENT_SOCKET_TCP_EVENT_CLOSE == enTCPClientEvents)
+			{
+				//退出处理
+				SocketOpt_HeartBeat_ForceOutAddrEx(xhSocksHeart, ppSt_ClientList[i]->tszIPAddr);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Socks客户端:%s,离开服务器,客户端主动断开"), ppSt_ClientList[i]->tszIPAddr);
+			}
 			break;
 		}
 	}
-	//退出处理
-	XClient_TCPSelect_Close(hSocket);
-	SocketOpt_HeartBeat_ForceOutAddrEx(xhSocksHeart, tszClientAddr);
-	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Socks客户端:%s,离开服务器,客户端主动断开"), tszClientAddr);
-	return 0;
+	BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 }
