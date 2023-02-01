@@ -136,7 +136,7 @@ void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, int nCloseType)
 		//释放客户端
 		int nListCount = 0;
 		PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;
-		ProxyProtocol_TunnelCore_GetList((XPPPMEM)&ppSt_ClientList, &nListCount);
+		ProxyProtocol_TunnelCore_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
 		for (int i = 0; i < nListCount; i++)
 		{
 			if (0 == _tcsnicmp(lpszClientAddr, ppSt_ClientList[i]->tszIPAddr, _tcslen(lpszClientAddr)))

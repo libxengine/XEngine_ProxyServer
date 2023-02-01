@@ -31,7 +31,7 @@ void ServiceApp_Stop(int signo)
 		SocketOpt_HeartBeat_DestoryEx(xhTunnelHeart);
 		XClient_TCPSelect_StopEx(xhTunnelClient);
 		//销毁Forward资源
-		HelpComponents_Packets_Destory(xhForwardPacket);
+		HelpComponents_Datas_Destory(xhForwardPacket);
 		NetCore_TCPXCore_DestroyEx(xhForwardSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhForwardHeart);
 		ManagePool_Thread_NQDestroy(xhForwardPool);
@@ -287,7 +287,7 @@ XENGINE_SERVICEAPP_EXIT:
 		SocketOpt_HeartBeat_DestoryEx(xhTunnelHeart);
 		XClient_TCPSelect_StopEx(xhTunnelClient);
 		//销毁Forward资源
-		HelpComponents_Packets_Destory(xhForwardPacket);
+		HelpComponents_Datas_Destory(xhForwardPacket);
 		NetCore_TCPXCore_DestroyEx(xhForwardSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhForwardHeart);
 		ManagePool_Thread_NQDestroy(xhForwardPool);

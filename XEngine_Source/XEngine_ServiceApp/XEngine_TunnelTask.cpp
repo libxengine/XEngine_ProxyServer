@@ -132,7 +132,7 @@ void CALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, SOCKET
 {
 	int nListCount = 0;
 	PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;
-	ProxyProtocol_TunnelCore_GetList((XPPPMEM)&ppSt_ClientList, &nListCount);
+	ProxyProtocol_TunnelCore_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
 	for (int i = 0; i < nListCount; i++)
 	{
 		if (xhClient == ppSt_ClientList[i]->xhClient)
