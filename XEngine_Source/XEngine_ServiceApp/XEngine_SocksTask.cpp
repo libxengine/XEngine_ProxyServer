@@ -161,7 +161,7 @@ BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int
 				memset(tszClientAddr, '\0', sizeof(tszClientAddr));
 				_tcscpy(tszClientAddr, ppszListAddr[0]);   //随便选择一个IP地址
 				BaseLib_OperatorMemory_Free((XPPPMEM)&ppszListAddr, nListCount);
-				if (!XClient_TCPSelect_InsertEx(xhSocksClient, tszClientAddr, nPort))
+				if (!XClient_TCPSelect_InsertEx(xhSocksClient, tszClientAddr, nPort, &st_ProxyClient.xhClient))
 				{
 					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("SOCKS客户端:%s,创建客户端连接失败,连接到服务器:%s:%d,错误:%lX"), lpszClientAddr, tszClientAddr, nPort, ProxyProtocol_GetLastError());
 					return FALSE;
