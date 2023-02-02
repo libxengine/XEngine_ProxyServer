@@ -20,6 +20,7 @@ c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service
 6. 加密通信(planning)  
 7. 负载均衡(planning)  
 8. 自定义证书代理协议(planning)  
+9. 多级代理(planning)  
 
 ## 安装教程
 
@@ -71,8 +72,8 @@ make FLAGS=CleanAll 清理编译
 你可以参考docment目录下的文档.里面包含了API协议和服务说明.
 
 ## 测试服务器
-地址:app.xyry.org 或者 159.75.200.173  
-端口:Socks5 5400,HTTP Tunnel 5401  
+地址:app.xyry.org  
+端口:Socks5 5400,HTTP Tunnel 5401,Forward 5402
 
 ## 参与贡献
 
@@ -82,7 +83,8 @@ make FLAGS=CleanAll 清理编译
 4.  新建 Pull Request  
 
 ## 开发计划
-使用线程池转发数据而不是一对一的线程  
+透传代理  
+转发代理支持权限和确认  
 
 ## 关注我们
 如果你觉得这个软件对你有帮助,请你给我们一个START吧

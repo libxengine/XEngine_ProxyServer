@@ -1,3 +1,15 @@
+XEngine_ProxyServer V1.5.0.1001
+
+优化:优化服务器性能和线程个数
+修改:tunnel和socks代理客户端使用了新的客户端函数
+修正:客户端关闭没有释放资源
+修正:关闭服务器崩溃
+
+improved:server performance and thread number
+modify:tunnel and socks proxy clients used to new client functions
+fixed:client close does not free res
+fixed:close server is crashed
+======================================================================================
 XEngine_ProxyServer V1.4.0.1001
 
 更新:匹配XEngine 7.43版本
