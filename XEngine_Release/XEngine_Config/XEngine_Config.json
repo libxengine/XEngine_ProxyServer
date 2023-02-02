@@ -7,8 +7,8 @@
   "XMax": {
     "nMaxClient": 10000,
     "nMaxQueue": 10000,
-    "nIOThread": 1,
-    "nForwardThread": 1
+    "nIOThread": 4,
+    "nForwardThread": 4
   },
   "XTime": {
     "nTimeCheck": 3,
@@ -27,6 +27,7 @@
     "tszAuthFile": "./XEngine_Config/UserList.txt"
   },
   "XVer": [
+    "1.5.0.1001 Build20230202",
     "1.4.0.1001 Build20221111",
     "1.3.1.1001 Build20220804",
     "1.3.0.1001 Build20220617",
