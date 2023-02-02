@@ -12,4 +12,4 @@
 *********************************************************************/
 //任务处理相关函数,处理包的内容
 BOOL XEngine_SocksTask_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMsgLen);
-XHTHREAD CALLBACK XEngine_SocksTask_Thread(LPCTSTR lpszClientAddr, SOCKET hSocket);
+void CALLBACK XEngine_Socks_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, SOCKET hSocket, ENUM_NETCLIENT_TCPEVENTS enTCPClientEvents, LPCSTR lpszMsgBuffer, int nLen, LPVOID lParam);

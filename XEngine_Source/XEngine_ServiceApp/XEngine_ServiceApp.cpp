@@ -5,9 +5,11 @@ XLOG xhLog = NULL;
 
 XHANDLE xhSocksSocket = NULL;
 XHANDLE xhSocksHeart = NULL;
+XHANDLE xhSocksClient = NULL;
 
 XHANDLE xhTunnelSocket = NULL;
 XHANDLE xhTunnelHeart = NULL;
+XHANDLE xhTunnelClient = NULL;
 
 XHANDLE xhForwardSocket = NULL;
 XHANDLE xhForwardHeart = NULL;
@@ -25,11 +27,13 @@ void ServiceApp_Stop(int signo)
 		//销毁Socks资源
 		NetCore_TCPXCore_DestroyEx(xhSocksSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhSocksHeart);
+		XClient_TCPSelect_StopEx(xhSocksClient);
 		//销毁Tunnel资源
 		NetCore_TCPXCore_DestroyEx(xhTunnelSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhTunnelHeart);
+		XClient_TCPSelect_StopEx(xhTunnelClient);
 		//销毁Forward资源
-		HelpComponents_Packets_Destory(xhForwardPacket);
+		HelpComponents_Datas_Destory(xhForwardPacket);
 		NetCore_TCPXCore_DestroyEx(xhForwardSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhForwardHeart);
 		ManagePool_Thread_NQDestroy(xhForwardPool);
@@ -160,6 +164,14 @@ int main(int argc, char** argv)
 		//绑定网络事件
 		NetCore_TCPXCore_RegisterCallBackEx(xhSocksSocket, Network_Callback_SocksLogin, Network_Callback_SocksRecv, Network_Callback_SocksLeave);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,注册Socks网络事件成功"));
+		//客户端
+		xhSocksClient = XClient_TCPSelect_StartEx(XEngine_Socks_CBRecv);
+		if (NULL == xhSocksClient)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Socks客户端服务失败,错误：%lX"), XClient_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Socks客户端服务成功"));
 	}
 	else
 	{
@@ -193,6 +205,14 @@ int main(int argc, char** argv)
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Tunnel网络服务器成功,Tunnel端口:%d,IO:%d"), st_ServiceConfig.nTunnelPort, st_ServiceConfig.st_XMax.nIOThread);
 		NetCore_TCPXCore_RegisterCallBackEx(xhTunnelSocket, Network_Callback_TunnelLogin, Network_Callback_TunnelRecv, Network_Callback_TunnelLeave);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,注册Tunnel网络事件成功"));
+		//客户端
+		xhTunnelClient = XClient_TCPSelect_StartEx(XEngine_Tunnel_CBRecv);
+		if (NULL == xhTunnelClient)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Tunnel客户端服务失败,错误：%lX"), XClient_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Tunnel客户端服务成功"));
 	}
 	else
 	{
@@ -205,10 +225,10 @@ int main(int argc, char** argv)
 		xhForwardPacket = HelpComponents_Datas_Init(st_ServiceConfig.st_XMax.nMaxQueue, st_ServiceConfig.st_XMax.nForwardThread);
 		if (NULL == xhForwardPacket)
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("初始化Forward组包器失败，错误：%lX"), Packets_GetLastError());
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("初始化Forward组包器失败,错误：%lX"), Packets_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中，启动Forward组包器成功"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Forward组包器成功"));
 		//启动心跳
 		if (st_ServiceConfig.st_XTime.nForwardTimeOut > 0)
 		{
@@ -248,10 +268,10 @@ int main(int argc, char** argv)
 		xhForwardPool = ManagePool_Thread_NQCreate(&ppSt_ListParam, st_ServiceConfig.st_XMax.nForwardThread);
 		if (NULL == xhForwardPool)
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Forward线程池服务失败，错误：%lX"), ManagePool_GetLastError());
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Forward线程池服务失败,错误：%lX"), ManagePool_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中，启动Forward线程池服务成功,启动个数:%d"), st_ServiceConfig.st_XMax.nForwardThread);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Forward线程池服务成功,启动个数:%d"), st_ServiceConfig.st_XMax.nForwardThread);
 	}
 	else
 	{
@@ -272,11 +292,13 @@ XENGINE_SERVICEAPP_EXIT:
 		//销毁Socks资源
 		NetCore_TCPXCore_DestroyEx(xhSocksSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhSocksHeart);
+		XClient_TCPSelect_StopEx(xhSocksClient);
 		//销毁Tunnel资源
 		NetCore_TCPXCore_DestroyEx(xhTunnelSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhTunnelHeart);
+		XClient_TCPSelect_StopEx(xhTunnelClient);
 		//销毁Forward资源
-		HelpComponents_Packets_Destory(xhForwardPacket);
+		HelpComponents_Datas_Destory(xhForwardPacket);
 		NetCore_TCPXCore_DestroyEx(xhForwardSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhForwardHeart);
 		ManagePool_Thread_NQDestroy(xhForwardPool);

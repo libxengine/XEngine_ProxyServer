@@ -20,6 +20,7 @@ this software support following features
 6. encrypt Communication(planning)  
 7. load balanc(planning)  
 8. custom cert proxy protocol(planning)  
+9. multilevel proxy(planning)
 
 ## install
 
@@ -71,8 +72,8 @@ make FLAGS=CleanAll clear
 You can refer to the document under the docment directory. It contains API protocol and service description.  
 
 ## Test Server Address
-Address:app.xyry.org or 159.75.200.173  
-Port:Socks5 5400,HTTP Tunnel 5401  
+Address:app.xyry.org  
+Port:Socks5 5400,HTTP Tunnel 5401,Forward 5402
 
 ## Participate in contribution
 

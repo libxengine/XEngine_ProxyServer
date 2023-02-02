@@ -76,9 +76,11 @@ extern XLOG xhLog;
 //Socks服务器
 extern XHANDLE xhSocksSocket;
 extern XHANDLE xhSocksHeart;
+extern XHANDLE xhSocksClient;
 //Tunnel服务器
 extern XHANDLE xhTunnelSocket;
 extern XHANDLE xhTunnelHeart;
+extern XHANDLE xhTunnelClient;
 //Forward服务器
 extern XHANDLE xhForwardSocket;
 extern XHANDLE xhForwardHeart;
@@ -100,8 +102,7 @@ typedef struct
 {
 	TCHAR tszIPAddr[128];
 	ENUM_RFCCOMPONENTS_PROXY_STATUS enStatus;
-	SOCKET hSocket;
-	BOOL bClose;
+	XNETHANDLE xhClient;
 }PROXYPROTOCOL_CLIENTINFO;
 
 //连接库
