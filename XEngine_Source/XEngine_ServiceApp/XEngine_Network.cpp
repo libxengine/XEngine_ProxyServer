@@ -11,7 +11,7 @@
 //    History:
 *********************************************************************/
 //////////////////////////////////////////////////////////////////////////下面是SOCKS网络IO相关代码处理函数
-BOOL __stdcall Network_Callback_SocksLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+BOOL CALLBACK Network_Callback_SocksLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
 	//客户端连接后要把客户端插入心跳管理器中才有效
 	ProxyProtocol_SocksCore_Create(lpszClientAddr);
@@ -19,53 +19,53 @@ BOOL __stdcall Network_Callback_SocksLogin(LPCTSTR lpszClientAddr, SOCKET hSocke
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("SOCKS客户端:%s,连接到服务器"), lpszClientAddr);
 	return TRUE;
 }
-void __stdcall Network_Callback_SocksRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
+void CALLBACK Network_Callback_SocksRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
 {
 	//需要激活一次
 	XEngine_SocksTask_Handle(lpszClientAddr, lpszRecvMsg, nMsgLen);
 	SocketOpt_HeartBeat_ActiveAddrEx(xhSocksHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _T("SOCKS客户端:%s,投递数据包到组包队列成功,大小:%d"), lpszClientAddr, nMsgLen);
 }
-void __stdcall Network_Callback_SocksLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+void CALLBACK Network_Callback_SocksLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
 	//交给指定函数来处理客户端离开消息
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, XENGINE_CLIENT_CLOSE_NETWORK);
 }
-void __stdcall Network_Callback_SocksHeart(LPCSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
+void CALLBACK Network_Callback_SocksHeart(LPCSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
 {
 	//同上
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, XENGINE_CLIENT_CLOSE_HEARTBEAT);
 }
 //////////////////////////////////////////////////////////////////////////下面是Tunnel网络IO相关代码处理函数
-BOOL __stdcall Network_Callback_TunnelLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+BOOL CALLBACK Network_Callback_TunnelLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
 	ProxyProtocol_TunnelCore_Create(lpszClientAddr);
 	SocketOpt_HeartBeat_InsertAddrEx(xhTunnelHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Tunnel客户端:%s,连接到服务器"), lpszClientAddr);
 	return TRUE;
 }
-void __stdcall Network_Callback_TunnelRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
+void CALLBACK Network_Callback_TunnelRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
 {
 	XEngine_TunnelTask_Handle(lpszClientAddr, lpszRecvMsg, nMsgLen);
 	SocketOpt_HeartBeat_ActiveAddrEx(xhTunnelHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _T("Tunnel客户端:%s,投递数据包到组包队列成功,大小:%d"), lpszClientAddr, nMsgLen);
 }
-void __stdcall Network_Callback_TunnelLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+void CALLBACK Network_Callback_TunnelLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, XENGINE_CLIENT_CLOSE_NETWORK);
 }
-void __stdcall Network_Callback_TunnelHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
+void CALLBACK Network_Callback_TunnelHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, XENGINE_CLIENT_CLOSE_HEARTBEAT);
 }
 //////////////////////////////////////////////////////////////////////////下面是Tunnel网络IO相关代码处理函数
-BOOL __stdcall Network_Callback_ForwardLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+BOOL CALLBACK Network_Callback_ForwardLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
 	SocketOpt_HeartBeat_InsertAddrEx(xhForwardHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Forward客户端:%s,连接到服务器"), lpszClientAddr);
 	return TRUE;
 }
-void __stdcall Network_Callback_ForwardRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
+void CALLBACK Network_Callback_ForwardRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
 {
 	TCHAR tszDstAddr[128];
 	memset(tszDstAddr, '\0', sizeof(tszDstAddr));
@@ -86,11 +86,11 @@ void __stdcall Network_Callback_ForwardRecv(LPCTSTR lpszClientAddr, SOCKET hSock
 	SocketOpt_HeartBeat_ActiveAddrEx(xhForwardHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _T("Forward客户端:%s,投递数据包到组包队列成功,大小:%d"), lpszClientAddr, nMsgLen);
 }
-void __stdcall Network_Callback_ForwardLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+void CALLBACK Network_Callback_ForwardLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_FORWARD, XENGINE_CLIENT_CLOSE_NETWORK);
 }
-void __stdcall Network_Callback_ForwardHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
+void CALLBACK Network_Callback_ForwardHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_FORWARD, XENGINE_CLIENT_CLOSE_HEARTBEAT);
 }
