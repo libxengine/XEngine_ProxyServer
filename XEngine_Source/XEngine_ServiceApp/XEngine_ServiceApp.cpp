@@ -1,7 +1,7 @@
 ﻿#include "XEngine_Hdr.h"
 
-BOOL bIsRun = FALSE;
-XLOG xhLog = NULL;
+bool bIsRun = false;
+XHANDLE xhLog = NULL;
 
 XHANDLE xhSocksSocket = NULL;
 XHANDLE xhSocksHeart = NULL;
@@ -23,7 +23,7 @@ void ServiceApp_Stop(int signo)
 	if (bIsRun)
 	{
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("服务器退出..."));
-		bIsRun = FALSE;
+		bIsRun = false;
 		//销毁Socks资源
 		NetCore_TCPXCore_DestroyEx(xhSocksSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhSocksHeart);
@@ -84,12 +84,7 @@ int main(int argc, char** argv)
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
 
-#if XENGINE_VERSION_BIT < 7370001001
-	printf("版本号过低,无法继续,按任意键退出!\n");
-	getchar();
-	return 0;
-#endif
-	bIsRun = TRUE;
+	bIsRun = true;
 	HELPCOMPONENTS_XLOG_CONFIGURE st_XLogConfig;
 
 	memset(&st_XLogConfig, '\0', sizeof(HELPCOMPONENTS_XLOG_CONFIGURE));
@@ -278,9 +273,9 @@ int main(int argc, char** argv)
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Forward服务没有被启用"));
 	}
 
-	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("所有服务成功启动,服务运行中,XEngine版本:%s,服务版本;%s,发行次数:%d。。。"), BaseLib_OperatorVer_XGetStr(), st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str(), st_ServiceConfig.st_XVer.pStl_ListVer->size());
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("所有服务成功启动,服务运行中,XEngine版本:%s,服务版本;%s,发行次数:%d。。。"), BaseLib_OperatorVer_XNumberStr(), st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str(), st_ServiceConfig.st_XVer.pStl_ListVer->size());
 
-	while (TRUE)
+	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
@@ -288,7 +283,7 @@ XENGINE_SERVICEAPP_EXIT:
 	if (bIsRun)
 	{
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("有服务启动失败,服务器退出..."));
-		bIsRun = FALSE;
+		bIsRun = false;
 		//销毁Socks资源
 		NetCore_TCPXCore_DestroyEx(xhSocksSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhSocksHeart);

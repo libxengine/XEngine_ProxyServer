@@ -30,7 +30,7 @@ extern "C" DWORD ModuleSession_GetLastError(int* pInt_SysError = NULL);
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" BOOL ModuleSession_Forward_Insert(LPCTSTR lpszAddr);
+extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr);
 /********************************************************************
 函数名称：ModuleSession_Forward_List
 函数功能：获取列表
@@ -54,7 +54,7 @@ extern "C" BOOL ModuleSession_Forward_Insert(LPCTSTR lpszAddr);
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" BOOL ModuleSession_Forward_List(TCHAR*** ppptszListAddr, int* pInt_Count, LPCTSTR lpszAddr = NULL);
+extern "C" bool ModuleSession_Forward_List(XCHAR*** ppptszListAddr, int* pInt_Count, LPCXSTR lpszAddr = NULL);
 /********************************************************************
 函数名称：ModuleSession_Forward_Bind
 函数功能：绑定转发需求
@@ -73,7 +73,7 @@ extern "C" BOOL ModuleSession_Forward_List(TCHAR*** ppptszListAddr, int* pInt_Co
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" BOOL ModuleSession_Forward_Bind(LPCTSTR lpszSrcAddr, LPCTSTR lpszDstAddr);
+extern "C" bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
 /********************************************************************
 函数名称：ModuleSession_Forward_Delete
 函数功能：删除用户
@@ -92,7 +92,7 @@ extern "C" BOOL ModuleSession_Forward_Bind(LPCTSTR lpszSrcAddr, LPCTSTR lpszDstA
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" BOOL ModuleSession_Forward_Delete(LPCTSTR lpszAddr, TCHAR * ptszDstAddr);
+extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAddr);
 /********************************************************************
 函数名称：ModuleSession_Forward_Get
 函数功能：获取转发用户给
@@ -111,4 +111,4 @@ extern "C" BOOL ModuleSession_Forward_Delete(LPCTSTR lpszAddr, TCHAR * ptszDstAd
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" BOOL ModuleSession_Forward_Get(LPCTSTR lpszAddr, TCHAR* ptszDstAddr);
+extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* ptszDstAddr);

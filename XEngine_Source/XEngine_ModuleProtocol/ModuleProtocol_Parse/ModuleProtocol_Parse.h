@@ -17,6 +17,6 @@ public:
 	CModuleProtocol_Parse();
 	~CModuleProtocol_Parse();
 public:
-	BOOL ModuleProtocol_Parse_ForwardBind(LPCTSTR lpszMsgBuffer, int nMsgLen, TCHAR* ptszSrcAddr, TCHAR* ptszDstAddr);
+	bool ModuleProtocol_Parse_ForwardBind(LPCXSTR lpszMsgBuffer, int nMsgLen, XCHAR* ptszSrcAddr, XCHAR* ptszDstAddr);
 private:
 };

@@ -11,7 +11,7 @@
 //    Purpose:     导出实现
 //    History:
 *********************************************************************/
-BOOL Session_IsErrorOccur = FALSE;
+bool Session_IsErrorOccur = false;
 DWORD Session_dwErrorCode = 0;
 //////////////////////////////////////////////////////////////////////////
 CModuleSession_Forward m_Forward;
@@ -29,23 +29,23 @@ extern "C" DWORD ModuleSession_GetLastError(int* pInt_SysError)
 /************************************************************************/
 /*                        转发导出函数                                  */
 /************************************************************************/
-extern "C" BOOL ModuleSession_Forward_Insert(LPCTSTR lpszAddr)
+extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr)
 {
 	return m_Forward.ModuleSession_Forward_Insert(lpszAddr);
 }
-extern "C" BOOL ModuleSession_Forward_List(TCHAR * **ppptszListAddr, int* pInt_Count, LPCTSTR lpszAddr)
+extern "C" bool ModuleSession_Forward_List(XCHAR * **ppptszListAddr, int* pInt_Count, LPCXSTR lpszAddr)
 {
 	return m_Forward.ModuleSession_Forward_List(ppptszListAddr, pInt_Count, lpszAddr);
 }
-extern "C" BOOL ModuleSession_Forward_Bind(LPCTSTR lpszSrcAddr, LPCTSTR lpszDstAddr)
+extern "C" bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr)
 {
 	return m_Forward.ModuleSession_Forward_Bind(lpszSrcAddr, lpszDstAddr);
 }
-extern "C" BOOL ModuleSession_Forward_Delete(LPCTSTR lpszAddr, TCHAR * ptszDstAddr)
+extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAddr)
 {
 	return m_Forward.ModuleSession_Forward_Delete(lpszAddr, ptszDstAddr);
 }
-extern "C" BOOL ModuleSession_Forward_Get(LPCTSTR lpszAddr, TCHAR * ptszDstAddr)
+extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR * ptszDstAddr)
 {
 	return m_Forward.ModuleSession_Forward_Get(lpszAddr, ptszDstAddr);
 }

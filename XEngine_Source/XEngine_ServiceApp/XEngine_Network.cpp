@@ -11,63 +11,63 @@
 //    History:
 *********************************************************************/
 //////////////////////////////////////////////////////////////////////////下面是SOCKS网络IO相关代码处理函数
-BOOL CALLBACK Network_Callback_SocksLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+bool CALLBACK Network_Callback_SocksLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
 {
 	//客户端连接后要把客户端插入心跳管理器中才有效
 	ProxyProtocol_SocksCore_Create(lpszClientAddr);
 	SocketOpt_HeartBeat_InsertAddrEx(xhSocksHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("SOCKS客户端:%s,连接到服务器"), lpszClientAddr);
-	return TRUE;
+	return true;
 }
-void CALLBACK Network_Callback_SocksRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
+void CALLBACK Network_Callback_SocksRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam)
 {
 	//需要激活一次
 	XEngine_SocksTask_Handle(lpszClientAddr, lpszRecvMsg, nMsgLen);
 	SocketOpt_HeartBeat_ActiveAddrEx(xhSocksHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _T("SOCKS客户端:%s,投递数据包到组包队列成功,大小:%d"), lpszClientAddr, nMsgLen);
 }
-void CALLBACK Network_Callback_SocksLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+void CALLBACK Network_Callback_SocksLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
 {
 	//交给指定函数来处理客户端离开消息
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, XENGINE_CLIENT_CLOSE_NETWORK);
 }
-void CALLBACK Network_Callback_SocksHeart(LPCSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
+void CALLBACK Network_Callback_SocksHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam)
 {
 	//同上
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_SOCKS, XENGINE_CLIENT_CLOSE_HEARTBEAT);
 }
 //////////////////////////////////////////////////////////////////////////下面是Tunnel网络IO相关代码处理函数
-BOOL CALLBACK Network_Callback_TunnelLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+bool CALLBACK Network_Callback_TunnelLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
 {
 	ProxyProtocol_TunnelCore_Create(lpszClientAddr);
 	SocketOpt_HeartBeat_InsertAddrEx(xhTunnelHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Tunnel客户端:%s,连接到服务器"), lpszClientAddr);
-	return TRUE;
+	return true;
 }
-void CALLBACK Network_Callback_TunnelRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
+void CALLBACK Network_Callback_TunnelRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam)
 {
 	XEngine_TunnelTask_Handle(lpszClientAddr, lpszRecvMsg, nMsgLen);
 	SocketOpt_HeartBeat_ActiveAddrEx(xhTunnelHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _T("Tunnel客户端:%s,投递数据包到组包队列成功,大小:%d"), lpszClientAddr, nMsgLen);
 }
-void CALLBACK Network_Callback_TunnelLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+void CALLBACK Network_Callback_TunnelLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, XENGINE_CLIENT_CLOSE_NETWORK);
 }
-void CALLBACK Network_Callback_TunnelHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
+void CALLBACK Network_Callback_TunnelHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_TUNNEL, XENGINE_CLIENT_CLOSE_HEARTBEAT);
 }
 //////////////////////////////////////////////////////////////////////////下面是Tunnel网络IO相关代码处理函数
-BOOL CALLBACK Network_Callback_ForwardLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+bool CALLBACK Network_Callback_ForwardLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
 {
 	SocketOpt_HeartBeat_InsertAddrEx(xhForwardHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("Forward客户端:%s,连接到服务器"), lpszClientAddr);
-	return TRUE;
+	return true;
 }
-void CALLBACK Network_Callback_ForwardRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam)
+void CALLBACK Network_Callback_ForwardRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam)
 {
-	TCHAR tszDstAddr[128];
+	XCHAR tszDstAddr[128];
 	memset(tszDstAddr, '\0', sizeof(tszDstAddr));
 
 	if (ModuleSession_Forward_Get(lpszClientAddr, tszDstAddr))
@@ -86,16 +86,16 @@ void CALLBACK Network_Callback_ForwardRecv(LPCTSTR lpszClientAddr, SOCKET hSocke
 	SocketOpt_HeartBeat_ActiveAddrEx(xhForwardHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _T("Forward客户端:%s,投递数据包到组包队列成功,大小:%d"), lpszClientAddr, nMsgLen);
 }
-void CALLBACK Network_Callback_ForwardLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam)
+void CALLBACK Network_Callback_ForwardLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_FORWARD, XENGINE_CLIENT_CLOSE_NETWORK);
 }
-void CALLBACK Network_Callback_ForwardHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam)
+void CALLBACK Network_Callback_ForwardHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_FORWARD, XENGINE_CLIENT_CLOSE_HEARTBEAT);
 }
 //////////////////////////////////////////////////////////////////////////网络IO关闭操作
-void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, int nCloseType)
+void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 {
 	if (XENGINE_CLIENT_NETTYPE_SOCKS == nIPProto)
 	{
@@ -177,7 +177,7 @@ void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, int nCloseType)
 			SocketOpt_HeartBeat_DeleteAddrEx(xhForwardHeart, lpszClientAddr);
 			NetCore_TCPXCore_CloseForClientEx(xhForwardSocket, lpszClientAddr);
 		}
-		TCHAR tszClientAddr[128];
+		XCHAR tszClientAddr[128];
 		memset(tszClientAddr, '\0', sizeof(tszClientAddr));
 		ModuleSession_Forward_Delete(lpszClientAddr, tszClientAddr);
 
@@ -193,7 +193,7 @@ void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, int nCloseType)
 	}
 }
 //////////////////////////////////////////////////////////////////////////
-BOOL XEngine_Network_Send(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMsgLen, int nIPProto)
+bool XEngine_Network_Send(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int nMsgLen, int nIPProto)
 {
 	//根据客户端类型来处理发送业务逻辑
 	if (XENGINE_CLIENT_NETTYPE_SOCKS == nIPProto)
@@ -202,7 +202,7 @@ BOOL XEngine_Network_Send(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMs
 		if (!NetCore_TCPXCore_SendEx(xhSocksSocket, lpszClientAddr, lpszMsgBuffer, nMsgLen, 1, 1))
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("SOCKS客户端:%s,发送数据失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
-			return FALSE;
+			return false;
 		}
 		//发送成功激活一次心跳
 		SocketOpt_HeartBeat_ActiveAddrEx(xhSocksHeart, lpszClientAddr);
@@ -212,7 +212,7 @@ BOOL XEngine_Network_Send(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMs
 		if (!NetCore_TCPXCore_SendEx(xhTunnelSocket, lpszClientAddr, lpszMsgBuffer, nMsgLen, 1, 1))
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("Tunnel客户端:%s,发送数据失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
-			return FALSE;
+			return false;
 		}
 		SocketOpt_HeartBeat_ActiveAddrEx(xhTunnelHeart, lpszClientAddr);
 	}
@@ -221,7 +221,7 @@ BOOL XEngine_Network_Send(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMs
 		if (!NetCore_TCPXCore_SendEx(xhForwardSocket, lpszClientAddr, lpszMsgBuffer, nMsgLen, 1, 1))
 		{
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("Forward客户端:%s,发送数据失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
-			return FALSE;
+			return false;
 		}
 		SocketOpt_HeartBeat_ActiveAddrEx(xhForwardHeart, lpszClientAddr);
 	}
@@ -229,5 +229,5 @@ BOOL XEngine_Network_Send(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMs
 	{
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("未知客户端:%s,发送数据给失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
 	}
-	return TRUE;
+	return true;
 }

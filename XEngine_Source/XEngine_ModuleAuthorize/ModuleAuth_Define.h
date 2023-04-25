@@ -30,7 +30,7 @@ extern "C" DWORD ModuleAuthorize_GetLastError(int* pInt_SysError = NULL);
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" BOOL ModuleAuthorize_User_Init(LPCTSTR lpszAuthFile);
+extern "C" bool ModuleAuthorize_User_Init(LPCXSTR lpszAuthFile);
 /************************************************************************
 函数名称：ModuleAuthorize_User_Destory
 函数功能：销毁授权管理器
@@ -39,7 +39,7 @@ extern "C" BOOL ModuleAuthorize_User_Init(LPCTSTR lpszAuthFile);
   意思：是否销毁成功
 备注：
 ************************************************************************/
-extern "C" BOOL ModuleAuthorize_User_Destory();
+extern "C" bool ModuleAuthorize_User_Destory();
 /********************************************************************
 函数名称：ModuleAuthorize_User_Exist
 函数功能：是否验证通过
@@ -58,4 +58,4 @@ extern "C" BOOL ModuleAuthorize_User_Destory();
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" BOOL ModuleAuthorize_User_Exist(LPCTSTR lpszUser, LPCTSTR lpszPass);
+extern "C" bool ModuleAuthorize_User_Exist(LPCXSTR lpszUser, LPCXSTR lpszPass);

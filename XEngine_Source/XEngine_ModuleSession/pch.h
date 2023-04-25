@@ -35,7 +35,7 @@ using namespace std;
 //    Purpose:     公用头文件
 //    History:
 *********************************************************************/
-extern BOOL Session_IsErrorOccur;
+extern bool Session_IsErrorOccur;
 extern DWORD Session_dwErrorCode;
 
 #ifdef _UNICODE

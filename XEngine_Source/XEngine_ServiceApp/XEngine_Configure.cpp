@@ -10,14 +10,14 @@
 //    Purpose:     配置文件读写代码
 //    History:
 *********************************************************************/
-BOOL XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pSt_Configure)
+bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pSt_Configure)
 {
-	LPCTSTR lpszConfigFile = _T("./XEngine_Config/XEngine_Config.json");
+	LPCXSTR lpszConfigFile = _T("./XEngine_Config/XEngine_Config.json");
 
 	if (!ModuleConfigure_Json_File(lpszConfigFile, pSt_Configure))
 	{
 		printf("解析配置文件失败,ModuleConfigure_Json_File:%lX\n", ModuleConfigure_GetLastError());
-		return FALSE;
+		return false;
 	}
 
 	for (int i = 0; i < argc; i++)
@@ -25,7 +25,7 @@ BOOL XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 		if ((0 == _tcscmp("-h", argv[i])) || (0 == _tcscmp("-H", argv[i])))
 		{
 			XEngine_Configure_Help();
-			return FALSE;
+			return false;
 		}
 		else if (0 == _tcscmp("-TP", argv[i]))
 		{
@@ -41,12 +41,13 @@ BOOL XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 		}
 		else if (0 == _tcscmp("-v", argv[i]))
 		{
-			printf("XEngine版本:%s,服务版本;%s", XENGINE_VERSION_STR, st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str());
-			return FALSE;
+			string m_StrVersion = st_ServiceConfig.st_XVer.pStl_ListVer->front();
+			printf("Version：%s\n", m_StrVersion.c_str());
+			return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 void XEngine_Configure_Help()

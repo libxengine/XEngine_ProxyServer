@@ -11,5 +11,5 @@
 //    History:
 *********************************************************************/
 //任务处理相关函数,处理包的内容
-XHTHREAD CALLBACK XEngine_Forward_Thread(LPVOID lParam);
-BOOL XEngine_Forward_Handle(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMsgLen, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr);
+XHTHREAD CALLBACK XEngine_Forward_Thread(XPVOID lParam);
+bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int nMsgLen, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr);

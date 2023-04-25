@@ -12,9 +12,9 @@
 *********************************************************************/
 typedef struct
 {
-	TCHAR tszSrcAddr[128];
-	TCHAR tszDstAddr[128];
-	BOOL bForward;
+	XCHAR tszSrcAddr[128];
+	XCHAR tszDstAddr[128];
+	bool bForward;
 }SESSION_FORWARD, * LPSESSION_FORWARD;
 
 class CModuleSession_Forward
@@ -23,11 +23,11 @@ public:
 	CModuleSession_Forward();
 	~CModuleSession_Forward();
 public:
-	BOOL ModuleSession_Forward_Insert(LPCTSTR lpszAddr);
-	BOOL ModuleSession_Forward_List(TCHAR*** ppptszListAddr, int* pInt_Count, LPCTSTR lpszAddr = NULL);
-	BOOL ModuleSession_Forward_Bind(LPCTSTR lpszSrcAddr, LPCTSTR lpszDstAddr);
-	BOOL ModuleSession_Forward_Delete(LPCTSTR lpszAddr, TCHAR* ptszDstAddr);
-	BOOL ModuleSession_Forward_Get(LPCTSTR lpszAddr, TCHAR* ptszDstAddr);
+	bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr);
+	bool ModuleSession_Forward_List(XCHAR*** ppptszListAddr, int* pInt_Count, LPCXSTR lpszAddr = NULL);
+	bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
+	bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR* ptszDstAddr);
+	bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* ptszDstAddr);
 private:
 	shared_mutex st_Locker;
 private:

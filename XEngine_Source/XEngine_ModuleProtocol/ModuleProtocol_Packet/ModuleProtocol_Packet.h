@@ -17,6 +17,6 @@ public:
 	CModuleProtocol_Packet();
 	~CModuleProtocol_Packet();
 public:
-	BOOL ModuleProtocol_Packet_ForwardList(TCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, TCHAR*** ppptszListAddr, int nCount);
+	bool ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, XCHAR*** ppptszListAddr, int nCount);
 private:
 };

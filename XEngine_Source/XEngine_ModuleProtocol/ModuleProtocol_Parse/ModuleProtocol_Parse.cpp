@@ -50,15 +50,15 @@ CModuleProtocol_Parse::~CModuleProtocol_Parse()
   意思：是否成功
 备注：
 *********************************************************************/
-BOOL CModuleProtocol_Parse::ModuleProtocol_Parse_ForwardBind(LPCTSTR lpszMsgBuffer, int nMsgLen, TCHAR* ptszSrcAddr, TCHAR* ptszDstAddr)
+bool CModuleProtocol_Parse::ModuleProtocol_Parse_ForwardBind(LPCXSTR lpszMsgBuffer, int nMsgLen, XCHAR* ptszSrcAddr, XCHAR* ptszDstAddr)
 {
-	Protocol_IsErrorOccur = FALSE;
+	Protocol_IsErrorOccur = false;
 
 	if (NULL == lpszMsgBuffer)
 	{
-		Protocol_IsErrorOccur = TRUE;
+		Protocol_IsErrorOccur = true;
 		Protocol_dwErrorCode = ERROR_MODULE_PROTOCOL_PARSE_PARAMENT;
-		return FALSE;
+		return false;
 	}
 	Json::Value st_JsonRoot;
 	JSONCPP_STRING st_JsonError;
@@ -67,12 +67,12 @@ BOOL CModuleProtocol_Parse::ModuleProtocol_Parse_ForwardBind(LPCTSTR lpszMsgBuff
 	std::unique_ptr<Json::CharReader> const pSt_JsonReader(st_JsonBuilder.newCharReader());
 	if (!pSt_JsonReader->parse(lpszMsgBuffer, lpszMsgBuffer + nMsgLen, &st_JsonRoot, &st_JsonError))
 	{
-		Protocol_IsErrorOccur = TRUE;
+		Protocol_IsErrorOccur = true;
 		Protocol_dwErrorCode = ERROR_MODULE_PROTOCOL_PARSE_JSON;
-		return FALSE;
+		return false;
 	}
 	//_tcscpy(ptszSrcAddr, st_JsonRoot["tszSrcAddr"].asCString());  暂时不支持
 	_tcscpy(ptszDstAddr, st_JsonRoot["tszDstAddr"].asCString());
 
-	return TRUE;
+	return true;
 }
