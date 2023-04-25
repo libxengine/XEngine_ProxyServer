@@ -41,4 +41,4 @@ typedef std::string tstring;
 //    History:
 *********************************************************************/
 extern bool Authorize_IsErrorOccur;
-extern DWORD Authorize_dwErrorCode;
+extern XLONG Authorize_dwErrorCode;

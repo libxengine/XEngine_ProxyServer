@@ -54,7 +54,7 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	JSONCPP_STRING st_JsonError;
 	Json::CharReaderBuilder st_JsonBuilder;
 	//读取配置文件所有内容到缓冲区
-	FILE* pSt_File = _tfopen(lpszConfigFile, _T("rb"));
+	FILE* pSt_File = _xtfopen(lpszConfigFile, _X("rb"));
 	if (NULL == pSt_File)
 	{
 		Config_IsErrorOccur = true;
@@ -81,7 +81,7 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_PARSE;
 		return false;
 	}
-	_tcscpy(pSt_ServerConfig->tszIPAddr, st_JsonRoot["tszIPAddr"].asCString());
+	_tcsxcpy(pSt_ServerConfig->tszIPAddr, st_JsonRoot["tszIPAddr"].asCString());
 	pSt_ServerConfig->bDeamon = st_JsonRoot["bDeamon"].asInt();
 	pSt_ServerConfig->nSocksPort = st_JsonRoot["nSocksPort"].asInt();
 	pSt_ServerConfig->nTunnelPort = st_JsonRoot["nTunnelPort"].asInt();
@@ -121,7 +121,7 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XLog.nMaxSize = st_JsonXLog["MaxSize"].asInt();
 	pSt_ServerConfig->st_XLog.nMaxCount = st_JsonXLog["MaxCount"].asInt();
 	pSt_ServerConfig->st_XLog.nLogLeave = st_JsonXLog["LogLeave"].asInt();
-	_tcscpy(pSt_ServerConfig->st_XLog.tszLogFile, st_JsonXLog["tszLogFile"].asCString());
+	_tcsxcpy(pSt_ServerConfig->st_XLog.tszLogFile, st_JsonXLog["tszLogFile"].asCString());
 
 	if (st_JsonRoot["XAuth"].empty() || (2 != st_JsonRoot["XAuth"].size()))
 	{
@@ -131,7 +131,7 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	}
 	Json::Value st_JsonXAuth = st_JsonRoot["XAuth"];
 	pSt_ServerConfig->st_XAuth.bAuth = st_JsonXAuth["bAuth"].asInt();
-	_tcscpy(pSt_ServerConfig->st_XAuth.tszAuthFile, st_JsonXAuth["tszAuthFile"].asCString());
+	_tcsxcpy(pSt_ServerConfig->st_XAuth.tszAuthFile, st_JsonXAuth["tszAuthFile"].asCString());
 
 	if (st_JsonRoot["XVer"].empty())
 	{

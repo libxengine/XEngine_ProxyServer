@@ -22,7 +22,7 @@ void ServiceApp_Stop(int signo)
 {
 	if (bIsRun)
 	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("服务器退出..."));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("服务器退出..."));
 		bIsRun = false;
 		//销毁Socks资源
 		NetCore_TCPXCore_DestroyEx(xhSocksSocket);
@@ -106,7 +106,7 @@ int main(int argc, char** argv)
 	//初始日志
 	st_XLogConfig.XLog_MaxBackupFile = 10;
 	st_XLogConfig.XLog_MaxSize = 1024000;
-	_tcscpy(st_XLogConfig.tszFileName, st_ServiceConfig.st_XLog.tszLogFile);
+	_tcsxcpy(st_XLogConfig.tszFileName, st_ServiceConfig.st_XLog.tszLogFile);
 	xhLog = HelpComponents_XLog_Init(HELPCOMPONENTS_XLOG_OUTTYPE_STD | HELPCOMPONENTS_XLOG_OUTTYPE_FILE, &st_XLogConfig);
 	if (NULL == xhLog)
 	{
@@ -115,20 +115,20 @@ int main(int argc, char** argv)
 	}
 	//设置日志打印级别
 	HelpComponents_XLog_SetLogPriority(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO);
-	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化日志系统成功"));
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化日志系统成功"));
 
 	if (st_ServiceConfig.st_XAuth.bAuth >0)
 	{
 		if (!ModuleAuthorize_User_Init(st_ServiceConfig.st_XAuth.tszAuthFile))
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,启用用户验证服务失败,错误：%lX"), ModuleAuthorize_GetLastError());
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启用用户验证服务失败,错误：%lX"), ModuleAuthorize_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启用用户验证服务,用户列表地址:%s"), st_ServiceConfig.st_XAuth.tszAuthFile);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启用用户验证服务,用户列表地址:%s"), st_ServiceConfig.st_XAuth.tszAuthFile);
 	}
 	else
 	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,没有启用用户验证服务"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,没有启用用户验证服务"));
 	}
 	//启动Socks服务相关代码
 	if (st_ServiceConfig.nSocksPort > 0)
@@ -139,38 +139,38 @@ int main(int argc, char** argv)
 			xhSocksHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_SocksHeart);
 			if (NULL == xhSocksHeart)
 			{
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,初始化Socks心跳服务失败,错误：%lX"), NetCore_GetLastError());
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化Socks心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
 			}
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化Socks心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Socks心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
 		}
 		else
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Socks心跳服务被设置为不启用"));
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Socks心跳服务被设置为不启用"));
 		}
 		//启动网络
 		xhSocksSocket = NetCore_TCPXCore_StartEx(st_ServiceConfig.nSocksPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread);
 		if (NULL == xhSocksSocket)
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,启动Socks网络服务器失败,错误：%lX"), NetCore_GetLastError());
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启动Socks网络服务器失败,错误：%lX"), NetCore_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Socks网络服务器成功,Socks端口:%d,网络IO线程个数:%d"), st_ServiceConfig.nSocksPort, st_ServiceConfig.st_XMax.nIOThread);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Socks网络服务器成功,Socks端口:%d,网络IO线程个数:%d"), st_ServiceConfig.nSocksPort, st_ServiceConfig.st_XMax.nIOThread);
 		//绑定网络事件
 		NetCore_TCPXCore_RegisterCallBackEx(xhSocksSocket, Network_Callback_SocksLogin, Network_Callback_SocksRecv, Network_Callback_SocksLeave);
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,注册Socks网络事件成功"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,注册Socks网络事件成功"));
 		//客户端
 		xhSocksClient = XClient_TCPSelect_StartEx(XEngine_Socks_CBRecv);
 		if (NULL == xhSocksClient)
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Socks客户端服务失败,错误：%lX"), XClient_GetLastError());
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动Socks客户端服务失败,错误：%lX"), XClient_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Socks客户端服务成功"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Socks客户端服务成功"));
 	}
 	else
 	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Socks消息服务没有被启用"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Socks消息服务没有被启用"));
 	}
 	//启动Tunnel服务相关代码
 	if (st_ServiceConfig.nTunnelPort > 0)
@@ -181,37 +181,37 @@ int main(int argc, char** argv)
 			xhTunnelHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_TunnelHeart);
 			if (NULL == xhTunnelHeart)
 			{
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,初始化Tunnel心跳服务失败,错误：%lX"), NetCore_GetLastError());
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化Tunnel心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
 			}
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化Tunnel心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Tunnel心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
 		}
 		else
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Tunnel心跳服务被设置为不启用"));
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Tunnel心跳服务被设置为不启用"));
 		}
 		//网络
 		xhTunnelSocket = NetCore_TCPXCore_StartEx(st_ServiceConfig.nTunnelPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread);
 		if (NULL == xhTunnelSocket)
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,启动Tunnel网络服务器失败,错误：%lX"), NetCore_GetLastError());
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启动Tunnel网络服务器失败,错误：%lX"), NetCore_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Tunnel网络服务器成功,Tunnel端口:%d,IO:%d"), st_ServiceConfig.nTunnelPort, st_ServiceConfig.st_XMax.nIOThread);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Tunnel网络服务器成功,Tunnel端口:%d,IO:%d"), st_ServiceConfig.nTunnelPort, st_ServiceConfig.st_XMax.nIOThread);
 		NetCore_TCPXCore_RegisterCallBackEx(xhTunnelSocket, Network_Callback_TunnelLogin, Network_Callback_TunnelRecv, Network_Callback_TunnelLeave);
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,注册Tunnel网络事件成功"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,注册Tunnel网络事件成功"));
 		//客户端
 		xhTunnelClient = XClient_TCPSelect_StartEx(XEngine_Tunnel_CBRecv);
 		if (NULL == xhTunnelClient)
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Tunnel客户端服务失败,错误：%lX"), XClient_GetLastError());
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动Tunnel客户端服务失败,错误：%lX"), XClient_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Tunnel客户端服务成功"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Tunnel客户端服务成功"));
 	}
 	else
 	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Tunnel消息服务没有被启用"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Tunnel消息服务没有被启用"));
 	}
 	//启动转发协议服务
 	if (st_ServiceConfig.nForwardPort > 0)
@@ -220,35 +220,35 @@ int main(int argc, char** argv)
 		xhForwardPacket = HelpComponents_Datas_Init(st_ServiceConfig.st_XMax.nMaxQueue, st_ServiceConfig.st_XMax.nForwardThread);
 		if (NULL == xhForwardPacket)
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("初始化Forward组包器失败,错误：%lX"), Packets_GetLastError());
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("初始化Forward组包器失败,错误：%lX"), Packets_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Forward组包器成功"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Forward组包器成功"));
 		//启动心跳
 		if (st_ServiceConfig.st_XTime.nForwardTimeOut > 0)
 		{
 			xhForwardHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_ForwardHeart);
 			if (NULL == xhForwardHeart)
 			{
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,初始化Forward心跳服务失败,错误：%lX"), NetCore_GetLastError());
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化Forward心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
 			}
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,初始化Forward心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Forward心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
 		}
 		else
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Forward心跳服务被设置为不启用"));
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Forward心跳服务被设置为不启用"));
 		}
 		//网络
 		xhForwardSocket = NetCore_TCPXCore_StartEx(st_ServiceConfig.nForwardPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread);
 		if (NULL == xhForwardSocket)
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动服务中,启动Forward网络服务器失败,错误：%lX"), NetCore_GetLastError());
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启动Forward网络服务器失败,错误：%lX"), NetCore_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Forward网络服务器成功,Forward端口:%d,IO:%d"), st_ServiceConfig.nForwardPort, st_ServiceConfig.st_XMax.nIOThread);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Forward网络服务器成功,Forward端口:%d,IO:%d"), st_ServiceConfig.nForwardPort, st_ServiceConfig.st_XMax.nIOThread);
 		NetCore_TCPXCore_RegisterCallBackEx(xhForwardSocket, Network_Callback_ForwardLogin, Network_Callback_ForwardRecv, Network_Callback_ForwardLeave);
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,注册Forward网络事件成功"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,注册Forward网络事件成功"));
 		//任务池
 		THREADPOOL_PARAMENT** ppSt_ListParam;
 		BaseLib_OperatorMemory_Malloc((XPPPMEM)&ppSt_ListParam, st_ServiceConfig.st_XMax.nForwardThread, sizeof(THREADPOOL_PARAMENT));
@@ -263,17 +263,17 @@ int main(int argc, char** argv)
 		xhForwardPool = ManagePool_Thread_NQCreate(&ppSt_ListParam, st_ServiceConfig.st_XMax.nForwardThread);
 		if (NULL == xhForwardPool)
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("启动Forward线程池服务失败,错误：%lX"), ManagePool_GetLastError());
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动Forward线程池服务失败,错误：%lX"), ManagePool_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("启动服务中,启动Forward线程池服务成功,启动个数:%d"), st_ServiceConfig.st_XMax.nForwardThread);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Forward线程池服务成功,启动个数:%d"), st_ServiceConfig.st_XMax.nForwardThread);
 	}
 	else
 	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _T("启动服务中,Forward服务没有被启用"));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Forward服务没有被启用"));
 	}
 
-	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _T("所有服务成功启动,服务运行中,XEngine版本:%s%s,服务版本:%s,发行次数:%d。。。"), BaseLib_OperatorVer_XNumberStr(), BaseLib_OperatorVer_XTypeStr(), st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str(), st_ServiceConfig.st_XVer.pStl_ListVer->size());
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("所有服务成功启动,服务运行中,XEngine版本:%s%s,服务版本:%s,发行次数:%d。。。"), BaseLib_OperatorVer_XNumberStr(), BaseLib_OperatorVer_XTypeStr(), st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str(), st_ServiceConfig.st_XVer.pStl_ListVer->size());
 
 	while (true)
 	{
@@ -282,7 +282,7 @@ int main(int argc, char** argv)
 XENGINE_SERVICEAPP_EXIT:
 	if (bIsRun)
 	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _T("有服务启动失败,服务器退出..."));
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("有服务启动失败,服务器退出..."));
 		bIsRun = false;
 		//销毁Socks资源
 		NetCore_TCPXCore_DestroyEx(xhSocksSocket);

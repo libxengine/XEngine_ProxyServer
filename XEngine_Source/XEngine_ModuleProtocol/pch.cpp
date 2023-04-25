@@ -13,14 +13,14 @@
 //    History:
 *********************************************************************/
 bool Protocol_IsErrorOccur = false;
-DWORD Protocol_dwErrorCode = 0;
+XLONG Protocol_dwErrorCode = 0;
 //////////////////////////////////////////////////////////////////////////
 CModuleProtocol_Packet m_ProtocolPacket;
 CModuleProtocol_Parse m_ProtocolParse;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
-extern "C" DWORD ModuleProtocol_GetLastError(int* pInt_SysError)
+extern "C" XLONG ModuleProtocol_GetLastError(int* pInt_SysError)
 {
 	if (NULL != pInt_SysError)
 	{

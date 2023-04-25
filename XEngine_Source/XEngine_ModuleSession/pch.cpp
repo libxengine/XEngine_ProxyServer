@@ -12,13 +12,13 @@
 //    History:
 *********************************************************************/
 bool Session_IsErrorOccur = false;
-DWORD Session_dwErrorCode = 0;
+XLONG Session_dwErrorCode = 0;
 //////////////////////////////////////////////////////////////////////////
 CModuleSession_Forward m_Forward;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
-extern "C" DWORD ModuleSession_GetLastError(int* pInt_SysError)
+extern "C" XLONG ModuleSession_GetLastError(int* pInt_SysError)
 {
 	if (NULL != pInt_SysError)
 	{

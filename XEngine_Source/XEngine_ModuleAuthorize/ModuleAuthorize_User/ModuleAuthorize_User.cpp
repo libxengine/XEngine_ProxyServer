@@ -39,7 +39,7 @@ bool CModuleAuthorize_User::ModuleAuthorize_User_Init(LPCXSTR lpszAuthFile)
 {
 	Authorize_IsErrorOccur = false;
 
-	FILE* pSt_File = _tfopen(lpszAuthFile, _T("rb"));
+	FILE* pSt_File = _xtfopen(lpszAuthFile, _X("rb"));
 	if (NULL == pSt_File)
 	{
 		Authorize_IsErrorOccur = true;
@@ -61,8 +61,8 @@ bool CModuleAuthorize_User::ModuleAuthorize_User_Init(LPCXSTR lpszAuthFile)
 	}
 	fclose(pSt_File);
 
-	LPCXSTR lpszLineStr = _T("\r\n");
-	XCHAR* ptszTokStr = _tcstok(tszMsgBuffer, lpszLineStr);
+	LPCXSTR lpszLineStr = _X("\r\n");
+	XCHAR* ptszTokStr = _tcsxtok(tszMsgBuffer, lpszLineStr);
 	while (1)
 	{
 		if (NULL == ptszTokStr)
@@ -72,10 +72,10 @@ bool CModuleAuthorize_User::ModuleAuthorize_User_Init(LPCXSTR lpszAuthFile)
 		XENGINE_USERAUTH st_UserInfo;
 		memset(&st_UserInfo, '\0', sizeof(XENGINE_USERAUTH));
 
-		_stscanf(ptszTokStr, _T("%s %s"), st_UserInfo.tszUserName, st_UserInfo.tszUserPass);
+		_stxscanf(ptszTokStr, _X("%s %s"), st_UserInfo.tszUserName, st_UserInfo.tszUserPass);
 		stl_MapSession.insert(make_pair(st_UserInfo.tszUserName, st_UserInfo));
 
-		ptszTokStr = _tcstok(NULL, lpszLineStr);
+		ptszTokStr = _tcsxtok(NULL, lpszLineStr);
 	}
 	return true;
 }
@@ -124,13 +124,13 @@ bool CModuleAuthorize_User::ModuleAuthorize_User_Exist(LPCXSTR lpszUser, LPCXSTR
 		return false;
 	}
 
-	if (_tcslen(lpszPass) != _tcslen(stl_MapIterator->second.tszUserPass))
+	if (_tcsxlen(lpszPass) != _tcsxlen(stl_MapIterator->second.tszUserPass))
 	{
 		Authorize_IsErrorOccur = true;
 		Authorize_dwErrorCode = ERROR_MODULE_AUTHORIZE_USER_PASSWORD;
 		return false;
 	}
-	if (0 != _tcsncmp(lpszPass, stl_MapIterator->second.tszUserPass, _tcslen(lpszPass)))
+	if (0 != _tcsxncmp(lpszPass, stl_MapIterator->second.tszUserPass, _tcsxlen(lpszPass)))
 	{
 		Authorize_IsErrorOccur = true;
 		Authorize_dwErrorCode = ERROR_MODULE_AUTHORIZE_USER_PASSWORD;

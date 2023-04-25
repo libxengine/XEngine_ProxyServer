@@ -12,13 +12,13 @@
 //    History:
 *********************************************************************/
 bool Authorize_IsErrorOccur = false;
-DWORD Authorize_dwErrorCode = 0;
+XLONG Authorize_dwErrorCode = 0;
 //////////////////////////////////////////////////////////////////////////
 CModuleAuthorize_User m_User;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
-extern "C" DWORD ModuleAuthorize_GetLastError(int* pInt_SysError)
+extern "C" XLONG ModuleAuthorize_GetLastError(int* pInt_SysError)
 {
 	if (NULL != pInt_SysError)
 	{

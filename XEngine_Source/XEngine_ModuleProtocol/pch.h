@@ -36,7 +36,7 @@ using namespace std;
 //    History:
 *********************************************************************/
 extern bool Protocol_IsErrorOccur;
-extern DWORD Protocol_dwErrorCode;
+extern XLONG Protocol_dwErrorCode;
 
 #ifdef _MSC_BUILD
 #ifdef _DEBUG

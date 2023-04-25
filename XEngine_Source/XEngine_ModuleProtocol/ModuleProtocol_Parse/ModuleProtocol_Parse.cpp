@@ -71,8 +71,8 @@ bool CModuleProtocol_Parse::ModuleProtocol_Parse_ForwardBind(LPCXSTR lpszMsgBuff
 		Protocol_dwErrorCode = ERROR_MODULE_PROTOCOL_PARSE_JSON;
 		return false;
 	}
-	//_tcscpy(ptszSrcAddr, st_JsonRoot["tszSrcAddr"].asCString());  暂时不支持
-	_tcscpy(ptszDstAddr, st_JsonRoot["tszDstAddr"].asCString());
+	//_tcsxcpy(ptszSrcAddr, st_JsonRoot["tszSrcAddr"].asCString());  暂时不支持
+	_tcsxcpy(ptszDstAddr, st_JsonRoot["tszDstAddr"].asCString());
 
 	return true;
 }

@@ -48,7 +48,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Insert(LPCXSTR lpszAddr)
 	SESSION_FORWARD st_Forward;
 	memset(&st_Forward, '\0', sizeof(SESSION_FORWARD));
 
-	_tcscpy(st_Forward.tszSrcAddr, lpszAddr);
+	_tcsxcpy(st_Forward.tszSrcAddr, lpszAddr);
 
 	st_Locker.lock();
 	unordered_map<tstring, SESSION_FORWARD>::const_iterator stl_MapIterator = stl_MapSession.find(lpszAddr);
@@ -113,12 +113,12 @@ bool CModuleSession_Forward::ModuleSession_Forward_List(XCHAR*** ppptszListAddr,
 	{
 		if (NULL != lpszAddr)
 		{
-			if (0 == _tcsncmp(lpszAddr, stl_MapIterator->first.c_str(), _tcslen(lpszAddr)))
+			if (0 == _tcsxncmp(lpszAddr, stl_MapIterator->first.c_str(), _tcsxlen(lpszAddr)))
 			{
 				continue;
 			}
 		}
-		_tcscpy((*ppptszListAddr)[i], stl_MapIterator->first.c_str());
+		_tcsxcpy((*ppptszListAddr)[i], stl_MapIterator->first.c_str());
 	}
 	st_Locker.unlock_shared();
 	return true;
@@ -172,10 +172,10 @@ bool CModuleSession_Forward::ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPC
 	}
 	//需要设置两方的转发内容
 	stl_MapSrcIterator->second.bForward = true;
-	_tcscpy(stl_MapSrcIterator->second.tszDstAddr, lpszDstAddr);
+	_tcsxcpy(stl_MapSrcIterator->second.tszDstAddr, lpszDstAddr);
 
 	stl_MapDstIterator->second.bForward = true;
-	_tcscpy(stl_MapDstIterator->second.tszDstAddr, lpszSrcAddr);
+	_tcsxcpy(stl_MapDstIterator->second.tszDstAddr, lpszSrcAddr);
 	st_Locker.unlock_shared();
 	return true;
 }
@@ -220,7 +220,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHA
 	//如果有转发,需要清理对方的转发设置
 	if (stl_MapSrcIterator->second.bForward)
 	{
-		_tcscpy(ptszDstAddr, stl_MapSrcIterator->second.tszDstAddr);
+		_tcsxcpy(ptszDstAddr, stl_MapSrcIterator->second.tszDstAddr);
 		auto stl_MapDstIterator = stl_MapSession.find(stl_MapSrcIterator->second.tszSrcAddr);
 		if (stl_MapDstIterator == stl_MapSession.end())
 		{
@@ -278,7 +278,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* 
 		st_Locker.unlock_shared();
 		return false;
 	}
-	_tcscpy(ptszDstAddr, stl_MapIterator->second.tszDstAddr);
+	_tcsxcpy(ptszDstAddr, stl_MapIterator->second.tszDstAddr);
 	st_Locker.unlock_shared();
 	return true;
 }
