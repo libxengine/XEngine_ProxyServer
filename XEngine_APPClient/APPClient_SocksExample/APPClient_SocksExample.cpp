@@ -1,4 +1,4 @@
-﻿#ifdef _WINDOWS
+﻿#ifdef _MSC_BUILD
 #include <Windows.h>
 #include <tchar.h>
 #pragma comment(lib,"Ws2_32.lib")
@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <XEngine_Include/XEngine_CommHdr.h>
+#include <XEngine_Include/XEngine_Types.h>
 #include <XEngine_Include/XEngine_ProtocolHdr.h>
 #include <XEngine_Include/XEngine_BaseLib/BaseLib_Define.h>
 #include <XEngine_Include/XEngine_BaseLib/BaseLib_Error.h>
@@ -25,12 +26,12 @@
 //g++ -std=c++17 -Wall -g APPClient_SocksExample.cpp -o APPClient_SocksExample.exe -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Client -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol
 int main(int argc, char** argv)
 {
-#ifdef _WINDOWS
+#ifdef _MSC_BUILD
 	WSADATA st_WSAData;
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
-	SOCKET m_Socket;
-	LPCTSTR lpszServiceAddr = _T("127.0.0.1");
+	XSOCKET m_Socket;
+	LPCXSTR lpszServiceAddr = _X("127.0.0.1");
 	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5400))
 	{
 		printf("连接失败！错误:%lX\n", XClient_GetLastError());
@@ -39,7 +40,7 @@ int main(int argc, char** argv)
 	printf("连接成功！\n");
 
 	int nMsgLen = 2048;
-	TCHAR tszMsgBuffer[2048];
+	XCHAR tszMsgBuffer[2048];
 	memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
 
 	int nCount = 2;
@@ -102,8 +103,8 @@ int main(int argc, char** argv)
 	int nCode = 0;
 	ProxyProtocol_SocksClient_ConnectParse(tszMsgBuffer, &nCode);
 	//请求
-	LPCTSTR lpszGetHttp = _T("GET / HTTP/1.1\r\nHost: www.xyry.org\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36\r\nAccept: text/html\r\n\r\n");
-	if (!XClient_TCPSelect_SendMsg(m_Socket, lpszGetHttp, _tcslen(lpszGetHttp)))
+	LPCXSTR lpszGetHttp = _X("GET / HTTP/1.1\r\nHost: www.xyry.org\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36\r\nAccept: text/html\r\n\r\n");
+	if (!XClient_TCPSelect_SendMsg(m_Socket, lpszGetHttp, _tcsxlen(lpszGetHttp)))
 	{
 		printf("发送投递失败！\n");
 		return 0;
@@ -120,7 +121,7 @@ int main(int argc, char** argv)
 	}
 
 	XClient_TCPSelect_Close(m_Socket);
-#ifdef _WINDOWS
+#ifdef _MSC_BUILD
 	WSACleanup();
 #endif
 	return 0;
