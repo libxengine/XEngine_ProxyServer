@@ -25,7 +25,7 @@ this software support following features
 ## install
 
 #### XEngine Evn
-you must install XEngine,need V7.38 or above,install XEngine can be refer to xengine Readme docment  
+you must install XEngine,need V8.10 or above,install XEngine can be refer to xengine Readme docment  
 GITEE:https://gitee.com/xyry/libxengine  
 GITHUB:https://github.com/libxengine/xengine
 
@@ -40,11 +40,7 @@ use vs open and compile,suport windows 7sp1 and above
 Just Run it,use XEngine_AuthorizeApp
 
 #### Linux
-use makefile compile,UBUNTU20.04 x64 or CENTOS8 x64  
-Run it on the terminal
-
-#### Macos
-use makefile compile,mac 12 and above  
+use makefile compile,UBUNTU22.04 x64 or RockyLinux9 x64  
 Run it on the terminal
 
 ##### complie
@@ -52,6 +48,13 @@ execute command in XEngine_Source path
 make complie  
 make FLAGS=InstallAll install  
 make FLAGS=CleanAll clear  
+
+#### Macos
+use makefile compile,mac 12 and above  
+Run it on the terminal
+
+##### complie
+Refer to Linux
 
 #### use
 
