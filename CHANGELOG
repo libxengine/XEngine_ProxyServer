@@ -1,3 +1,15 @@
+XEngine_ProxyServer V1.5.1.1001
+
+更新:匹配XEngine到V8.x版本
+更新:启动打印xengine版本类型了
+修改:启动参数-v现在打印自身版本信息
+删除:xengine版本判断代码
+
+update:match xengine v8.x
+update:start printf xengine ver type
+modify:printf self version info for parament -v
+delete:xengine version judgment code
+======================================================================================
 XEngine_ProxyServer V1.5.0.1001
 
 优化:优化服务器性能和线程个数
