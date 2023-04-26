@@ -35,22 +35,22 @@ CModuleAuthorize_User::~CModuleAuthorize_User()
   意思：是否成功
 备注：
 *********************************************************************/
-BOOL CModuleAuthorize_User::ModuleAuthorize_User_Init(LPCTSTR lpszAuthFile)
+bool CModuleAuthorize_User::ModuleAuthorize_User_Init(LPCXSTR lpszAuthFile)
 {
-	Authorize_IsErrorOccur = FALSE;
+	Authorize_IsErrorOccur = false;
 
-	FILE* pSt_File = _tfopen(lpszAuthFile, _T("rb"));
+	FILE* pSt_File = _xtfopen(lpszAuthFile, _X("rb"));
 	if (NULL == pSt_File)
 	{
-		Authorize_IsErrorOccur = TRUE;
+		Authorize_IsErrorOccur = true;
 		Authorize_dwErrorCode = ERROR_MODULE_AUTHORIZE_USER_OPENFILE;
-		return FALSE;
+		return false;
 	}
 	int nCount = 0;
-	TCHAR tszMsgBuffer[4096];
+	XCHAR tszMsgBuffer[4096];
 	memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
 
-	while (TRUE)
+	while (true)
 	{
 		int nRet = fread(tszMsgBuffer + nCount, 1, 1024, pSt_File);
 		if (nRet <= 0)
@@ -61,8 +61,8 @@ BOOL CModuleAuthorize_User::ModuleAuthorize_User_Init(LPCTSTR lpszAuthFile)
 	}
 	fclose(pSt_File);
 
-	LPCTSTR lpszLineStr = _T("\r\n");
-	TCHAR* ptszTokStr = _tcstok(tszMsgBuffer, lpszLineStr);
+	LPCXSTR lpszLineStr = _X("\r\n");
+	XCHAR* ptszTokStr = _tcsxtok(tszMsgBuffer, lpszLineStr);
 	while (1)
 	{
 		if (NULL == ptszTokStr)
@@ -72,12 +72,12 @@ BOOL CModuleAuthorize_User::ModuleAuthorize_User_Init(LPCTSTR lpszAuthFile)
 		XENGINE_USERAUTH st_UserInfo;
 		memset(&st_UserInfo, '\0', sizeof(XENGINE_USERAUTH));
 
-		_stscanf(ptszTokStr, _T("%s %s"), st_UserInfo.tszUserName, st_UserInfo.tszUserPass);
+		_stxscanf(ptszTokStr, _X("%s %s"), st_UserInfo.tszUserName, st_UserInfo.tszUserPass);
 		stl_MapSession.insert(make_pair(st_UserInfo.tszUserName, st_UserInfo));
 
-		ptszTokStr = _tcstok(NULL, lpszLineStr);
+		ptszTokStr = _tcsxtok(NULL, lpszLineStr);
 	}
-	return TRUE;
+	return true;
 }
 /************************************************************************
 函数名称：ModuleAuthorize_User_Destory
@@ -87,12 +87,12 @@ BOOL CModuleAuthorize_User::ModuleAuthorize_User_Init(LPCTSTR lpszAuthFile)
   意思：是否销毁成功
 备注：
 ************************************************************************/
-BOOL CModuleAuthorize_User::ModuleAuthorize_User_Destory()
+bool CModuleAuthorize_User::ModuleAuthorize_User_Destory()
 {
-	Authorize_IsErrorOccur = FALSE;
+	Authorize_IsErrorOccur = false;
 
 	stl_MapSession.clear();
-	return TRUE;
+	return true;
 }
 /********************************************************************
 函数名称：ModuleAuthorize_User_Exist
@@ -112,29 +112,29 @@ BOOL CModuleAuthorize_User::ModuleAuthorize_User_Destory()
   意思：是否成功
 备注：
 *********************************************************************/
-BOOL CModuleAuthorize_User::ModuleAuthorize_User_Exist(LPCTSTR lpszUser, LPCTSTR lpszPass)
+bool CModuleAuthorize_User::ModuleAuthorize_User_Exist(LPCXSTR lpszUser, LPCXSTR lpszPass)
 {
-	Authorize_IsErrorOccur = FALSE;
+	Authorize_IsErrorOccur = false;
 
 	unordered_map<string, XENGINE_USERAUTH>::const_iterator stl_MapIterator = stl_MapSession.find(lpszUser);
 	if (stl_MapIterator == stl_MapSession.end())
 	{
-		Authorize_IsErrorOccur = TRUE;
+		Authorize_IsErrorOccur = true;
 		Authorize_dwErrorCode = ERROR_MODULE_AUTHORIZE_USER_NOTFOUND;
-		return FALSE;
+		return false;
 	}
 
-	if (_tcslen(lpszPass) != _tcslen(stl_MapIterator->second.tszUserPass))
+	if (_tcsxlen(lpszPass) != _tcsxlen(stl_MapIterator->second.tszUserPass))
 	{
-		Authorize_IsErrorOccur = TRUE;
+		Authorize_IsErrorOccur = true;
 		Authorize_dwErrorCode = ERROR_MODULE_AUTHORIZE_USER_PASSWORD;
-		return FALSE;
+		return false;
 	}
-	if (0 != _tcsncmp(lpszPass, stl_MapIterator->second.tszUserPass, _tcslen(lpszPass)))
+	if (0 != _tcsxncmp(lpszPass, stl_MapIterator->second.tszUserPass, _tcsxlen(lpszPass)))
 	{
-		Authorize_IsErrorOccur = TRUE;
+		Authorize_IsErrorOccur = true;
 		Authorize_dwErrorCode = ERROR_MODULE_AUTHORIZE_USER_PASSWORD;
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }

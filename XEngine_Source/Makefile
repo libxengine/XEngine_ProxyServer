@@ -1,7 +1,7 @@
 RELEASE = 0
 UNICODE = 0
-#编译的选项参数
-FLAGS = RELEASE=$(RELEASE)
+PLATFORM=linux
+FLAGS= 
 #要编译的模块
 THIRDPART_MODULE_JSONCPP = ./XEngine_ThirdPart/jsoncpp
 
@@ -17,25 +17,16 @@ XENGINE_MODULES = libjsoncpp.so libXEngine_ModuleConfigure.so libXEngine_ModuleA
 MakeAll:$(XENGINE_MODULES)
 
 libjsoncpp.so:
-	make -C $(THIRDPART_MODULE_JSONCPP) $(FLAGS)
+	make -C $(THIRDPART_MODULE_JSONCPP) PLATFORM=$(PLATFORM) $(FLAGS)
 	
 libXEngine_ModuleConfigure.so:
-	make -C $(MODULE_CONFIGURE_PATH) $(FLAGS)
+	make -C $(MODULE_CONFIGURE_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
 libXEngine_ModuleAuthorize.so:
-	make -C $(MODULE_AUTHORIZE_PATH) $(FLAGS)
+	make -C $(MODULE_AUTHORIZE_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
 libXEngine_ModuleProtocol.so:
-	make -C $(MODULE_PROTOCOL_PATH) $(FLAGS)
+	make -C $(MODULE_PROTOCOL_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
 libXEngine_ModuleSession.so:
-	make -C $(MODULE_SESSION_PATH) $(FLAGS)	
+	make -C $(MODULE_SESSION_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
 	
 XEngine_ServiceApp.exe:
-	make -C $(APP_SERVICE_PATH) $(FLAGS)
-
-
-SetFlags_Install:
-	export FLAGS=InstallAll
-InstallAll:SetFlags_Install $(NETENGINE_LIB) 
- 
-SetFlags_Clean:
-	export FLAGS=CleanAll
-CleanAll:SetFlags_Clean $(NETENGINE_LIB) 
+	make -C $(APP_SERVICE_PATH) PLATFORM=$(PLATFORM) $(FLAGS)

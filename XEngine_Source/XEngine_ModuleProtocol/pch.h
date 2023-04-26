@@ -35,8 +35,8 @@ using namespace std;
 //    Purpose:     公用头文件
 //    History:
 *********************************************************************/
-extern BOOL Protocol_IsErrorOccur;
-extern DWORD Protocol_dwErrorCode;
+extern bool Protocol_IsErrorOccur;
+extern XLONG Protocol_dwErrorCode;
 
 #ifdef _MSC_BUILD
 #ifdef _DEBUG

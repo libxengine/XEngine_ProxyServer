@@ -11,14 +11,14 @@
 //    Purpose:     导出实现
 //    History:
 *********************************************************************/
-BOOL Authorize_IsErrorOccur = FALSE;
-DWORD Authorize_dwErrorCode = 0;
+bool Authorize_IsErrorOccur = false;
+XLONG Authorize_dwErrorCode = 0;
 //////////////////////////////////////////////////////////////////////////
 CModuleAuthorize_User m_User;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
-extern "C" DWORD ModuleAuthorize_GetLastError(int* pInt_SysError)
+extern "C" XLONG ModuleAuthorize_GetLastError(int* pInt_SysError)
 {
 	if (NULL != pInt_SysError)
 	{
@@ -29,15 +29,15 @@ extern "C" DWORD ModuleAuthorize_GetLastError(int* pInt_SysError)
 /************************************************************************/
 /*                        验证导出函数                                  */
 /************************************************************************/
-extern "C" BOOL ModuleAuthorize_User_Init(LPCTSTR lpszAuthFile)
+extern "C" bool ModuleAuthorize_User_Init(LPCXSTR lpszAuthFile)
 {
 	return m_User.ModuleAuthorize_User_Init(lpszAuthFile);
 }
-extern "C" BOOL ModuleAuthorize_User_Destory()
+extern "C" bool ModuleAuthorize_User_Destory()
 {
 	return m_User.ModuleAuthorize_User_Destory();
 }
-extern "C" BOOL ModuleAuthorize_User_Exist(LPCTSTR lpszUser, LPCTSTR lpszPass)
+extern "C" bool ModuleAuthorize_User_Exist(LPCXSTR lpszUser, LPCXSTR lpszPass)
 {
 	return m_User.ModuleAuthorize_User_Exist(lpszUser, lpszPass);
 }
