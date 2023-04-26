@@ -40,5 +40,5 @@ typedef std::string tstring;
 //    Purpose:     公用头文件
 //    History:
 *********************************************************************/
-extern BOOL Authorize_IsErrorOccur;
-extern DWORD Authorize_dwErrorCode;
+extern bool Authorize_IsErrorOccur;
+extern XLONG Authorize_dwErrorCode;

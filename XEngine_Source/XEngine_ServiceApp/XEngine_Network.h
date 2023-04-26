@@ -11,20 +11,20 @@
 //    History:
 *********************************************************************/
 //SOCKS相关
-BOOL CALLBACK Network_Callback_SocksLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam);                                  //用户连接
-void CALLBACK Network_Callback_SocksRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam); //接受到数据
-void CALLBACK Network_Callback_SocksLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam);                                  //用户离开
-void CALLBACK Network_Callback_SocksHeart(LPCSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam);                      //心跳超时
+bool CALLBACK Network_Callback_SocksLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);                                  //用户连接
+void CALLBACK Network_Callback_SocksRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam); //接受到数据
+void CALLBACK Network_Callback_SocksLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);                                  //用户离开
+void CALLBACK Network_Callback_SocksHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam);                      //心跳超时
 //Tunnel相关
-BOOL CALLBACK Network_Callback_TunnelLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam);
-void CALLBACK Network_Callback_TunnelRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam);
-void CALLBACK Network_Callback_TunnelLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam);
-void CALLBACK Network_Callback_TunnelHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam);
+bool CALLBACK Network_Callback_TunnelLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);
+void CALLBACK Network_Callback_TunnelRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam);
+void CALLBACK Network_Callback_TunnelLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);
+void CALLBACK Network_Callback_TunnelHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam);
 //Forward相关
-BOOL CALLBACK Network_Callback_ForwardLogin(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam);
-void CALLBACK Network_Callback_ForwardRecv(LPCTSTR lpszClientAddr, SOCKET hSocket, LPCTSTR lpszRecvMsg, int nMsgLen, LPVOID lParam);
-void CALLBACK Network_Callback_ForwardLeave(LPCTSTR lpszClientAddr, SOCKET hSocket, LPVOID lParam);
-void CALLBACK Network_Callback_ForwardHeart(LPCTSTR lpszClientAddr, SOCKET hSocket, int nStatus, LPVOID lParam);
+bool CALLBACK Network_Callback_ForwardLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);
+void CALLBACK Network_Callback_ForwardRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam);
+void CALLBACK Network_Callback_ForwardLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);
+void CALLBACK Network_Callback_ForwardHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam);
 //关闭与发送
-void XEngine_Network_Close(LPCTSTR lpszClientAddr, int nIPProto, int nCloseType);
-BOOL XEngine_Network_Send(LPCTSTR lpszClientAddr, LPCTSTR lpszMsgBuffer, int nMsgLen, int nIPProto);
+void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType);
+bool XEngine_Network_Send(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int nMsgLen, int nIPProto);

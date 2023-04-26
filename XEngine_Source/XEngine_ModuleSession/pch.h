@@ -35,8 +35,8 @@ using namespace std;
 //    Purpose:     公用头文件
 //    History:
 *********************************************************************/
-extern BOOL Session_IsErrorOccur;
-extern DWORD Session_dwErrorCode;
+extern bool Session_IsErrorOccur;
+extern XLONG Session_dwErrorCode;
 
 #ifdef _UNICODE
 typedef std::wstring tstring;

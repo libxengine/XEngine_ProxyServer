@@ -35,33 +35,33 @@ CModuleSession_Forward::~CModuleSession_Forward()
   意思：是否成功
 备注：
 *********************************************************************/
-BOOL CModuleSession_Forward::ModuleSession_Forward_Insert(LPCTSTR lpszAddr)
+bool CModuleSession_Forward::ModuleSession_Forward_Insert(LPCXSTR lpszAddr)
 {
-	Session_IsErrorOccur = FALSE;
+	Session_IsErrorOccur = false;
 
 	if (NULL == lpszAddr)
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_PARAMENT;
-		return FALSE;
+		return false;
 	}
 	SESSION_FORWARD st_Forward;
 	memset(&st_Forward, '\0', sizeof(SESSION_FORWARD));
 
-	_tcscpy(st_Forward.tszSrcAddr, lpszAddr);
+	_tcsxcpy(st_Forward.tszSrcAddr, lpszAddr);
 
 	st_Locker.lock();
 	unordered_map<tstring, SESSION_FORWARD>::const_iterator stl_MapIterator = stl_MapSession.find(lpszAddr);
 	if (stl_MapIterator != stl_MapSession.end())
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_EXIST;
 		st_Locker.unlock();
-		return FALSE;
+		return false;
 	}
 	stl_MapSession.insert(make_pair(lpszAddr, st_Forward));
 	st_Locker.unlock();
-	return TRUE;
+	return true;
 }
 /********************************************************************
 函数名称：ModuleSession_Forward_List
@@ -86,15 +86,15 @@ BOOL CModuleSession_Forward::ModuleSession_Forward_Insert(LPCTSTR lpszAddr)
   意思：是否成功
 备注：
 *********************************************************************/
-BOOL CModuleSession_Forward::ModuleSession_Forward_List(TCHAR*** ppptszListAddr, int* pInt_Count, LPCTSTR lpszAddr)
+bool CModuleSession_Forward::ModuleSession_Forward_List(XCHAR*** ppptszListAddr, int* pInt_Count, LPCXSTR lpszAddr)
 {
-	Session_IsErrorOccur = FALSE;
+	Session_IsErrorOccur = false;
 
 	if (NULL == pInt_Count)
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_PARAMENT;
-		return FALSE;
+		return false;
 	}
 	st_Locker.lock_shared();
 
@@ -113,15 +113,15 @@ BOOL CModuleSession_Forward::ModuleSession_Forward_List(TCHAR*** ppptszListAddr,
 	{
 		if (NULL != lpszAddr)
 		{
-			if (0 == _tcsncmp(lpszAddr, stl_MapIterator->first.c_str(), _tcslen(lpszAddr)))
+			if (0 == _tcsxncmp(lpszAddr, stl_MapIterator->first.c_str(), _tcsxlen(lpszAddr)))
 			{
 				continue;
 			}
 		}
-		_tcscpy((*ppptszListAddr)[i], stl_MapIterator->first.c_str());
+		_tcsxcpy((*ppptszListAddr)[i], stl_MapIterator->first.c_str());
 	}
 	st_Locker.unlock_shared();
-	return TRUE;
+	return true;
 }
 /********************************************************************
 函数名称：ModuleSession_Forward_Bind
@@ -141,15 +141,15 @@ BOOL CModuleSession_Forward::ModuleSession_Forward_List(TCHAR*** ppptszListAddr,
   意思：是否成功
 备注：
 *********************************************************************/
-BOOL CModuleSession_Forward::ModuleSession_Forward_Bind(LPCTSTR lpszSrcAddr, LPCTSTR lpszDstAddr)
+bool CModuleSession_Forward::ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr)
 {
-	Session_IsErrorOccur = FALSE;
+	Session_IsErrorOccur = false;
 
 	if ((NULL == lpszSrcAddr) || (NULL == lpszDstAddr))
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_PARAMENT;
-		return FALSE;
+		return false;
 	}
 	st_Locker.lock_shared();
 	//查找
@@ -157,27 +157,27 @@ BOOL CModuleSession_Forward::ModuleSession_Forward_Bind(LPCTSTR lpszSrcAddr, LPC
 	auto stl_MapDstIterator = stl_MapSession.find(lpszDstAddr);
 	if (stl_MapSrcIterator == stl_MapSession.end() || stl_MapDstIterator == stl_MapSession.end())
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_NOTFOUND;
 		st_Locker.unlock_shared();
-		return FALSE;
+		return false;
 	}
 	//如果设置过,不允许在设置
 	if (stl_MapSrcIterator->second.bForward || stl_MapDstIterator->second.bForward)
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_BIND;
 		st_Locker.unlock_shared();
-		return FALSE;
+		return false;
 	}
 	//需要设置两方的转发内容
-	stl_MapSrcIterator->second.bForward = TRUE;
-	_tcscpy(stl_MapSrcIterator->second.tszDstAddr, lpszDstAddr);
+	stl_MapSrcIterator->second.bForward = true;
+	_tcsxcpy(stl_MapSrcIterator->second.tszDstAddr, lpszDstAddr);
 
-	stl_MapDstIterator->second.bForward = TRUE;
-	_tcscpy(stl_MapDstIterator->second.tszDstAddr, lpszSrcAddr);
+	stl_MapDstIterator->second.bForward = true;
+	_tcsxcpy(stl_MapDstIterator->second.tszDstAddr, lpszSrcAddr);
 	st_Locker.unlock_shared();
-	return TRUE;
+	return true;
 }
 /********************************************************************
 函数名称：ModuleSession_Forward_Delete
@@ -197,40 +197,40 @@ BOOL CModuleSession_Forward::ModuleSession_Forward_Bind(LPCTSTR lpszSrcAddr, LPC
   意思：是否成功
 备注：
 *********************************************************************/
-BOOL CModuleSession_Forward::ModuleSession_Forward_Delete(LPCTSTR lpszAddr, TCHAR* ptszDstAddr)
+bool CModuleSession_Forward::ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR* ptszDstAddr)
 {
-	Session_IsErrorOccur = FALSE;
+	Session_IsErrorOccur = false;
 
 	if (NULL == lpszAddr)
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_PARAMENT;
-		return FALSE;
+		return false;
 	}
 	st_Locker.lock();
 	//查找
 	auto stl_MapSrcIterator = stl_MapSession.find(lpszAddr);
 	if (stl_MapSrcIterator == stl_MapSession.end())
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_NOTFOUND;
 		st_Locker.unlock();
-		return FALSE;
+		return false;
 	}
 	//如果有转发,需要清理对方的转发设置
 	if (stl_MapSrcIterator->second.bForward)
 	{
-		_tcscpy(ptszDstAddr, stl_MapSrcIterator->second.tszDstAddr);
+		_tcsxcpy(ptszDstAddr, stl_MapSrcIterator->second.tszDstAddr);
 		auto stl_MapDstIterator = stl_MapSession.find(stl_MapSrcIterator->second.tszSrcAddr);
 		if (stl_MapDstIterator == stl_MapSession.end())
 		{
-			stl_MapDstIterator->second.bForward = FALSE;
+			stl_MapDstIterator->second.bForward = false;
 			memset(stl_MapDstIterator->second.tszDstAddr, '\0', sizeof(stl_MapDstIterator->second.tszDstAddr));
 		}
 	}
 	stl_MapSession.erase(stl_MapSrcIterator);
 	st_Locker.unlock();
-	return TRUE;
+	return true;
 }
 /********************************************************************
 函数名称：ModuleSession_Forward_Get
@@ -250,35 +250,35 @@ BOOL CModuleSession_Forward::ModuleSession_Forward_Delete(LPCTSTR lpszAddr, TCHA
   意思：是否成功
 备注：
 *********************************************************************/
-BOOL CModuleSession_Forward::ModuleSession_Forward_Get(LPCTSTR lpszAddr, TCHAR* ptszDstAddr)
+bool CModuleSession_Forward::ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* ptszDstAddr)
 {
-	Session_IsErrorOccur = FALSE;
+	Session_IsErrorOccur = false;
 
 	if ((NULL == lpszAddr) || (NULL == ptszDstAddr))
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_PARAMENT;
-		return FALSE;
+		return false;
 	}
 	st_Locker.lock_shared();
 	//查找
 	auto stl_MapIterator = stl_MapSession.find(lpszAddr);
 	if (stl_MapIterator == stl_MapSession.end())
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_NOTFOUND;
 		st_Locker.unlock_shared();
-		return FALSE;
+		return false;
 	}
 	//如果有转发,需要清理对方的转发设置
 	if (!stl_MapIterator->second.bForward)
 	{
-		Session_IsErrorOccur = TRUE;
+		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_NOTFORWARD;
 		st_Locker.unlock_shared();
-		return FALSE;
+		return false;
 	}
-	_tcscpy(ptszDstAddr, stl_MapIterator->second.tszDstAddr);
+	_tcsxcpy(ptszDstAddr, stl_MapIterator->second.tszDstAddr);
 	st_Locker.unlock_shared();
-	return TRUE;
+	return true;
 }

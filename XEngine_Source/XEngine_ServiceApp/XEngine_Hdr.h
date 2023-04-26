@@ -71,8 +71,8 @@ using namespace std;
 //    Purpose:     公用头文件
 //    History:
 *********************************************************************/
-extern BOOL bIsRun;
-extern XLOG xhLog;
+extern bool bIsRun;
+extern XHANDLE xhLog;
 //Socks服务器
 extern XHANDLE xhSocksSocket;
 extern XHANDLE xhSocksHeart;
@@ -100,7 +100,7 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 
 typedef struct
 {
-	TCHAR tszIPAddr[128];
+	XCHAR tszIPAddr[128];
 	ENUM_RFCCOMPONENTS_PROXY_STATUS enStatus;
 	XNETHANDLE xhClient;
 }PROXYPROTOCOL_CLIENTINFO;

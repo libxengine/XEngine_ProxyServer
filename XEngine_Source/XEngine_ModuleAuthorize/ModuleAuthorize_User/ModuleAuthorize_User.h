@@ -13,8 +13,8 @@
 
 typedef struct
 {
-	TCHAR tszUserName[64];
-	TCHAR tszUserPass[64];
+	XCHAR tszUserName[64];
+	XCHAR tszUserPass[64];
 }XENGINE_USERAUTH, * LPXENGINE_USERAUTH;
 
 class CModuleAuthorize_User
@@ -23,9 +23,9 @@ public:
 	CModuleAuthorize_User();
 	~CModuleAuthorize_User();
 public:
-	BOOL ModuleAuthorize_User_Init(LPCTSTR lpszAuthFile);
-	BOOL ModuleAuthorize_User_Destory();
-	BOOL ModuleAuthorize_User_Exist(LPCTSTR lpszUser, LPCTSTR lpszPass);
+	bool ModuleAuthorize_User_Init(LPCXSTR lpszAuthFile);
+	bool ModuleAuthorize_User_Destory();
+	bool ModuleAuthorize_User_Exist(LPCXSTR lpszUser, LPCXSTR lpszPass);
 private:
 	unordered_map<tstring, XENGINE_USERAUTH> stl_MapSession;
 };

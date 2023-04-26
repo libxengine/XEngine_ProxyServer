@@ -15,8 +15,8 @@
 //////////////////////////////////////////////////////////////////////////
 typedef struct tag_XEngine_ServiceConfig
 {
-	TCHAR tszIPAddr[128];                     //本机IP地址,根据需要配置
-	BOOL bDeamon;                             //是否以守护进程启动,LINUX有效
+	XCHAR tszIPAddr[128];                     //本机IP地址,根据需要配置
+	bool bDeamon;                             //是否以守护进程启动,LINUX有效
 	int nSocksPort;                           //Socks端口,<=0不启用
 	int nTunnelPort;                          //Tunnel服务端口
 	int nForwardPort;                         //数据转发端口
@@ -36,7 +36,7 @@ typedef struct tag_XEngine_ServiceConfig
 	}st_XTime;                                //次数*时间=超时
 	struct
 	{
-		TCHAR tszLogFile[MAX_PATH];           //日志保存路径
+		XCHAR tszLogFile[MAX_PATH];           //日志保存路径
 		int nMaxSize;                         //最大日志大小
 		int nMaxCount;                        //最大日志个数
 		int nLogLeave;                        //日志等级
@@ -44,7 +44,7 @@ typedef struct tag_XEngine_ServiceConfig
 	struct  
 	{
 		int bAuth;                            //是否启用验证,大于0启用
-		TCHAR tszAuthFile[MAX_PATH];          //验证地址
+		XCHAR tszAuthFile[MAX_PATH];          //验证地址
 	}st_XAuth;
 	struct  
 	{
@@ -54,7 +54,7 @@ typedef struct tag_XEngine_ServiceConfig
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数定义
 //////////////////////////////////////////////////////////////////////////
-extern "C" DWORD ModuleConfigure_GetLastError(int* pInt_ErrorCode = NULL);
+extern "C" XLONG ModuleConfigure_GetLastError(int* pInt_ErrorCode = NULL);
 /************************************************************************/
 /*                        文件配置读取                                  */
 /************************************************************************/
@@ -76,4 +76,4 @@ extern "C" DWORD ModuleConfigure_GetLastError(int* pInt_ErrorCode = NULL);
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" BOOL ModuleConfigure_Json_File(LPCTSTR lpszConfigFile, XENGINE_SERVICECONFIG* pSt_ServerConfig);
+extern "C" bool ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XENGINE_SERVICECONFIG* pSt_ServerConfig);

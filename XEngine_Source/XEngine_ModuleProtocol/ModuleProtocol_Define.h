@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
-extern "C" DWORD ModuleProtocol_GetLastError(int* pInt_SysError = NULL);
+extern "C" XLONG ModuleProtocol_GetLastError(int* pInt_SysError = NULL);
 /************************************************************************/
 /*                        封包导出函数                                  */
 /************************************************************************/
@@ -50,7 +50,7 @@ extern "C" DWORD ModuleProtocol_GetLastError(int* pInt_SysError = NULL);
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" BOOL ModuleProtocol_Packet_ForwardList(TCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, TCHAR*** ppptszListAddr, int nCount);
+extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, XCHAR*** ppptszListAddr, int nCount);
 /************************************************************************/
 /*                        解析导出函数                                  */
 /************************************************************************/
@@ -82,4 +82,4 @@ extern "C" BOOL ModuleProtocol_Packet_ForwardList(TCHAR* ptszMsgBuffer, int* pIn
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" BOOL ModuleProtocol_Parse_ForwardBind(LPCTSTR lpszMsgBuffer, int nMsgLen, TCHAR * ptszSrcAddr, TCHAR * ptszDstAddr);
+extern "C" bool ModuleProtocol_Parse_ForwardBind(LPCXSTR lpszMsgBuffer, int nMsgLen, XCHAR * ptszSrcAddr, XCHAR * ptszDstAddr);

@@ -12,15 +12,15 @@
 //    Purpose:     导出实现
 //    History:
 *********************************************************************/
-BOOL Protocol_IsErrorOccur = FALSE;
-DWORD Protocol_dwErrorCode = 0;
+bool Protocol_IsErrorOccur = false;
+XLONG Protocol_dwErrorCode = 0;
 //////////////////////////////////////////////////////////////////////////
 CModuleProtocol_Packet m_ProtocolPacket;
 CModuleProtocol_Parse m_ProtocolParse;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
-extern "C" DWORD ModuleProtocol_GetLastError(int* pInt_SysError)
+extern "C" XLONG ModuleProtocol_GetLastError(int* pInt_SysError)
 {
 	if (NULL != pInt_SysError)
 	{
@@ -31,14 +31,14 @@ extern "C" DWORD ModuleProtocol_GetLastError(int* pInt_SysError)
 /************************************************************************/
 /*                        封包导出函数                                  */
 /************************************************************************/
-extern "C" BOOL ModuleProtocol_Packet_ForwardList(TCHAR * ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR * pSt_ProtocolHdr, TCHAR * **ppptszListAddr, int nCount)
+extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR * ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR * pSt_ProtocolHdr, XCHAR * **ppptszListAddr, int nCount)
 {
 	return m_ProtocolPacket.ModuleProtocol_Packet_ForwardList(ptszMsgBuffer, pInt_Len, pSt_ProtocolHdr, ppptszListAddr, nCount);
 }
 /************************************************************************/
 /*                        解析导出函数                                  */
 /************************************************************************/
-extern "C" BOOL ModuleProtocol_Parse_ForwardBind(LPCTSTR lpszMsgBuffer, int nMsgLen, TCHAR * ptszSrcAddr, TCHAR * ptszDstAddr)
+extern "C" bool ModuleProtocol_Parse_ForwardBind(LPCXSTR lpszMsgBuffer, int nMsgLen, XCHAR * ptszSrcAddr, XCHAR * ptszDstAddr)
 {
 	return m_ProtocolParse.ModuleProtocol_Parse_ForwardBind(lpszMsgBuffer, nMsgLen, ptszSrcAddr, ptszDstAddr);
 }

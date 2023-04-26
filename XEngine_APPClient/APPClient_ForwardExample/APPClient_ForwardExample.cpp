@@ -26,15 +26,16 @@
 //需要优先配置XEngine
 //WINDOWS支持VS2022 x86 debug 编译调试
 //linux使用下面的命令编译
-//g++ -std=c++17 -Wall -g APPClient_ForwardExample.cpp -o APPClient_ForwardExample.exe -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Client -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol
+//g++ -std=c++17 -Wall -g APPClient_ForwardExample.cpp -o APPClient_ForwardExample.exe -I ../../XEngine_Source/XEngine_ThirdPart/jsoncpp -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Client -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -L ../../XEngine_Source/XEngine_ThirdPart/jsoncpp -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol -ljsoncpp -Wl,-rpath=../../XEngine_Source/XEngine_ThirdPart/jsoncpp,--disable-new-dtags
+
 int main(int argc, char** argv)
 {
 #ifdef _MSC_BUILD
 	WSADATA st_WSAData;
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
-	SOCKET m_Socket;
-	LPCTSTR lpszServiceAddr = _T("127.0.0.1");
+	XSOCKET m_Socket;
+	LPCXSTR lpszServiceAddr = _X("127.0.0.1");
 	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5402))
 	{
 		printf("连接失败！错误:%lX\n", XClient_GetLastError());
@@ -53,14 +54,14 @@ int main(int argc, char** argv)
 	st_ProtocolHdr.unOperatorType = ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_AUTH;
 	st_ProtocolHdr.unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LOGREQ;
 
-	if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCTSTR)&st_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR)))
+	if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCXSTR)&st_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR)))
 	{
 		printf("发送失败！\n");
 		return 0;
 	}
 
 	nMsgLen = 0;
-	TCHAR* ptszMsgBuffer = NULL;
+	XCHAR* ptszMsgBuffer = NULL;
 	memset(&st_ProtocolHdr, '\0', sizeof(XENGINE_PROTOCOLHDR));
 	if (!XClient_TCPSelect_RecvPkt(m_Socket, &ptszMsgBuffer, &nMsgLen, &st_ProtocolHdr))
 	{
@@ -75,7 +76,7 @@ int main(int argc, char** argv)
 	st_ProtocolHdr.byVersion = 0;
 	st_ProtocolHdr.unOperatorType = ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_USER_FORWARD;
 	st_ProtocolHdr.unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LISTREQ;
-	if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCTSTR)&st_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR)))
+	if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCXSTR)&st_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR)))
 	{
 		printf("发送失败！\n");
 		return 0;
@@ -95,7 +96,7 @@ int main(int argc, char** argv)
 	std::unique_ptr<Json::CharReader> const pSt_JsonReader(st_JsonBuilder.newCharReader());
 	if (!pSt_JsonReader->parse(ptszMsgBuffer, ptszMsgBuffer + nMsgLen, &st_JsonAddr, &st_JsonError))
 	{
-		return FALSE;
+		return false;
 	}
 	BaseLib_OperatorMemory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
 	if (st_JsonAddr["Count"].asInt() > 0)
@@ -112,7 +113,7 @@ int main(int argc, char** argv)
 		st_ProtocolHdr.unPacketSize = st_JsonRoot.toStyledString().length();
 		st_ProtocolHdr.unOperatorType = ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_USER_FORWARD;
 		st_ProtocolHdr.unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREQ;
-		if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCTSTR)&st_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR)))
+		if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCXSTR)&st_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR)))
 		{
 			printf("发送失败！\n");
 			return 0;
@@ -139,14 +140,14 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		BOOL bGet = FALSE;
+		bool bGet = false;
 		while (1)
 		{
 			if (bGet)
 			{
 				//收到转发请求
 				nMsgLen = 2048;
-				TCHAR tszMsgBuffer[2048];
+				XCHAR tszMsgBuffer[2048];
 
 				memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
 
@@ -162,7 +163,7 @@ int main(int argc, char** argv)
 					//收到转发请求
 					if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREQ == st_ProtocolHdr.unOperatorCode)
 					{
-						bGet = TRUE;
+						bGet = true;
 						printf("get forward\n");
 					}
 					BaseLib_OperatorMemory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
