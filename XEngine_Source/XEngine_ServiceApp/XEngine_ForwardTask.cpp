@@ -22,7 +22,7 @@ XHTHREAD CALLBACK XEngine_Forward_Thread(XPVOID lParam)
 			continue;
 		}
 		int nListCount = 0;
-		HELPCOMPONENT_PACKET_CLIENT** ppSt_ListClient;
+		XENGINE_MANAGEPOOL_TASKEVENT** ppSt_ListClient;
 		HelpComponents_Datas_GetPoolEx(xhForwardPacket, nThreadPos, &ppSt_ListClient, &nListCount);
 		for (int i = 0; i < nListCount; i++)
 		{
