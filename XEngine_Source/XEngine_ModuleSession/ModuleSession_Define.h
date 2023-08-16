@@ -116,14 +116,14 @@ extern "C" bool ModuleSession_Forward_UNBind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDs
  参数.二：ptszDstAddr
   In/Out：Out
   类型：字符指针
-  可空：N
+  可空：Y
   意思：输出解绑的地址
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAddr);
+extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAddr = NULL);
 /********************************************************************
 函数名称：ModuleSession_Forward_Get
 函数功能：获取转发用户给

@@ -178,14 +178,8 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 			SocketOpt_HeartBeat_DeleteAddrEx(xhForwardHeart, lpszClientAddr);
 			NetCore_TCPXCore_CloseForClientEx(xhForwardSocket, lpszClientAddr);
 		}
-		XCHAR tszClientAddr[128];
-		memset(tszClientAddr, '\0', sizeof(tszClientAddr));
-		ModuleSession_Forward_Delete(lpszClientAddr, tszClientAddr);
-
-		if (_tcsxlen(tszClientAddr) > 0)
-		{
-			XEngine_Network_Close(tszClientAddr, XENGINE_CLIENT_NETTYPE_FORWARD, XENGINE_CLIENT_CLOSE_SERVICE);
-		}
+		HelpComponents_Datas_DeleteEx(xhForwardPacket, lpszClientAddr);
+		ModuleSession_Forward_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
 	else

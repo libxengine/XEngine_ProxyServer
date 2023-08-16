@@ -244,7 +244,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_UNBind(LPCXSTR lpszSrcAddr, L
  参数.二：ptszDstAddr
   In/Out：Out
   类型：字符指针
-  可空：N
+  可空：Y
   意思：输出解绑的地址
 返回值
   类型：逻辑型
@@ -274,7 +274,11 @@ bool CModuleSession_Forward::ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHA
 	//如果有转发,需要清理对方的转发设置
 	if (stl_MapSrcIterator->second.bForward)
 	{
-		_tcsxcpy(ptszDstAddr, stl_MapSrcIterator->second.tszDstAddr);
+		if (NULL != ptszDstAddr)
+		{
+			_tcsxcpy(ptszDstAddr, stl_MapSrcIterator->second.tszDstAddr);
+		}
+		
 		auto stl_MapDstIterator = stl_MapSession.find(stl_MapSrcIterator->second.tszSrcAddr);
 		if (stl_MapDstIterator == stl_MapSession.end())
 		{
