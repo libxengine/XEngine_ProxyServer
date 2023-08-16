@@ -61,6 +61,7 @@ void CALLBACK Network_Callback_TunnelHeart(LPCXSTR lpszClientAddr, XSOCKET hSock
 //////////////////////////////////////////////////////////////////////////下面是Tunnel网络IO相关代码处理函数
 bool CALLBACK Network_Callback_ForwardLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
 {
+	HelpComponents_Datas_CreateEx(xhForwardPacket, lpszClientAddr);
 	SocketOpt_HeartBeat_InsertAddrEx(xhForwardHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端:%s,连接到服务器"), lpszClientAddr);
 	return true;
