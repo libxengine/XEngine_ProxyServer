@@ -29,9 +29,9 @@ extern "C" XLONG ModuleSession_GetLastError(int* pInt_SysError)
 /************************************************************************/
 /*                        转发导出函数                                  */
 /************************************************************************/
-extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr)
+extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENGINE_PROTOCOL_USERAUTH * pSt_UserAuth)
 {
-	return m_Forward.ModuleSession_Forward_Insert(lpszAddr);
+	return m_Forward.ModuleSession_Forward_Insert(lpszAddr, pSt_UserAuth);
 }
 extern "C" bool ModuleSession_Forward_List(XCHAR * **ppptszListAddr, int* pInt_Count, LPCXSTR lpszAddr)
 {

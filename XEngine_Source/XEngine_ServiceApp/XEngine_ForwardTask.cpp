@@ -52,8 +52,13 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 	{
 		if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LOGREQ == pSt_ProtocolHdr->unOperatorCode)
 		{
+			XENGINE_PROTOCOL_USERAUTH st_UserAuth;
+			memset(&st_UserAuth, '\0', sizeof(XENGINE_PROTOCOL_USERAUTH));
+
+			memcpy(&st_UserAuth, lpszMsgBuffer, sizeof(XENGINE_PROTOCOL_USERAUTH));
+
 			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LOGREP;
-			ModuleSession_Forward_Insert(lpszClientAddr);
+			ModuleSession_Forward_Insert(lpszClientAddr, &st_UserAuth);
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，登录到服务器"), lpszClientAddr);
 		}

@@ -25,12 +25,17 @@ extern "C" XLONG ModuleSession_GetLastError(int* pInt_SysError = NULL);
   类型：常量字符指针
   可空：N
   意思：输入要插入的客户端
+ 参数.二：pSt_UserAuth
+  In/Out：In
+  类型：数据结构指针
+  可空：N
+  意思：输入要保存的客户端附加数据
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr);
+extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENGINE_PROTOCOL_USERAUTH * pSt_UserAuth);
 /********************************************************************
 函数名称：ModuleSession_Forward_List
 函数功能：获取列表

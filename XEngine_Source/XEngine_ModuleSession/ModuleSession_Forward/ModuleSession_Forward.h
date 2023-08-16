@@ -12,6 +12,7 @@
 *********************************************************************/
 typedef struct
 {
+	XENGINE_PROTOCOL_USERAUTH st_UserAuth;
 	XCHAR tszSrcAddr[128];
 	XCHAR tszDstAddr[128];
 	bool bForward;
@@ -23,7 +24,7 @@ public:
 	CModuleSession_Forward();
 	~CModuleSession_Forward();
 public:
-	bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr);
+	bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENGINE_PROTOCOL_USERAUTH* pSt_UserAuth);
 	bool ModuleSession_Forward_List(XCHAR*** ppptszListAddr, int* pInt_Count, LPCXSTR lpszAddr = NULL);
 	bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
 	bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR* ptszDstAddr);

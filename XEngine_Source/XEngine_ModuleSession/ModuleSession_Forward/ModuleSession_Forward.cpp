@@ -30,12 +30,17 @@ CModuleSession_Forward::~CModuleSession_Forward()
   类型：常量字符指针
   可空：N
   意思：输入要插入的客户端
+ 参数.二：pSt_UserAuth
+  In/Out：In
+  类型：数据结构指针
+  可空：N
+  意思：输入要保存的客户端附加数据
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Forward::ModuleSession_Forward_Insert(LPCXSTR lpszAddr)
+bool CModuleSession_Forward::ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENGINE_PROTOCOL_USERAUTH* pSt_UserAuth)
 {
 	Session_IsErrorOccur = false;
 
@@ -49,6 +54,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Insert(LPCXSTR lpszAddr)
 	memset(&st_Forward, '\0', sizeof(SESSION_FORWARD));
 
 	_tcsxcpy(st_Forward.tszSrcAddr, lpszAddr);
+	memcpy(&st_Forward.st_UserAuth, pSt_UserAuth, sizeof(XENGINE_PROTOCOL_USERAUTH));
 
 	st_Locker.lock();
 	unordered_map<tstring, SESSION_FORWARD>::const_iterator stl_MapIterator = stl_MapSession.find(lpszAddr);
