@@ -47,12 +47,6 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 	int nSDLen = 10240;
 	XCHAR tszSDBuffer[10240];
 	memset(tszSDBuffer, '\0', sizeof(tszSDBuffer));
-	//判断协议头和尾部
-	if ((XENGIEN_COMMUNICATION_PACKET_PROTOCOL_HEADER != pSt_ProtocolHdr->wHeader) || (XENGIEN_COMMUNICATION_PACKET_PROTOCOL_TAIL != pSt_ProtocolHdr->wTail))
-	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端：%s，协议错误"), lpszClientAddr);
-		return false;
-	}
 	//处理验证协议
 	if (ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_AUTH == pSt_ProtocolHdr->unOperatorType)
 	{
