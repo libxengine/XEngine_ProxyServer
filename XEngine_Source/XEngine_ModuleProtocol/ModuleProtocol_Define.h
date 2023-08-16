@@ -35,7 +35,7 @@ extern "C" XLONG ModuleProtocol_GetLastError(int* pInt_SysError = NULL);
   类型：协议头
   可空：N
   意思：输入请求的头
- 参数.四：ppptszListAddr
+ 参数.四：pppSt_ListUser
   In/Out：In
   类型：三级指针
   可空：N
@@ -50,7 +50,7 @@ extern "C" XLONG ModuleProtocol_GetLastError(int* pInt_SysError = NULL);
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, XCHAR*** ppptszListAddr, int nCount);
+extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, SESSION_FORWARD * **pppSt_ListUser, int nCount);
 /************************************************************************/
 /*                        解析导出函数                                  */
 /************************************************************************/

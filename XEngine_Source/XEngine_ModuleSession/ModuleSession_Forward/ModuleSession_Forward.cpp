@@ -92,7 +92,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENG
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Forward::ModuleSession_Forward_List(XCHAR*** ppptszListAddr, int* pInt_Count, LPCXSTR lpszAddr)
+bool CModuleSession_Forward::ModuleSession_Forward_List(SESSION_FORWARD*** pppSt_ListUser, int* pInt_Count, LPCXSTR lpszAddr /* = NULL */)
 {
 	Session_IsErrorOccur = false;
 
@@ -112,7 +112,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_List(XCHAR*** ppptszListAddr,
 	{
 		*pInt_Count = stl_MapSession.size() - 1;   //减去自己
 	}
-	BaseLib_OperatorMemory_Malloc((XPPPMEM)ppptszListAddr, *pInt_Count, 128);
+	BaseLib_OperatorMemory_Malloc((XPPPMEM)pppSt_ListUser, *pInt_Count, sizeof(SESSION_FORWARD));
 	//遍历
 	auto stl_MapIterator = stl_MapSession.begin();
 	for (int i = 0; stl_MapIterator != stl_MapSession.end(); stl_MapIterator++, i++)
@@ -124,7 +124,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_List(XCHAR*** ppptszListAddr,
 				continue;
 			}
 		}
-		_tcsxcpy((*ppptszListAddr)[i], stl_MapIterator->first.c_str());
+		*(*pppSt_ListUser)[i] = stl_MapIterator->second;
 	}
 	st_Locker.unlock_shared();
 	return true;

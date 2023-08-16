@@ -10,6 +10,13 @@
 //    Purpose:     导出定义
 //    History:
 *********************************************************************/
+typedef struct
+{
+	XENGINE_PROTOCOL_USERAUTH st_UserAuth;
+	XCHAR tszSrcAddr[128];
+	XCHAR tszDstAddr[128];
+	bool bForward;
+}SESSION_FORWARD, * LPSESSION_FORWARD;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
@@ -39,7 +46,7 @@ extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENGINE_PROTOCOL_
 /********************************************************************
 函数名称：ModuleSession_Forward_List
 函数功能：获取列表
- 参数.一：ppptszListAddr
+ 参数.一：pppSt_ListUser
   In/Out：Out
   类型：三级指针
   可空：N
@@ -59,7 +66,7 @@ extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENGINE_PROTOCOL_
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Forward_List(XCHAR*** ppptszListAddr, int* pInt_Count, LPCXSTR lpszAddr = NULL);
+extern "C" bool ModuleSession_Forward_List(SESSION_FORWARD * **pppSt_ListUser, int* pInt_Count, LPCXSTR lpszAddr = NULL);
 /********************************************************************
 函数名称：ModuleSession_Forward_Bind
 函数功能：绑定转发需求

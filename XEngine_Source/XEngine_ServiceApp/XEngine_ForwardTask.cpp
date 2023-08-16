@@ -69,12 +69,12 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 		if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LISTREQ == pSt_ProtocolHdr->unOperatorCode)
 		{
 			int nListCount = 0;
-			XCHAR** pptszListAddr;
+			SESSION_FORWARD** ppSt_ListUser;
 
 			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LISTREP;
-			if (ModuleSession_Forward_List(&pptszListAddr, &nListCount, lpszClientAddr))
+			if (ModuleSession_Forward_List(&ppSt_ListUser, &nListCount, lpszClientAddr))
 			{
-				ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, pSt_ProtocolHdr, &pptszListAddr, nListCount);
+				ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, pSt_ProtocolHdr, &ppSt_ListUser, nListCount);
 				XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_FORWARD);
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求可用转发列表成功"), lpszClientAddr);
 			}

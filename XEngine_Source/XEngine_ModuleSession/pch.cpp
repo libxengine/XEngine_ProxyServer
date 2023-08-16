@@ -33,9 +33,9 @@ extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENGINE_PROTOCOL_
 {
 	return m_Forward.ModuleSession_Forward_Insert(lpszAddr, pSt_UserAuth);
 }
-extern "C" bool ModuleSession_Forward_List(XCHAR * **ppptszListAddr, int* pInt_Count, LPCXSTR lpszAddr)
+extern "C" bool ModuleSession_Forward_List(SESSION_FORWARD * **pppSt_ListUser, int* pInt_Count, LPCXSTR lpszAddr)
 {
-	return m_Forward.ModuleSession_Forward_List(ppptszListAddr, pInt_Count, lpszAddr);
+	return m_Forward.ModuleSession_Forward_List(pppSt_ListUser, pInt_Count, lpszAddr);
 }
 extern "C" bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr)
 {
