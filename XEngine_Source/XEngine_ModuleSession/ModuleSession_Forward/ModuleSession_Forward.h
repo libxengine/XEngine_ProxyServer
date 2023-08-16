@@ -20,6 +20,7 @@ public:
 	bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENGINE_PROTOCOL_USERAUTH* pSt_UserAuth);
 	bool ModuleSession_Forward_List(SESSION_FORWARD*** pppSt_ListUser, int* pInt_Count, LPCXSTR lpszAddr = NULL);
 	bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
+	bool ModuleSession_Forward_UNBind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
 	bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR* ptszDstAddr);
 	bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* ptszDstAddr);
 private:
