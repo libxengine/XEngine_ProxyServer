@@ -31,9 +31,9 @@ extern "C" XLONG ModuleProtocol_GetLastError(int* pInt_SysError)
 /************************************************************************/
 /*                        封包导出函数                                  */
 /************************************************************************/
-extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR * ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR * pSt_ProtocolHdr, XCHAR * **ppptszListAddr, int nCount)
+extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR * ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR * pSt_ProtocolHdr, SESSION_FORWARD * **pppSt_ListUser, int nCount)
 {
-	return m_ProtocolPacket.ModuleProtocol_Packet_ForwardList(ptszMsgBuffer, pInt_Len, pSt_ProtocolHdr, ppptszListAddr, nCount);
+	return m_ProtocolPacket.ModuleProtocol_Packet_ForwardList(ptszMsgBuffer, pInt_Len, pSt_ProtocolHdr, pppSt_ListUser, nCount);
 }
 /************************************************************************/
 /*                        解析导出函数                                  */

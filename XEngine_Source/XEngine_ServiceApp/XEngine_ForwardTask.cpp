@@ -22,7 +22,7 @@ XHTHREAD CALLBACK XEngine_Forward_Thread(XPVOID lParam)
 			continue;
 		}
 		int nListCount = 0;
-		HELPCOMPONENT_PACKET_CLIENT** ppSt_ListClient;
+		XENGINE_MANAGEPOOL_TASKEVENT** ppSt_ListClient;
 		HelpComponents_Datas_GetPoolEx(xhForwardPacket, nThreadPos, &ppSt_ListClient, &nListCount);
 		for (int i = 0; i < nListCount; i++)
 		{
@@ -47,21 +47,22 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 	int nSDLen = 10240;
 	XCHAR tszSDBuffer[10240];
 	memset(tszSDBuffer, '\0', sizeof(tszSDBuffer));
-	//判断协议头和尾部
-	if ((XENGIEN_COMMUNICATION_PACKET_PROTOCOL_HEADER != pSt_ProtocolHdr->wHeader) || (XENGIEN_COMMUNICATION_PACKET_PROTOCOL_TAIL != pSt_ProtocolHdr->wTail))
-	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端：%s，协议错误"), lpszClientAddr);
-		return false;
-	}
 	//处理验证协议
 	if (ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_AUTH == pSt_ProtocolHdr->unOperatorType)
 	{
 		if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LOGREQ == pSt_ProtocolHdr->unOperatorCode)
 		{
+			XENGINE_PROTOCOL_USERAUTH st_UserAuth;
+			memset(&st_UserAuth, '\0', sizeof(XENGINE_PROTOCOL_USERAUTH));
+
+			memcpy(&st_UserAuth, lpszMsgBuffer, sizeof(XENGINE_PROTOCOL_USERAUTH));
+
+			pSt_ProtocolHdr->wReserve = 0;
+			pSt_ProtocolHdr->unPacketSize = 0;
 			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LOGREP;
-			ModuleSession_Forward_Insert(lpszClientAddr);
+			ModuleSession_Forward_Insert(lpszClientAddr, &st_UserAuth);
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，登录到服务器"), lpszClientAddr);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，设置的用户：%s，登录到服务器"), lpszClientAddr, st_UserAuth.tszUserName);
 		}
 	}
 	//处理转发协议
@@ -70,12 +71,13 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 		if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LISTREQ == pSt_ProtocolHdr->unOperatorCode)
 		{
 			int nListCount = 0;
-			XCHAR** pptszListAddr;
+			SESSION_FORWARD** ppSt_ListUser;
 
 			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LISTREP;
-			if (ModuleSession_Forward_List(&pptszListAddr, &nListCount, lpszClientAddr))
+			if (ModuleSession_Forward_List(&ppSt_ListUser, &nListCount, lpszClientAddr))
 			{
-				ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, pSt_ProtocolHdr, &pptszListAddr, nListCount);
+				ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, pSt_ProtocolHdr, &ppSt_ListUser, nListCount);
+				BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ListUser, nListCount);
 				XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_FORWARD);
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求可用转发列表成功"), lpszClientAddr);
 			}
@@ -112,6 +114,38 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREP;
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求绑定转发地址:%s 成功"), lpszClientAddr, tszDstAddr);
+		}
+		else if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_UNREQ == pSt_ProtocolHdr->unOperatorCode)
+		{
+			XCHAR tszDstAddr[128];
+			memset(tszDstAddr, '\0', sizeof(tszDstAddr));
+
+			if (!ModuleSession_Forward_Get(lpszClientAddr, tszDstAddr))
+			{
+				pSt_ProtocolHdr->wReserve = 411;
+				pSt_ProtocolHdr->unPacketSize = 0;
+				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_UNREP;
+				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端：%s，请求解绑失败,错误:%lX"), lpszClientAddr, ModuleSession_GetLastError());
+				return false;
+			}
+			if (!ModuleSession_Forward_UNBind(lpszClientAddr, tszDstAddr))
+			{
+				pSt_ProtocolHdr->wReserve = 411;
+				pSt_ProtocolHdr->unPacketSize = 0;
+				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_UNREP;
+				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端：%s，请求解绑失败,解除绑定的地址:%s,错误:%lX"), lpszClientAddr, tszDstAddr, ModuleSession_GetLastError());
+				return false;
+			}
+			//先告知对方要转发数据
+			pSt_ProtocolHdr->wReserve = 0;
+			pSt_ProtocolHdr->unPacketSize = 0;
+			XEngine_Network_Send(tszDstAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+			//最后返回结果
+			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_UNREP;
+			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求解绑转发地址:%s 成功"), lpszClientAddr, tszDstAddr);
 		}
 	}
 	
