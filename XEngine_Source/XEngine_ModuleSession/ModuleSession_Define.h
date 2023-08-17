@@ -10,6 +10,13 @@
 //    Purpose:     导出定义
 //    History:
 *********************************************************************/
+typedef struct
+{
+	XENGINE_PROTOCOL_USERAUTH st_UserAuth;
+	XCHAR tszSrcAddr[128];
+	XCHAR tszDstAddr[128];
+	bool bForward;
+}SESSION_FORWARD, * LPSESSION_FORWARD;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
@@ -25,16 +32,21 @@ extern "C" XLONG ModuleSession_GetLastError(int* pInt_SysError = NULL);
   类型：常量字符指针
   可空：N
   意思：输入要插入的客户端
+ 参数.二：pSt_UserAuth
+  In/Out：In
+  类型：数据结构指针
+  可空：N
+  意思：输入要保存的客户端附加数据
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr);
+extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENGINE_PROTOCOL_USERAUTH * pSt_UserAuth);
 /********************************************************************
 函数名称：ModuleSession_Forward_List
 函数功能：获取列表
- 参数.一：ppptszListAddr
+ 参数.一：pppSt_ListUser
   In/Out：Out
   类型：三级指针
   可空：N
@@ -54,7 +66,7 @@ extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr);
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Forward_List(XCHAR*** ppptszListAddr, int* pInt_Count, LPCXSTR lpszAddr = NULL);
+extern "C" bool ModuleSession_Forward_List(SESSION_FORWARD * **pppSt_ListUser, int* pInt_Count, LPCXSTR lpszAddr = NULL);
 /********************************************************************
 函数名称：ModuleSession_Forward_Bind
 函数功能：绑定转发需求
@@ -75,6 +87,25 @@ extern "C" bool ModuleSession_Forward_List(XCHAR*** ppptszListAddr, int* pInt_Co
 *********************************************************************/
 extern "C" bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
 /********************************************************************
+函数名称：ModuleSession_Forward_UNBind
+函数功能：解除绑定转发需求
+ 参数.一：lpszSrcAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入绑定的原始地址
+ 参数.二：lpszDstAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输出绑定的目标地址
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Forward_UNBind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
+/********************************************************************
 函数名称：ModuleSession_Forward_Delete
 函数功能：删除用户
  参数.一：lpszAddr
@@ -85,14 +116,14 @@ extern "C" bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstA
  参数.二：ptszDstAddr
   In/Out：Out
   类型：字符指针
-  可空：N
+  可空：Y
   意思：输出解绑的地址
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAddr);
+extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAddr = NULL);
 /********************************************************************
 函数名称：ModuleSession_Forward_Get
 函数功能：获取转发用户给

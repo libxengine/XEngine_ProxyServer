@@ -1,3 +1,24 @@
+XEngine_ProxyServer V1.6.0.1001
+
+增加:数据转发解绑协议支持
+增加:数据转发为会话模块插入现在有用户信息了
+更新:匹配XEngine到V8.15版本
+修改:数据转发枚举用户信息现在有更多信息
+修正:数据转发枚举用户列表没有释放内存的问题
+修正:数据转发用户登录的时候没有创建包管理器的问题
+修正:数据转发用户退出没有释放包资源的问题
+删除:数据转发没有用的协议处理代码
+
+added:unbind protocol supported
+added:insert have user info for session module
+update:match xengine v8.15
+modify:Enumerating users now has more information
+fixed:does not free memory when enum user 
+fixed:forward does not create packet when client login
+fixed:does not delete packet res when client close
+modify:does not close bind client when client close
+delete:unused protocol code
+======================================================================================
 XEngine_ProxyServer V1.5.1.1001
 
 更新:匹配XEngine到V8.x版本

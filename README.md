@@ -25,7 +25,7 @@ c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service
 ## 安装教程
 
 #### XEngine环境
-必须安装XEngine,版本需要V8.10或者以上版本,安装XEngine可以参考其Readme文档  
+必须安装XEngine,版本需要V8.15或者以上版本,安装XEngine可以参考其Readme文档  
 GITEE:https://gitee.com/xyry/libxengine  
 GITHUB:https://github.com/libxengine/xengine
 
@@ -89,6 +89,9 @@ make FLAGS=CleanAll 清理编译
 透传代理  
 转发代理支持权限和确认  
 支持加密代理  
+转发代理绑定解绑支持附加用户信息  
+转发代理绑定支持拒绝  
+转发代理支持用户验证  
 
 ## 关注我们
 如果你觉得这个软件对你有帮助,请你给我们一个START吧

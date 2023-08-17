@@ -61,6 +61,7 @@ void CALLBACK Network_Callback_TunnelHeart(LPCXSTR lpszClientAddr, XSOCKET hSock
 //////////////////////////////////////////////////////////////////////////下面是Tunnel网络IO相关代码处理函数
 bool CALLBACK Network_Callback_ForwardLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
 {
+	HelpComponents_Datas_CreateEx(xhForwardPacket, lpszClientAddr);
 	SocketOpt_HeartBeat_InsertAddrEx(xhForwardHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端:%s,连接到服务器"), lpszClientAddr);
 	return true;
@@ -177,14 +178,8 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 			SocketOpt_HeartBeat_DeleteAddrEx(xhForwardHeart, lpszClientAddr);
 			NetCore_TCPXCore_CloseForClientEx(xhForwardSocket, lpszClientAddr);
 		}
-		XCHAR tszClientAddr[128];
-		memset(tszClientAddr, '\0', sizeof(tszClientAddr));
-		ModuleSession_Forward_Delete(lpszClientAddr, tszClientAddr);
-
-		if (_tcsxlen(tszClientAddr) > 0)
-		{
-			XEngine_Network_Close(tszClientAddr, XENGINE_CLIENT_NETTYPE_FORWARD, XENGINE_CLIENT_CLOSE_SERVICE);
-		}
+		HelpComponents_Datas_DeleteEx(xhForwardPacket, lpszClientAddr);
+		ModuleSession_Forward_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
 	else

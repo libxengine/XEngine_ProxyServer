@@ -40,7 +40,7 @@ CModuleProtocol_Packet::~CModuleProtocol_Packet()
   类型：协议头
   可空：N
   意思：输入请求的头
- 参数.四：ppptszListAddr
+ 参数.四：pppSt_ListUser
   In/Out：In
   类型：三级指针
   可空：N
@@ -55,7 +55,7 @@ CModuleProtocol_Packet::~CModuleProtocol_Packet()
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, XCHAR*** ppptszListAddr, int nCount)
+bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, SESSION_FORWARD*** pppSt_ListUser, int nCount)
 {
 	Protocol_IsErrorOccur = false;
 
@@ -70,7 +70,20 @@ bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuf
 
 	for (int i = 0; i < nCount; i++)
 	{
-		st_JsonArray[i] = (*ppptszListAddr)[i];
+		Json::Value st_JsonObject;
+		Json::Value st_JsonSub;
+		st_JsonObject["bForward"] = (*pppSt_ListUser)[i]->bForward;
+		st_JsonObject["tszSrcAddr"] = (*pppSt_ListUser)[i]->tszSrcAddr;
+		st_JsonObject["tszDstAddr"] = (*pppSt_ListUser)[i]->tszDstAddr;
+
+		st_JsonSub["tszUserName"] = (*pppSt_ListUser)[i]->st_UserAuth.tszUserName;
+		st_JsonSub["tszUserPass"] = (*pppSt_ListUser)[i]->st_UserAuth.tszUserPass;
+		st_JsonSub["tszDCode"] = (*pppSt_ListUser)[i]->st_UserAuth.tszDCode;
+		st_JsonSub["enClientType"] = (*pppSt_ListUser)[i]->st_UserAuth.enClientType;
+		st_JsonSub["enDeviceType"] = (*pppSt_ListUser)[i]->st_UserAuth.enDeviceType;
+
+		st_JsonObject["st_UserAuth"] = st_JsonSub;
+		st_JsonArray.append(st_JsonObject);
 	}
 	st_JsonRoot["Count"] = nCount;
 	st_JsonRoot["Array"] = st_JsonArray;

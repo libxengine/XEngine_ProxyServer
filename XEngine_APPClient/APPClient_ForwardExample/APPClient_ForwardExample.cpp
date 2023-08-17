@@ -45,16 +45,27 @@ int main(int argc, char** argv)
 
 	int nMsgLen = 0;
 	XENGINE_PROTOCOLHDR st_ProtocolHdr;
+	XENGINE_PROTOCOL_USERAUTH st_UserAuth;
+
 	memset(&st_ProtocolHdr, '\0', sizeof(XENGINE_PROTOCOLHDR));
+	memset(&st_UserAuth, '\0', sizeof(XENGINE_PROTOCOL_USERAUTH));
 	//登录
 	st_ProtocolHdr.wHeader = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_HEADER;
 	st_ProtocolHdr.wTail = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_TAIL;
 	st_ProtocolHdr.byIsReply = true;
 	st_ProtocolHdr.byVersion = 0;
+	st_ProtocolHdr.unPacketSize = sizeof(XENGINE_PROTOCOL_USERAUTH);
 	st_ProtocolHdr.unOperatorType = ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_AUTH;
 	st_ProtocolHdr.unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LOGREQ;
 
+	_tcsxcpy(st_UserAuth.tszUserName, "test");
+
 	if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCXSTR)&st_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR)))
+	{
+		printf("发送失败！\n");
+		return 0;
+	}
+	if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCXSTR)&st_UserAuth, sizeof(XENGINE_PROTOCOL_USERAUTH)))
 	{
 		printf("发送失败！\n");
 		return 0;
@@ -104,7 +115,7 @@ int main(int argc, char** argv)
 		//请求绑定
 		Json::Value st_JsonRoot;
 		Json::Value st_JsonArray = st_JsonAddr["Array"];
-		st_JsonRoot["tszDstAddr"] = st_JsonArray[0].asCString();
+		st_JsonRoot["tszDstAddr"] = st_JsonArray[0]["tszSrcAddr"].asCString();
 
 		st_ProtocolHdr.wHeader = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_HEADER;
 		st_ProtocolHdr.wTail = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_TAIL;
@@ -172,7 +183,7 @@ int main(int argc, char** argv)
 		}		
 	}
 
-	std::this_thread::sleep_for(std::chrono::seconds(5000));
+	std::this_thread::sleep_for(std::chrono::seconds(20000));
 	XClient_TCPSelect_Close(m_Socket);
 #ifdef _MSC_BUILD
 	WSACleanup();
