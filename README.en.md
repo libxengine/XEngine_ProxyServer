@@ -25,7 +25,7 @@ this software support following features
 ## install
 
 #### XEngine Evn
-you must install XEngine,need V8.10 or above,install XEngine can be refer to xengine Readme docment  
+you must install XEngine,need V8.15 or above,install XEngine can be refer to xengine Readme docment  
 GITEE:https://gitee.com/xyry/libxengine  
 GITHUB:https://github.com/libxengine/xengine
 
