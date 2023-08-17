@@ -72,6 +72,7 @@ bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuf
 	{
 		Json::Value st_JsonObject;
 		Json::Value st_JsonSub;
+		st_JsonObject["bForward"] = (*pppSt_ListUser)[i]->bForward;
 		st_JsonObject["tszSrcAddr"] = (*pppSt_ListUser)[i]->tszSrcAddr;
 		st_JsonObject["tszDstAddr"] = (*pppSt_ListUser)[i]->tszDstAddr;
 
