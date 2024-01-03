@@ -85,6 +85,8 @@ bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuf
 		st_JsonObject["st_UserAuth"] = st_JsonSub;
 		st_JsonArray.append(st_JsonObject);
 	}
+	st_JsonRoot["code"] = 0;
+	st_JsonRoot["msg"] = "success";
 	st_JsonRoot["Count"] = nCount;
 	st_JsonRoot["Array"] = st_JsonArray;
 
