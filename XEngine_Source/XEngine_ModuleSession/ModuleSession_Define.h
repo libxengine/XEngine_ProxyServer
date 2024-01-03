@@ -87,25 +87,6 @@ extern "C" bool ModuleSession_Forward_List(SESSION_FORWARD * **pppSt_ListUser, i
 *********************************************************************/
 extern "C" bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
 /********************************************************************
-函数名称：ModuleSession_Forward_UNBind
-函数功能：解除绑定转发需求
- 参数.一：lpszSrcAddr
-  In/Out：In
-  类型：常量字符指针
-  可空：N
-  意思：输入绑定的原始地址
- 参数.二：lpszDstAddr
-  In/Out：In
-  类型：常量字符指针
-  可空：N
-  意思：输出绑定的目标地址
-返回值
-  类型：逻辑型
-  意思：是否成功
-备注：
-*********************************************************************/
-extern "C" bool ModuleSession_Forward_UNBind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
-/********************************************************************
 函数名称：ModuleSession_Forward_Delete
 函数功能：删除用户
  参数.一：lpszAddr

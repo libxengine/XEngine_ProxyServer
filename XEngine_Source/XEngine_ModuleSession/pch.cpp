@@ -41,10 +41,6 @@ extern "C" bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstA
 {
 	return m_Forward.ModuleSession_Forward_Bind(lpszSrcAddr, lpszDstAddr);
 }
-extern "C" bool ModuleSession_Forward_UNBind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr)
-{
-	return m_Forward.ModuleSession_Forward_UNBind(lpszSrcAddr, lpszDstAddr);
-}
 extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAddr)
 {
 	return m_Forward.ModuleSession_Forward_Delete(lpszAddr, ptszDstAddr);
