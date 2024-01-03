@@ -130,8 +130,8 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 		return false;
 	}
 	Json::Value st_JsonXAuth = st_JsonRoot["XAuth"];
-	pSt_ServerConfig->st_XAuth.bAuth = st_JsonXAuth["bAuth"].asInt();
-	_tcsxcpy(pSt_ServerConfig->st_XAuth.tszAuthFile, st_JsonXAuth["tszAuthFile"].asCString());
+	pSt_ServerConfig->st_XAuth.bAuth = st_JsonXAuth["bAuth"].asBool();
+	_tcsxcpy(pSt_ServerConfig->st_XAuth.tszAuthUrl, st_JsonXAuth["tszAuthUrl"].asCString());
 
 	if (st_JsonRoot["XVer"].empty())
 	{

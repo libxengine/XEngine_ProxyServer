@@ -18,5 +18,6 @@ public:
 	~CModuleProtocol_Packet();
 public:
 	bool ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, SESSION_FORWARD*** pppSt_ListUser, int nCount);
+	bool ModuleProtocol_Packet_Auth(XCHAR* ptszMsgBuffer, int* pInt_Len, LPCXSTR lpszUser, LPCXSTR lpszPass);
 private:
 };

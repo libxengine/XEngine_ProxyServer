@@ -4,5 +4,6 @@ EXPORTS
 	ModuleProtocol_GetLastError
 
 	ModuleProtocol_Packet_ForwardList
+	ModuleProtocol_Packet_Auth
 
 	ModuleProtocol_Parse_ForwardBind
