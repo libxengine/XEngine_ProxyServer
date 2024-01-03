@@ -14,6 +14,3 @@ copy /y "%XEngine_Lib64%\x64\XEngine_RfcComponents\RfcComponents_ProxyProtocol.d
 
 copy /y "%XEngine_Lib64%\x64\XEngine_SystemSdk\XEngine_ProcFile.dll" "./"
 copy /y "%XEngine_Lib64%\x64\XEngine_SystemSdk\XEngine_SystemApi.dll" "./"
-
-copy /y "%XEngine_Lib64%\x64\XEngine_LibEx\libcrypto-3-x64.dll" "./"
-copy /y "%XEngine_Lib64%\x64\XEngine_LibEx\libssl-3-x64.dll" "./"
