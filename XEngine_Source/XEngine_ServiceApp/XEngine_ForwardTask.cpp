@@ -82,6 +82,16 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 	//处理转发协议
 	if (ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_USER_FORWARD == pSt_ProtocolHdr->unOperatorType)
 	{
+		if (!ModuleSession_Forward_Get(lpszClientAddr))
+		{
+			pSt_ProtocolHdr->wReserve = 401;
+			pSt_ProtocolHdr->unPacketSize = 0;
+			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREP;
+			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求转发协议:%d 失败,因为没有登录"), lpszClientAddr, pSt_ProtocolHdr->unOperatorCode);
+			return false;
+		}
+
 		if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LISTREQ == pSt_ProtocolHdr->unOperatorCode)
 		{
 			int nListCount = 0;

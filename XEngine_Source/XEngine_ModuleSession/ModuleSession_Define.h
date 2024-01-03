@@ -116,11 +116,11 @@ extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAd
  参数.二：ptszDstAddr
   In/Out：Out
   类型：字符指针
-  可空：N
+  可空：Y
   意思：输出对端地址
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* ptszDstAddr);
+extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* ptszDstAddr = NULL);

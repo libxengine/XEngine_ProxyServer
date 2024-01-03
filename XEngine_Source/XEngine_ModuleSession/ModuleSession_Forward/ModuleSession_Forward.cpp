@@ -253,7 +253,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHA
  参数.二：ptszDstAddr
   In/Out：Out
   类型：字符指针
-  可空：N
+  可空：Y
   意思：输出对端地址
 返回值
   类型：逻辑型
@@ -279,6 +279,11 @@ bool CModuleSession_Forward::ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* 
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_NOTFOUND;
 		st_Locker.unlock_shared();
 		return false;
+	}
+	if (NULL == ptszDstAddr)
+	{
+		st_Locker.unlock_shared();
+		return true;
 	}
 	//如果有转发,需要清理对方的转发设置
 	if (!stl_MapIterator->second.bForward)
