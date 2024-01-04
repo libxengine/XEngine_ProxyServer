@@ -27,14 +27,6 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 			XEngine_Configure_Help();
 			return false;
 		}
-		else if (0 == _tcsxcmp("-TP", argv[i]))
-		{
-			pSt_Configure->nSocksPort = _ttxoi(argv[i + 1]);
-		}
-		else if (0 == _tcsxcmp("-HP", argv[i]))
-		{
-			pSt_Configure->nTunnelPort = _ttxoi(argv[i + 1]);
-		}
 		else if (0 == _tcsxcmp("-d", argv[i]))
 		{
 			pSt_Configure->bDeamon = _ttxoi(argv[i + 1]);
@@ -55,8 +47,6 @@ void XEngine_Configure_Help()
 	printf(_X("--------------------------启动参数帮助开始--------------------------\n"));
 	printf(_X("网络消息队列服务启动参数：程序 参数 参数值，参数是区分大小写的。如果不指定将会加载默认的ini配置文件里面的参数\n"));
 	printf(_X("-h or -H：启动参数帮助提示信息\n"));
-	printf(_X("-TP：设置消息队列TCP服务端口号\n"));
-	printf(_X("-HP：设置消息队列HTTP服务端口号\n"));
 	printf(_X("-d：1 启用守护进程，2不启用\n"));
 	printf(_X("--------------------------启动参数帮助结束--------------------------\n"));
 }

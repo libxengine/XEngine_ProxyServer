@@ -186,54 +186,6 @@ bool CModuleSession_Forward::ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPC
 	return true;
 }
 /********************************************************************
-函数名称：ModuleSession_Forward_UNBind
-函数功能：解除绑定转发需求
- 参数.一：lpszSrcAddr
-  In/Out：In
-  类型：常量字符指针
-  可空：N
-  意思：输入绑定的原始地址
- 参数.二：lpszDstAddr
-  In/Out：In
-  类型：常量字符指针
-  可空：N
-  意思：输出绑定的目标地址
-返回值
-  类型：逻辑型
-  意思：是否成功
-备注：
-*********************************************************************/
-bool CModuleSession_Forward::ModuleSession_Forward_UNBind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr)
-{
-	Session_IsErrorOccur = false;
-
-	if ((NULL == lpszSrcAddr) || (NULL == lpszDstAddr))
-	{
-		Session_IsErrorOccur = true;
-		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_PARAMENT;
-		return false;
-	}
-	st_Locker.lock_shared();
-	//查找
-	auto stl_MapSrcIterator = stl_MapSession.find(lpszSrcAddr);
-	auto stl_MapDstIterator = stl_MapSession.find(lpszDstAddr);
-	if (stl_MapSrcIterator == stl_MapSession.end() || stl_MapDstIterator == stl_MapSession.end())
-	{
-		Session_IsErrorOccur = true;
-		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_NOTFOUND;
-		st_Locker.unlock_shared();
-		return false;
-	}
-	//解除双方绑定
-	stl_MapSrcIterator->second.bForward = false;
-	memset(stl_MapSrcIterator->second.tszDstAddr, '\0', sizeof(stl_MapSrcIterator->second.tszDstAddr));
-
-	stl_MapDstIterator->second.bForward = false;
-	memset(stl_MapDstIterator->second.tszDstAddr, '\0', sizeof(stl_MapDstIterator->second.tszDstAddr));
-	st_Locker.unlock_shared();
-	return true;
-}
-/********************************************************************
 函数名称：ModuleSession_Forward_Delete
 函数功能：删除用户
  参数.一：lpszAddr
@@ -301,7 +253,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHA
  参数.二：ptszDstAddr
   In/Out：Out
   类型：字符指针
-  可空：N
+  可空：Y
   意思：输出对端地址
 返回值
   类型：逻辑型
@@ -327,6 +279,11 @@ bool CModuleSession_Forward::ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* 
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_NOTFOUND;
 		st_Locker.unlock_shared();
 		return false;
+	}
+	if (NULL == ptszDstAddr)
+	{
+		st_Locker.unlock_shared();
+		return true;
 	}
 	//如果有转发,需要清理对方的转发设置
 	if (!stl_MapIterator->second.bForward)

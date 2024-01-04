@@ -48,7 +48,7 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 			_tcsxcat(tszAuthBuffer, tszTmpBuffer);
 			_tcsxcat(tszAuthBuffer, _X(" "));
 			//服务器是否支持
-			if (st_ServiceConfig.st_XAuth.bAuth == enListAuths[i])
+			if ((ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_USERPASS == enListAuths[i]) || (ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_ANONYMOUS == enListAuths[i]))
 			{
 				bFoundAuth = true;
 			}
@@ -86,14 +86,16 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,用户登录验证失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 			return false;
 		}
-		if (enProxyAuth != st_ServiceConfig.st_XAuth.bAuth)
+		if (enProxyAuth != ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_USERPASS)
 		{
 			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_FAILED);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,用户登录验证失败,客户端发送的验证类型不支持"), lpszClientAddr);
 			return false;
 		}
-		if (!ModuleAuthorize_User_Exist(tszUserName, tszUserPass))
+		int nHTTPCode = 0;
+		ModuleProtocol_Packet_Auth(tszMsgBuffer, &nLen, tszUserName, tszUserPass);
+		if (!APIClient_Http_Request(_X("POST"), st_ServiceConfig.st_XAuth.tszAuthUrl, tszMsgBuffer, &nHTTPCode))
 		{
 			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_FAILED);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);

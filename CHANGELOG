@@ -1,3 +1,25 @@
+XEngine_ProxyServer V1.7.0.1001
+
+增加:转发协议支持用户验证了
+修改:用户验证从本地用户验证修改为http用户验证
+修改:http转发包协议现在有code和msg字段了
+修改:ModuleSession_Forward_Get是否登录处理
+修改:转发列表和绑定协议错误处理方法
+修改:转发协议请求必须登录了
+修正:套接字验证类型不正确
+删除:SOCKS和TUNNEL代理启动参数支持
+删除:解绑协议支持,因为不会被使用到
+
+added:forward user verifacation supported
+modify:user verifacation modify to http pass from local user
+modify:http forward packet protocol have code and msg field
+modify:ModuleSession_Forward_Get supported addr whether login
+modify:forward list and bind protocol error process way
+modify:forward must be login now
+fixed:socks ver type is incorrent
+delete:socks and tunnel start parament supported
+delete:unbind protocol,because that does not work
+======================================================================================
 XEngine_ProxyServer V1.6.0.1001
 
 增加:数据转发解绑协议支持
