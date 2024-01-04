@@ -39,7 +39,6 @@ void ServiceApp_Stop(int signo)
 		ManagePool_Thread_NQDestroy(xhForwardPool);
 		//销毁日志资源
 		HelpComponents_XLog_Destroy(xhLog);
-		ModuleAuthorize_User_Destory();
 	}
 #ifdef _WINDOWS
 	WSACleanup();
@@ -117,14 +116,9 @@ int main(int argc, char** argv)
 	HelpComponents_XLog_SetLogPriority(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化日志系统成功"));
 
-	if (st_ServiceConfig.st_XAuth.bAuth >0)
+	if (st_ServiceConfig.st_XAuth.bAuth)
 	{
-		if (!ModuleAuthorize_User_Init(st_ServiceConfig.st_XAuth.tszAuthFile))
-		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启用用户验证服务失败,错误：%lX"), ModuleAuthorize_GetLastError());
-			goto XENGINE_SERVICEAPP_EXIT;
-		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启用用户验证服务,用户列表地址:%s"), st_ServiceConfig.st_XAuth.tszAuthFile);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启用用户验证服务,用户验证地址:%s"), st_ServiceConfig.st_XAuth.tszAuthUrl);
 	}
 	else
 	{
@@ -299,7 +293,6 @@ XENGINE_SERVICEAPP_EXIT:
 		ManagePool_Thread_NQDestroy(xhForwardPool);
 		//销毁日志资源
 		HelpComponents_XLog_Destroy(xhLog);
-		ModuleAuthorize_User_Destory();
 	}
 #ifdef _MSC_BUILD
 	WSACleanup();

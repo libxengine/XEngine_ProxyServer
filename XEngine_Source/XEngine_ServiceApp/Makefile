@@ -6,10 +6,10 @@ RELEASE = 0
 UNICODE = 0
 LOADHDR = -I ./ -I ../XEngine_ThirdPart/jsoncpp
 LOADSO = -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Core -L /usr/local/lib/XEngine_Release/XEngine_HelpComponents -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -L /usr/local/lib/XEngine_Release/XEngine_Client -L /usr/local/lib/XEngine_Release/XEngine_NetHelp  \
-         -L ../XEngine_ModuleConfigure -L ../XEngine_ModuleAuthorize -L ../XEngine_ModuleSession -L ../XEngine_ModuleProtocol  \
+         -L ../XEngine_ModuleConfigure -L ../XEngine_ModuleSession -L ../XEngine_ModuleProtocol  \
 		 -L ../XEngine_ThirdPart/jsoncpp
-LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_OPenSsl -lXEngine_ManagePool -lXEngine_NetXApi -lHelpComponents_XLog -lHelpComponents_Packets -lRfcComponents_ProxyProtocol -lXClient_Socket -lNetHelp_APIHelp \
-      -lXEngine_ModuleConfigure -lXEngine_ModuleAuthorize -lXEngine_ModuleSession -lXEngine_ModuleProtocol  \
+LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_OPenSsl -lXEngine_ManagePool -lXEngine_NetXApi -lHelpComponents_XLog -lHelpComponents_Packets -lRfcComponents_ProxyProtocol -lXClient_Socket -lNetHelp_APIHelp -lNetHelp_APIClient \
+      -lXEngine_ModuleConfigure -lXEngine_ModuleSession -lXEngine_ModuleProtocol  \
 	  -ljsoncpp
 LIBEX = 
 OBJECTS = XEngine_Configure.o XEngine_Network.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ForwardTask.o XEngine_ServiceApp.o

@@ -85,6 +85,8 @@ bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuf
 		st_JsonObject["st_UserAuth"] = st_JsonSub;
 		st_JsonArray.append(st_JsonObject);
 	}
+	st_JsonRoot["code"] = 0;
+	st_JsonRoot["msg"] = "success";
 	st_JsonRoot["Count"] = nCount;
 	st_JsonRoot["Array"] = st_JsonArray;
 
@@ -93,5 +95,54 @@ bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuf
 	*pInt_Len = sizeof(XENGINE_PROTOCOLHDR) + pSt_ProtocolHdr->unPacketSize;
 	memcpy(ptszMsgBuffer, pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR));
 	memcpy(ptszMsgBuffer + sizeof(XENGINE_PROTOCOLHDR), st_JsonRoot.toStyledString().c_str(), pSt_ProtocolHdr->unPacketSize);
+	return true;
+}
+/********************************************************************
+函数名称：ModuleProtocol_Packet_Auth
+函数功能：验证信息打包
+ 参数.一：ptszMsgBuffer
+  In/Out：Out
+  类型：字符指针
+  可空：N
+  意思：输出封装好的包
+ 参数.二：pInt_Len
+  In/Out：Out
+  类型：整数型指针
+  可空：N
+  意思：输出封装大小
+ 参数.三：lpszUser
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入用户名
+ 参数.四：lpszPass
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入密码
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+bool CModuleProtocol_Packet::ModuleProtocol_Packet_Auth(XCHAR* ptszMsgBuffer, int* pInt_Len, LPCXSTR lpszUser, LPCXSTR lpszPass)
+{
+	Protocol_IsErrorOccur = false;
+
+	if ((NULL == ptszMsgBuffer) || (NULL == pInt_Len))
+	{
+		Protocol_IsErrorOccur = true;
+		Protocol_dwErrorCode = ERROR_MODULE_PROTOCOL_PACKET_PARAMENT;
+		return false;
+	}
+	Json::Value st_JsonRoot;
+
+	st_JsonRoot["code"] = 0;
+	st_JsonRoot["msg"] = "success";
+	st_JsonRoot["lpszUser"] = lpszUser;
+	st_JsonRoot["lpszPass"] = lpszPass;
+
+	*pInt_Len = st_JsonRoot.toStyledString().length();
+	memcpy(ptszMsgBuffer, st_JsonRoot.toStyledString().c_str(), *pInt_Len);
 	return true;
 }

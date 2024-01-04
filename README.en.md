@@ -14,7 +14,7 @@ This software is a standard proxy server that supports Socks5 and HTTP tunnel pr
 this software support following features  
 1. SOCKS5 proxy  
 2. Tunnel proxy  
-3. forward proxy
+3. TCP forward proxy
 4. support Permission Validation  
 5. operator log  
 6. encrypt Communication(planning)  

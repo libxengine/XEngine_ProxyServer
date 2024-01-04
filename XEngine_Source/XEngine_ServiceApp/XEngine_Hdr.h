@@ -36,6 +36,8 @@ using namespace std;
 #include <XEngine_Include/XEngine_Core/NetXApi_Error.h>
 #include <XEngine_Include/XEngine_NetHelp/APIHelp_Define.h>
 #include <XEngine_Include/XEngine_NetHelp/APIHelp_Error.h>
+#include <XEngine_Include/XEngine_NetHelp/APIClient_Define.h>
+#include <XEngine_Include/XEngine_NetHelp/APIClient_Error.h>
 #include <XEngine_Include/XEngine_HelpComponents/XLog_Define.h>
 #include <XEngine_Include/XEngine_HelpComponents/XLog_Error.h>
 #include <XEngine_Include/XEngine_HelpComponents/Packets_Define.h>
@@ -48,8 +50,6 @@ using namespace std;
 #include "../XEngine_UserProtocol.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Define.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Error.h"
-#include "../XEngine_ModuleAuthorize/ModuleAuth_Define.h"
-#include "../XEngine_ModuleAuthorize/ModuleAuth_Error.h"
 #include "../XEngine_ModuleSession/ModuleSession_Define.h"
 #include "../XEngine_ModuleSession/ModuleSession_Error.h"
 #include "../XEngine_ModuleProtocol/ModuleProtocol_Define.h"
@@ -110,24 +110,20 @@ typedef struct
 #ifdef _WIN64
 #ifdef _DEBUG
 #pragma comment(lib,"../x64/Debug/XEngine_ModuleConfigure.lib")
-#pragma comment(lib,"../x64/Debug/XEngine_ModuleAuthorize.lib")
 #pragma comment(lib,"../x64/Debug/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../x64/Debug/XEngine_ModuleProtocol.lib")
 #else
 #pragma comment(lib,"../x64/Release/XEngine_ModuleConfigure.lib")
-#pragma comment(lib,"../x64/Release/XEngine_ModuleAuthorize.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleProtocol.lib")
 #endif
 #else
 #ifdef _DEBUG
 #pragma comment(lib,"../Debug/XEngine_ModuleConfigure.lib")
-#pragma comment(lib,"../Debug/XEngine_ModuleAuthorize.lib")
 #pragma comment(lib,"../Debug/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../Debug/XEngine_ModuleProtocol.lib")
 #else
 #pragma comment(lib,"../Release/XEngine_ModuleConfigure.lib")
-#pragma comment(lib,"../Release/XEngine_ModuleAuthorize.lib")
 #pragma comment(lib,"../Release/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../Release/XEngine_ModuleProtocol.lib")
 #endif
@@ -138,6 +134,7 @@ typedef struct
 #pragma comment(lib,"XEngine_Core/XEngine_OPenSsl.lib")
 #pragma comment(lib,"XEngine_Core/XEngine_NetXApi.lib")
 #pragma comment(lib,"XEngine_NetHelp/NetHelp_APIHelp.lib")
+#pragma comment(lib,"XEngine_NetHelp/NetHelp_APIClient.lib")
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_XLog.lib")
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_Packets.lib")
 #pragma comment(lib,"XEngine_RfcComponents/RfcComponents_ProxyProtocol.lib")

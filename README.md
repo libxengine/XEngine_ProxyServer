@@ -12,15 +12,15 @@ c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service
 此软件是一款标准的代理服务器,支持Socks5和HTTP的隧道代理  
 ## 软件特性
 此软件支持以下特性  
-1. SOCKS5代理  
-2. Tunnel代理 
-3. 数据转发服务 
-4. 权限验证  
+1. SOCKS5代理
+2. Tunnel代理
+3. TCP数据转发服务
+4. 权限验证
 5. 操作日志
-6. 加密通信(planning)  
-7. 负载均衡(planning)  
-8. 自定义证书代理协议(planning)  
-9. 多级代理(planning)  
+6. 加密通信(planning)
+7. 负载均衡(planning)
+8. 自定义证书代理协议(planning)
+9. 多级代理(planning)
 
 ## 安装教程
 
@@ -87,11 +87,11 @@ make FLAGS=CleanAll 清理编译
 
 ## 开发计划
 透传代理  
-转发代理支持权限和确认  
 支持加密代理  
 转发代理绑定解绑支持附加用户信息  
 转发代理绑定支持拒绝  
-转发代理支持用户验证  
+支持UDP转发代理  
+性能优化  
 
 ## 关注我们
 如果你觉得这个软件对你有帮助,请你给我们一个START吧
