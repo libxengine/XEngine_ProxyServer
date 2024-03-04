@@ -85,7 +85,7 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 				_xstprintf(tszIPAddr, _X("%s"), st_APIUrl.tszMainDomain);
 			}
 
-			if (!NetXApi_Socket_DomainToAddr(tszIPAddr, &ppszListAddr, &nListCount))
+			if (!XSocket_Api_DomainToAddr(tszIPAddr, &ppszListAddr, &nListCount))
 			{
 				ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 500);
 				XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);

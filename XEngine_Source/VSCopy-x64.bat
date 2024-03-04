@@ -3,11 +3,12 @@ copy /y "%XEngine_Lib64%\XEngine_BaseLib\XEngine_Algorithm.dll" "./"
 copy /y "%XEngine_Lib64%\XEngine_Core\XEngine_Core.dll" "./"
 copy /y "%XEngine_Lib64%\XEngine_Core\XEngine_OPenSsl.dll" "./"
 copy /y "%XEngine_Lib64%\XEngine_Core\XEngine_ManagePool.dll" "./"
-copy /y "%XEngine_Lib64%\XEngine_Core\XEngine_NetXApi.dll" "./"
+
+copy /y "%XEngine_Lib64%\XEngine_Client\XClient_Socket.dll" "./"
+copy /y "%XEngine_Lib64%\XEngine_Client\XClient_APIHelp.dll" "./"
 
 copy /y "%XEngine_Lib64%\XEngine_NetHelp\NetHelp_APIHelp.dll" "./"
-copy /y "%XEngine_Lib64%\XEngine_NetHelp\NetHelp_APIClient.dll" "./"
-copy /y "%XEngine_Lib64%\XEngine_Client\XClient_Socket.dll" "./"
+copy /y "%XEngine_Lib64%\XEngine_NetHelp\NetHelp_XSocket.dll" "./"
 
 copy /y "%XEngine_Lib64%\XEngine_HelpComponents\HelpComponents_XLog.dll" "./"
 copy /y "%XEngine_Lib64%\XEngine_HelpComponents\HelpComponents_Packets.dll" "./"

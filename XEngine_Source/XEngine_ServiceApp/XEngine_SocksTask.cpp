@@ -155,7 +155,7 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 					_xstprintf(tszClientAddr, _X("%s"), st_APIUrl.tszMainDomain);
 				}
 
-				if (!NetXApi_Socket_DomainToAddr(tszClientAddr, &ppszListAddr, &nListCount))
+				if (!XSocket_Api_DomainToAddr(tszClientAddr, &ppszListAddr, &nListCount))
 				{
 					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,解析域名失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 					return false;

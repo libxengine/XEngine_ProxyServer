@@ -5,10 +5,9 @@ PLATDIR =
 RELEASE = 0
 UNICODE = 0
 LOADHDR = -I ./ -I ../XEngine_ThirdPart/jsoncpp
-LOADSO = -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Core -L /usr/local/lib/XEngine_Release/XEngine_HelpComponents -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -L /usr/local/lib/XEngine_Release/XEngine_Client -L /usr/local/lib/XEngine_Release/XEngine_NetHelp  \
-         -L ../XEngine_ModuleConfigure -L ../XEngine_ModuleSession -L ../XEngine_ModuleProtocol  \
+LOADSO = -L ../XEngine_ModuleConfigure -L ../XEngine_ModuleSession -L ../XEngine_ModuleProtocol  \
 		 -L ../XEngine_ThirdPart/jsoncpp
-LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_OPenSsl -lXEngine_ManagePool -lXEngine_NetXApi -lHelpComponents_XLog -lHelpComponents_Packets -lRfcComponents_ProxyProtocol -lXClient_Socket -lNetHelp_APIHelp -lNetHelp_APIClient \
+LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_OPenSsl -lXEngine_ManagePool -lXClient_Socket -lXClient_APIHelp -lHelpComponents_XLog -lHelpComponents_Packets -lRfcComponents_ProxyProtocol -lNetHelp_APIHelp -lNetHelp_XSocket \
       -lXEngine_ModuleConfigure -lXEngine_ModuleSession -lXEngine_ModuleProtocol  \
 	  -ljsoncpp
 LIBEX = 
