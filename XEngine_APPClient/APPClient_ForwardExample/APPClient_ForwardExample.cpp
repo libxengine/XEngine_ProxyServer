@@ -26,7 +26,7 @@
 //需要优先配置XEngine
 //WINDOWS支持VS2022 x86 debug 编译调试
 //linux使用下面的命令编译
-//g++ -std=c++17 -Wall -g APPClient_ForwardExample.cpp -o APPClient_ForwardExample.exe -I ../../XEngine_Source/XEngine_ThirdPart/jsoncpp -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Client -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -L ../../XEngine_Source/XEngine_ThirdPart/jsoncpp -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol -ljsoncpp -Wl,-rpath=../../XEngine_Source/XEngine_ThirdPart/jsoncpp,--disable-new-dtags
+//g++ -std=c++17 -Wall -g APPClient_ForwardExample.cpp -o APPClient_ForwardExample.exe -I ../../XEngine_Source/XEngine_ThirdPart/jsoncpp -L ../../XEngine_Source/XEngine_ThirdPart/jsoncpp -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol -ljsoncpp 
 
 int main(int argc, char** argv)
 {
