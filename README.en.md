@@ -15,12 +15,11 @@ this software support following features
 1. SOCKS5 proxy  
 2. Tunnel proxy  
 3. TCP forward proxy
-4. support Permission Validation  
-5. operator log  
-6. encrypt Communication(planning)  
-7. load balanc(planning)  
-8. custom cert proxy protocol(planning)  
-9. multilevel proxy(planning)
+4. operator log  
+5. encrypt Communication(planning)  
+6. load balanc(planning)  
+7. custom cert proxy protocol(planning)  
+8. multilevel proxy(planning)
 
 ## install
 
