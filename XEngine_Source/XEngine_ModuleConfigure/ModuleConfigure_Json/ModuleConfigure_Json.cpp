@@ -123,16 +123,6 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XLog.nLogLeave = st_JsonXLog["LogLeave"].asInt();
 	_tcsxcpy(pSt_ServerConfig->st_XLog.tszLogFile, st_JsonXLog["tszLogFile"].asCString());
 
-	if (st_JsonRoot["XAuth"].empty() || (2 != st_JsonRoot["XAuth"].size()))
-	{
-		Config_IsErrorOccur = true;
-		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XAUTH;
-		return false;
-	}
-	Json::Value st_JsonXAuth = st_JsonRoot["XAuth"];
-	pSt_ServerConfig->st_XAuth.bAuth = st_JsonXAuth["bAuth"].asBool();
-	_tcsxcpy(pSt_ServerConfig->st_XAuth.tszAuthUrl, st_JsonXAuth["tszAuthUrl"].asCString());
-
 	if (st_JsonRoot["XVer"].empty())
 	{
 		Config_IsErrorOccur = true;

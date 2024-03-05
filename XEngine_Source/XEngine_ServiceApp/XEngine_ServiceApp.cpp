@@ -116,14 +116,6 @@ int main(int argc, char** argv)
 	HelpComponents_XLog_SetLogPriority(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化日志系统成功"));
 
-	if (st_ServiceConfig.st_XAuth.bAuth)
-	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启用用户验证服务,用户验证地址:%s"), st_ServiceConfig.st_XAuth.tszAuthUrl);
-	}
-	else
-	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,没有启用用户验证服务"));
-	}
 	//启动Socks服务相关代码
 	if (st_ServiceConfig.nSocksPort > 0)
 	{

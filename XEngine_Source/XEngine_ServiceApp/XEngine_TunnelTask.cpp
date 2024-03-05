@@ -38,28 +38,6 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 		}
 		XCHAR tszConnectAddr[128];
 		memset(tszConnectAddr, '\0', sizeof(tszConnectAddr));
-		if (st_ServiceConfig.st_XAuth.bAuth)
-		{
-			XCHAR tszUser[128] = {};
-			XCHAR tszPass[128] = {};
-
-			if (!OPenSsl_Help_BasicDecoder(tszAuthInfo, tszUser, tszPass))
-			{
-				ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 401);
-				XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Tunnel客户端:%s,失败无法继续,错误:%lX"), lpszClientAddr, OPenSsl_GetLastError());
-				return false;
-			}
-			int nHTTPCode = 0;
-			ModuleProtocol_Packet_Auth(tszMsgBuffer, &nLen, tszUser, tszPass);
-			if (!APIClient_Http_Request(_X("POST"), st_ServiceConfig.st_XAuth.tszAuthUrl, tszMsgBuffer, &nHTTPCode))
-			{
-				ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 401);
-				XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Tunnel客户端:%s,验证用户名:%s,密码:%s 失败,错误:%lX"), lpszClientAddr, tszUser, tszPass);
-				return false;
-			}
-		}
 		//是否为IP地址
 		if (BaseLib_OperatorIPAddr_IsIPV4Addr(tszIPAddr))
 		{
@@ -85,7 +63,7 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 				_xstprintf(tszIPAddr, _X("%s"), st_APIUrl.tszMainDomain);
 			}
 
-			if (!NetXApi_Socket_DomainToAddr(tszIPAddr, &ppszListAddr, &nListCount))
+			if (!XSocket_Api_DomainToAddr(tszIPAddr, &ppszListAddr, &nListCount))
 			{
 				ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 500);
 				XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
