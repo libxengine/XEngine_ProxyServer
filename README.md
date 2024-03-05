@@ -15,12 +15,11 @@ c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service
 1. SOCKS5代理
 2. Tunnel代理
 3. TCP数据转发服务
-4. 权限验证
-5. 操作日志
-6. 加密通信(planning)
-7. 负载均衡(planning)
-8. 自定义证书代理协议(planning)
-9. 多级代理(planning)
+4. 操作日志
+5. 加密通信(planning)
+6. 负载均衡(planning)
+7. 自定义证书代理协议(planning)
+8. 多级代理(planning)
 
 ## 安装教程
 
