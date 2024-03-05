@@ -32,8 +32,6 @@ using namespace std;
 #include <XEngine_Include/XEngine_Core/ManagePool_Error.h>
 #include <XEngine_Include/XEngine_Core/OPenSsl_Define.h>
 #include <XEngine_Include/XEngine_Core/OPenSsl_Error.h>
-#include <XEngine_Include/XEngine_Client/APIClient_Define.h>
-#include <XEngine_Include/XEngine_Client/APIClient_Error.h>
 #include <XEngine_Include/XEngine_NetHelp/XSocket_Define.h>
 #include <XEngine_Include/XEngine_NetHelp/XSocket_Error.h>
 #include <XEngine_Include/XEngine_NetHelp/APIHelp_Define.h>
@@ -133,7 +131,6 @@ typedef struct
 #pragma comment(lib,"XEngine_Core/XEngine_ManagePool.lib")
 #pragma comment(lib,"XEngine_Core/XEngine_OPenSsl.lib")
 #pragma comment(lib,"XEngine_Client/XClient_Socket.lib")
-#pragma comment(lib,"XEngine_Client/XClient_APIHelp")
 #pragma comment(lib,"XEngine_NetHelp/NetHelp_APIHelp.lib")
 #pragma comment(lib,"XEngine_NetHelp/NetHelp_XSocket.lib")
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_XLog.lib")

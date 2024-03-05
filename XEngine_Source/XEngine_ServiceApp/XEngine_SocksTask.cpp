@@ -48,7 +48,7 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 			_tcsxcat(tszAuthBuffer, tszTmpBuffer);
 			_tcsxcat(tszAuthBuffer, _X(" "));
 			//服务器是否支持
-			if ((ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_USERPASS == enListAuths[i]) || (ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_ANONYMOUS == enListAuths[i]))
+			if (ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_ANONYMOUS == enListAuths[i])
 			{
 				bFoundAuth = true;
 			}
@@ -57,18 +57,14 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 		{
 			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_NOAUTH);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,解析验证协议成功,但是验证类型不支持,客户端的支持验证:%s,服务器支持的验证:%d"), lpszClientAddr, tszAuthBuffer, st_ServiceConfig.st_XAuth.bAuth);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,解析验证协议成功,但是验证类型不支持,客户端的支持验证:%s"), lpszClientAddr, tszAuthBuffer);
 			return false;
 		}
-		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, st_ServiceConfig.st_XAuth.bAuth);
+		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_ANONYMOUS);
 		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 		//如果是匿名,不会有ENUM_RFCCOMPONENTS_PROXY_STATUS_AUTH步骤
-		if (ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_ANONYMOUS == st_ServiceConfig.st_XAuth.bAuth)
-		{
-			//跳过
-			ProxyProtocol_SocksCore_SetStatus(lpszClientAddr, ENUM_RFCCOMPONENTS_PROXY_STATUS_USER);
-		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("SOCKS客户端:%s,解析验证协议成功,支持的验证类型:%s,使用的验证类型:%d"), lpszClientAddr, tszAuthBuffer, st_ServiceConfig.st_XAuth.bAuth);
+		ProxyProtocol_SocksCore_SetStatus(lpszClientAddr, ENUM_RFCCOMPONENTS_PROXY_STATUS_USER);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("SOCKS客户端:%s,解析验证协议成功,支持的验证类型:%s"), lpszClientAddr, tszAuthBuffer);
 	}
 	else if (ENUM_RFCCOMPONENTS_PROXY_STATUS_AUTH == enSocksStatus)
 	{
@@ -91,15 +87,6 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_FAILED);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,用户登录验证失败,客户端发送的验证类型不支持"), lpszClientAddr);
-			return false;
-		}
-		int nHTTPCode = 0;
-		ModuleProtocol_Packet_Auth(tszMsgBuffer, &nLen, tszUserName, tszUserPass);
-		if (!APIClient_Http_Request(_X("POST"), st_ServiceConfig.st_XAuth.tszAuthUrl, tszMsgBuffer, &nHTTPCode))
-		{
-			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_FAILED);
-			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,用户登录验证失败,用户名:%s,或者密码:%s 不正确"), lpszClientAddr, tszUserPass, tszUserPass);
 			return false;
 		}
 		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_SUCCESS);

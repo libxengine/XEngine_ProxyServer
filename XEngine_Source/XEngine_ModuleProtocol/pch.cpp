@@ -35,10 +35,6 @@ extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR * ptszMsgBuffer, int* pI
 {
 	return m_ProtocolPacket.ModuleProtocol_Packet_ForwardList(ptszMsgBuffer, pInt_Len, pSt_ProtocolHdr, pppSt_ListUser, nCount);
 }
-extern "C" bool ModuleProtocol_Packet_Auth(XCHAR * ptszMsgBuffer, int* pInt_Len, LPCXSTR lpszUser, LPCXSTR lpszPass)
-{
-	return m_ProtocolPacket.ModuleProtocol_Packet_Auth(ptszMsgBuffer, pInt_Len, lpszUser, lpszPass);
-}
 /************************************************************************/
 /*                        解析导出函数                                  */
 /************************************************************************/

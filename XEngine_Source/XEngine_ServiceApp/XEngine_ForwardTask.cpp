@@ -56,21 +56,6 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			memset(&st_UserAuth, '\0', sizeof(XENGINE_PROTOCOL_USERAUTH));
 
 			memcpy(&st_UserAuth, lpszMsgBuffer, sizeof(XENGINE_PROTOCOL_USERAUTH));
-			//是否需要进行验证
-			if (st_ServiceConfig.st_XAuth.bAuth)
-			{
-				int nHTTPCode = 0;
-				ModuleProtocol_Packet_Auth(tszSDBuffer, &nSDLen, st_UserAuth.tszUserName, st_UserAuth.tszUserPass);
-				if (!APIClient_Http_Request(_X("POST"), st_ServiceConfig.st_XAuth.tszAuthUrl, tszSDBuffer, &nHTTPCode))
-				{
-					pSt_ProtocolHdr->wReserve = 401;
-					pSt_ProtocolHdr->unPacketSize = 0;
-					pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LOGREP;
-					XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，设置的用户:%s，密码:%s,验证失败无法继续."), lpszClientAddr, st_UserAuth.tszUserName, st_UserAuth.tszUserPass);
-					return false;
-				}
-			}
 			pSt_ProtocolHdr->wReserve = 0;
 			pSt_ProtocolHdr->unPacketSize = 0;
 			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LOGREP;

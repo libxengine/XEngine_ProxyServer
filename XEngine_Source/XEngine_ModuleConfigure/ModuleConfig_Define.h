@@ -43,11 +43,6 @@ typedef struct tag_XEngine_ServiceConfig
 	}st_XLog;
 	struct  
 	{
-		bool bAuth;                            //是否启用验证
-		XCHAR tszAuthUrl[MAX_PATH];            //验证地址
-	}st_XAuth;
-	struct  
-	{
 		list<string>* pStl_ListVer;
 	}st_XVer;
 }XENGINE_SERVICECONFIG;

@@ -51,35 +51,6 @@ extern "C" XLONG ModuleProtocol_GetLastError(int* pInt_SysError = NULL);
 备注：
 *********************************************************************/
 extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, SESSION_FORWARD * **pppSt_ListUser, int nCount);
-/********************************************************************
-函数名称：ModuleProtocol_Packet_Auth
-函数功能：验证信息打包
- 参数.一：ptszMsgBuffer
-  In/Out：Out
-  类型：字符指针
-  可空：N
-  意思：输出封装好的包
- 参数.二：pInt_Len
-  In/Out：Out
-  类型：整数型指针
-  可空：N
-  意思：输出封装大小
- 参数.三：lpszUser
-  In/Out：In
-  类型：常量字符指针
-  可空：N
-  意思：输入用户名
- 参数.四：lpszPass
-  In/Out：In
-  类型：常量字符指针
-  可空：N
-  意思：输入密码
-返回值
-  类型：逻辑型
-  意思：是否成功
-备注：
-*********************************************************************/
-extern "C" bool ModuleProtocol_Packet_Auth(XCHAR* ptszMsgBuffer, int* pInt_Len, LPCXSTR lpszUser, LPCXSTR lpszPass);
 /************************************************************************/
 /*                        解析导出函数                                  */
 /************************************************************************/
