@@ -56,6 +56,9 @@ make FLAGS=CleanAll 清理编译
 ##### 编译命令
 参考Linux
 
+## 视频教程
+你也可以观看视频教程来了解我们的代码框架情况:https://www.bilibili.com/video/BV191421f7zp
+
 #### 使用说明
 
 1.  切换到MASTER分支

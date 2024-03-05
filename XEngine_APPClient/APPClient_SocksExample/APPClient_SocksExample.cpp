@@ -23,7 +23,7 @@
 //需要优先配置XEngine
 //WINDOWS支持VS2022 x86 debug 编译调试
 //linux使用下面的命令编译
-//g++ -std=c++17 -Wall -g APPClient_SocksExample.cpp -o APPClient_SocksExample.exe -L /usr/local/lib/XEngine_Release/XEngine_BaseLib -L /usr/local/lib/XEngine_Release/XEngine_Client -L /usr/local/lib/XEngine_Release/XEngine_RfcComponents -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol
+//g++ -std=c++17 -Wall -g APPClient_SocksExample.cpp -o APPClient_SocksExample.exe -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol
 int main(int argc, char** argv)
 {
 #ifdef _MSC_BUILD
