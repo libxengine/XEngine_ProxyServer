@@ -41,6 +41,12 @@ typedef struct tag_XEngine_ServiceConfig
 		int nMaxCount;                        //最大日志个数
 		int nLogLeave;                        //日志等级
 	}st_XLog;
+	struct
+	{
+		bool bEnable;
+		XCHAR tszAPIUrl[MAX_PATH];
+		XCHAR tszServiceName[128];
+	}st_XReport;
 	struct  
 	{
 		list<string>* pStl_ListVer;
