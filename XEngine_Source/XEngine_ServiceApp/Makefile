@@ -4,9 +4,9 @@ PLATVER =
 PLATDIR = 
 RELEASE = 0
 UNICODE = 0
-LOADHDR = -I ./ -I ../XEngine_ThirdPart/jsoncpp
+LOADHDR = -I ./ -I ../XEngine_Depend/XEngine_Module/jsoncpp
 LOADSO = -L ../XEngine_ModuleConfigure -L ../XEngine_ModuleSession -L ../XEngine_ModuleProtocol  \
-		 -L ../XEngine_ThirdPart/jsoncpp
+		 -L ../XEngine_Depend/XEngine_Module/jsoncpp
 LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_OPenSsl -lXEngine_ManagePool -lXClient_Socket -lXClient_APIHelp -lHelpComponents_XLog -lHelpComponents_Packets -lRfcComponents_ProxyProtocol -lNetHelp_APIHelp -lNetHelp_XSocket \
       -lXEngine_ModuleConfigure -lXEngine_ModuleSession -lXEngine_ModuleProtocol  \
 	  -ljsoncpp
