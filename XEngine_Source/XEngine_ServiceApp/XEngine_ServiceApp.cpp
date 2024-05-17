@@ -88,10 +88,6 @@ int main(int argc, char** argv)
 
 	memset(&st_XLogConfig, '\0', sizeof(HELPCOMPONENTS_XLOG_CONFIGURE));
 	memset(&st_ServiceConfig, '\0', sizeof(XENGINE_SERVICECONFIG));
-
-	signal(SIGINT, ServiceApp_Stop);
-	signal(SIGTERM, ServiceApp_Stop);
-	signal(SIGABRT, ServiceApp_Stop);
 	//初始化参数
 	if (!XEngine_Configure_Parament(argc, argv, &st_ServiceConfig))
 	{
@@ -116,6 +112,10 @@ int main(int argc, char** argv)
 	HelpComponents_XLog_SetLogPriority(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化日志系统成功"));
 
+	signal(SIGINT, ServiceApp_Stop);
+	signal(SIGTERM, ServiceApp_Stop);
+	signal(SIGABRT, ServiceApp_Stop);
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化信号量处理程序成功"));
 	//启动Socks服务相关代码
 	if (st_ServiceConfig.nSocksPort > 0)
 	{
