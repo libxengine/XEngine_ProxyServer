@@ -13,10 +13,16 @@
 bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pSt_Configure)
 {
 	LPCXSTR lpszConfigFile = _X("./XEngine_Config/XEngine_Config.json");
+	LPCXSTR lpszConfigVersion = _X("./XEngine_Config/XEngine_Version.json");
 
 	if (!ModuleConfigure_Json_File(lpszConfigFile, pSt_Configure))
 	{
 		printf("解析配置文件失败,ModuleConfigure_Json_File:%lX\n", ModuleConfigure_GetLastError());
+		return false;
+	}
+	if (!ModuleConfigure_Json_Version(lpszConfigVersion, pSt_Configure))
+	{
+		printf("解析配置文件失败,ModuleConfigure_Json_Version:%lX\n", ModuleConfigure_GetLastError());
 		return false;
 	}
 

@@ -1,3 +1,17 @@
+XEngine_ProxyServer V1.8.0.1001
+
+增加:信息报告支持
+修改:使用git的submodule替换了jsoncpp模块
+修改:分离了版本列表配置从主配置中
+修改:信号量现在有日志提示了 
+修正:日志配置没有效果的问题
+
+added:info report supported
+modify:jsoncpp use sub module instead
+modify:detach version list from main configure file
+modify:single have log tips
+fixed:log configure is not work
+======================================================================================
 XEngine_ProxyServer V1.7.1.1001
 
 更新:匹配XEngine V8.25

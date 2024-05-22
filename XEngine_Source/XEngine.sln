@@ -4,21 +4,39 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XEngine_ServiceApp", "XEngine_ServiceApp\XEngine_ServiceApp.vcxproj", "{B94018F9-541B-4BE4-A2A8-AD49DD35357B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{237AF017-9AD2-44D8-A6C4-ECDEF7674FF2} = {237AF017-9AD2-44D8-A6C4-ECDEF7674FF2}
+		{9512A610-7197-4522-9AEF-1486619C99FE} = {9512A610-7197-4522-9AEF-1486619C99FE}
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB} = {F1736B3F-03A2-4FC7-B045-A12BA8D724FB}
+		{F54F152C-594F-4465-A44E-2DB915B39760} = {F54F152C-594F-4465-A44E-2DB915B39760}
+		{F6520D2C-BB8E-45BB-964B-F5D6A4318A89} = {F6520D2C-BB8E-45BB-964B-F5D6A4318A89}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XEngine_ModuleConfigure", "XEngine_ModuleConfigure\XEngine_ModuleConfigure.vcxproj", "{F54F152C-594F-4465-A44E-2DB915B39760}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB} = {F1736B3F-03A2-4FC7-B045-A12BA8D724FB}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XEngine_UserHdr", "XEngine_UserHdr", "{9E4F2158-9AC1-4C19-A3F7-375A9DBCF856}"
 	ProjectSection(SolutionItems) = preProject
 		XEngine_UserProtocol.h = XEngine_UserProtocol.h
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XEngine_ThirdPart", "XEngine_ThirdPart", "{F18FFEA0-27D2-4590-9190-F69F5E3D21D2}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsoncpp", "XEngine_ThirdPart\jsoncpp\jsoncpp.vcxproj", "{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XEngine_ModuleSession", "XEngine_ModuleSession\XEngine_ModuleSession.vcxproj", "{237AF017-9AD2-44D8-A6C4-ECDEF7674FF2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XEngine_ModuleProtocol", "XEngine_ModuleProtocol\XEngine_ModuleProtocol.vcxproj", "{9512A610-7197-4522-9AEF-1486619C99FE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB} = {F1736B3F-03A2-4FC7-B045-A12BA8D724FB}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XEngine_Depend", "XEngine_Depend", "{91EFAD20-FF05-4CA9-9472-7CEE32340749}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsoncpp", "XEngine_Depend\XEngine_Module\jsoncpp\jsoncpp.vcxproj", "{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XEngine_InfoReport", "XEngine_Depend\XEngine_Module\XEngine_InfoReport\XEngine_InfoReport.vcxproj", "{F6520D2C-BB8E-45BB-964B-F5D6A4318A89}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB} = {F1736B3F-03A2-4FC7-B045-A12BA8D724FB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,14 +62,6 @@ Global
 		{F54F152C-594F-4465-A44E-2DB915B39760}.Release|x64.Build.0 = Release|x64
 		{F54F152C-594F-4465-A44E-2DB915B39760}.Release|x86.ActiveCfg = Release|Win32
 		{F54F152C-594F-4465-A44E-2DB915B39760}.Release|x86.Build.0 = Release|Win32
-		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Debug|x64.ActiveCfg = Debug|x64
-		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Debug|x64.Build.0 = Debug|x64
-		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Debug|x86.ActiveCfg = Debug|Win32
-		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Debug|x86.Build.0 = Debug|Win32
-		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Release|x64.ActiveCfg = Release|x64
-		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Release|x64.Build.0 = Release|x64
-		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Release|x86.ActiveCfg = Release|Win32
-		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Release|x86.Build.0 = Release|Win32
 		{237AF017-9AD2-44D8-A6C4-ECDEF7674FF2}.Debug|x64.ActiveCfg = Debug|x64
 		{237AF017-9AD2-44D8-A6C4-ECDEF7674FF2}.Debug|x64.Build.0 = Debug|x64
 		{237AF017-9AD2-44D8-A6C4-ECDEF7674FF2}.Debug|x86.ActiveCfg = Debug|Win32
@@ -68,12 +78,29 @@ Global
 		{9512A610-7197-4522-9AEF-1486619C99FE}.Release|x64.Build.0 = Release|x64
 		{9512A610-7197-4522-9AEF-1486619C99FE}.Release|x86.ActiveCfg = Release|Win32
 		{9512A610-7197-4522-9AEF-1486619C99FE}.Release|x86.Build.0 = Release|Win32
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Debug|x64.ActiveCfg = Debug|x64
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Debug|x64.Build.0 = Debug|x64
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Debug|x86.ActiveCfg = Debug|Win32
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Debug|x86.Build.0 = Debug|Win32
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Release|x64.ActiveCfg = Release|x64
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Release|x64.Build.0 = Release|x64
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Release|x86.ActiveCfg = Release|Win32
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB}.Release|x86.Build.0 = Release|Win32
+		{F6520D2C-BB8E-45BB-964B-F5D6A4318A89}.Debug|x64.ActiveCfg = Debug|x64
+		{F6520D2C-BB8E-45BB-964B-F5D6A4318A89}.Debug|x64.Build.0 = Debug|x64
+		{F6520D2C-BB8E-45BB-964B-F5D6A4318A89}.Debug|x86.ActiveCfg = Debug|Win32
+		{F6520D2C-BB8E-45BB-964B-F5D6A4318A89}.Debug|x86.Build.0 = Debug|Win32
+		{F6520D2C-BB8E-45BB-964B-F5D6A4318A89}.Release|x64.ActiveCfg = Release|x64
+		{F6520D2C-BB8E-45BB-964B-F5D6A4318A89}.Release|x64.Build.0 = Release|x64
+		{F6520D2C-BB8E-45BB-964B-F5D6A4318A89}.Release|x86.ActiveCfg = Release|Win32
+		{F6520D2C-BB8E-45BB-964B-F5D6A4318A89}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB} = {F18FFEA0-27D2-4590-9190-F69F5E3D21D2}
+		{F1736B3F-03A2-4FC7-B045-A12BA8D724FB} = {91EFAD20-FF05-4CA9-9472-7CEE32340749}
+		{F6520D2C-BB8E-45BB-964B-F5D6A4318A89} = {91EFAD20-FF05-4CA9-9472-7CEE32340749}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B202F91-A601-429E-BB0F-880DDEE096FE}
