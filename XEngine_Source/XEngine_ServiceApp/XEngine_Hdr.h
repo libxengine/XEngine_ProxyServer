@@ -46,6 +46,8 @@ using namespace std;
 #include <XEngine_Include/XEngine_Client/XClient_Error.h>
 //加载项目相关头文件
 #include "../XEngine_UserProtocol.h"
+#include "../XEngine_Depend/XEngine_Module/XEngine_InfoReport/InfoReport_Define.h"
+#include "../XEngine_Depend/XEngine_Module/XEngine_InfoReport/InfoReport_Error.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Define.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Error.h"
 #include "../XEngine_ModuleSession/ModuleSession_Define.h"
@@ -107,20 +109,24 @@ typedef struct
 #ifdef _MSC_BUILD
 #ifdef _WIN64
 #ifdef _DEBUG
+#pragma comment(lib,"../x64/Debug/XEngine_InfoReport.lib")
 #pragma comment(lib,"../x64/Debug/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../x64/Debug/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../x64/Debug/XEngine_ModuleProtocol.lib")
 #else
+#pragma comment(lib,"../x64/Release/XEngine_InfoReport.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleProtocol.lib")
 #endif
 #else
 #ifdef _DEBUG
+#pragma comment(lib,"../Debug/XEngine_InfoReport.lib")
 #pragma comment(lib,"../Debug/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../Debug/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../Debug/XEngine_ModuleProtocol.lib")
 #else
+#pragma comment(lib,"../Release/XEngine_InfoReport.lib")
 #pragma comment(lib,"../Release/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../Release/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../Release/XEngine_ModuleProtocol.lib")
