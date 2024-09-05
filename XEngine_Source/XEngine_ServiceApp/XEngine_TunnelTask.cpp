@@ -106,7 +106,7 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 	return true;
 }
 
-void CALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_NETCLIENT_TCPEVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
+void CALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
 {
 	int nListCount = 0;
 	PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;
@@ -115,14 +115,14 @@ void CALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKE
 	{
 		if (xhClient == ppSt_ClientList[i]->xhClient)
 		{
-			if (ENUM_XENGINE_XCLIENT_SOCKET_TCP_EVENT_RECV == enTCPClientEvents)
+			if (ENUM_XCLIENT_SOCKET_EVENT_RECV == enTCPClientEvents)
 			{
 				if (!XEngine_Network_Send(ppSt_ClientList[i]->tszIPAddr, lpszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL))
 				{
 					SocketOpt_HeartBeat_ForceOutAddrEx(xhTunnelHeart, ppSt_ClientList[i]->tszIPAddr);
 				}
 			}
-			else if (ENUM_XENGINE_XCLIENT_SOCKET_TCP_EVENT_CLOSE == enTCPClientEvents)
+			else if (ENUM_XCLIENT_SOCKET_EVENT_CLOSE == enTCPClientEvents)
 			{
 				//退出处理
 				SocketOpt_HeartBeat_ForceOutAddrEx(xhTunnelHeart, ppSt_ClientList[i]->tszIPAddr);
