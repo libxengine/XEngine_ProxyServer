@@ -19,6 +19,12 @@
     <Filter Include="源文件\ModuleSession_Forward">
       <UniqueIdentifier>{8893a952-de7d-4b08-a49e-b46bbe302e17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\ModuleSession_Socks">
+      <UniqueIdentifier>{e1c185d0-94ec-4672-ab7d-9d9372a12f6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ModuleSession_Socks">
+      <UniqueIdentifier>{7b3ae0a7-df75-4e49-95eb-1a7760707b4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -36,6 +42,9 @@
     <ClInclude Include="ModuleSession_Forward\ModuleSession_Forward.h">
       <Filter>头文件\ModuleSession_Forward</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleSession_Socks\ModuleSession_Socks.h">
+      <Filter>头文件\ModuleSession_Socks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -46,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="ModuleSession_Forward\ModuleSession_Forward.cpp">
       <Filter>源文件\ModuleSession_Forward</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSession_Socks\ModuleSession_Socks.cpp">
+      <Filter>源文件\ModuleSession_Socks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

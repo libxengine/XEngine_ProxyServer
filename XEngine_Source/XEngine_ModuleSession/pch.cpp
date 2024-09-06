@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "ModuleSession_Forward/ModuleSession_Forward.h"
+#include "ModuleSession_Socks/ModuleSession_Socks.h"
 /********************************************************************
 //    Created:     2022/06/08  10:10:52
 //    File Name:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleSession\pch.cpp
@@ -15,6 +16,7 @@ bool Session_IsErrorOccur = false;
 XLONG Session_dwErrorCode = 0;
 //////////////////////////////////////////////////////////////////////////
 CModuleSession_Forward m_Forward;
+CModuleSession_Socks m_Socks;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
@@ -48,4 +50,39 @@ extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAd
 extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR * ptszDstAddr)
 {
 	return m_Forward.ModuleSession_Forward_Get(lpszAddr, ptszDstAddr);
+}
+/************************************************************************/
+/*                     SOCK代理服务器导出函数                           */
+/************************************************************************/
+extern "C" bool ModuleSession_Socks_Create(LPCXSTR lpszClientID)
+{
+	return m_Socks.ModuleSession_Socks_Create(lpszClientID);
+}
+extern "C" bool ModuleSession_Socks_Delete(LPCXSTR lpszClientID)
+{
+	return m_Socks.ModuleSession_Socks_Delete(lpszClientID);
+}
+extern "C" bool ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XPVOID lParam, int nLen)
+{
+	return m_Socks.ModuleSession_Socks_SetInfo(lpszClientID, lParam, nLen);
+}
+extern "C" bool ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XPVOID lParam, int* pInt_Len)
+{
+	return m_Socks.ModuleSession_Socks_GetInfo(lpszClientID, lParam, pInt_Len);
+}
+extern "C" bool ModuleSession_Socks_GetList(XPPPMEM xpppMem, int* pInt_Count, int nSize)
+{
+	return m_Socks.ModuleSession_Socks_GetList(xpppMem, pInt_Count, nSize);
+}
+extern "C" bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS* penSocks)
+{
+	return m_Socks.ModuleSession_Socks_GetStatus(lpszClientID, penSocks);
+}
+extern "C" bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS enStatus)
+{
+	return m_Socks.ModuleSession_Socks_SetStatus(lpszClientID, enStatus);
+}
+extern "C" bool ModuleSession_Socks_List(XCHAR*** ppptszClientList, int* pInt_ListCount)
+{
+	return m_Socks.ModuleSession_Socks_List(ppptszClientList, pInt_ListCount);
 }

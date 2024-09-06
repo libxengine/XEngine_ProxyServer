@@ -17,7 +17,7 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 
 	ProxyProtocol_TunnelCore_GetInfo(lpszClientAddr, &st_ProxyClient);
 	//创建成功就只需要转发
-	if (ENUM_RFCCOMPONENTS_PROXY_STATUS_CREATE == st_ProxyClient.enStatus)
+	if (ENUM_PROXY_SESSION_SOCKS_STATUS_CREATE == st_ProxyClient.enStatus)
 	{
 		int nLen = 0;
 		int nIPPort = 0;
@@ -81,7 +81,7 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 			return false;
 		}
 		//设置属于
-		st_ProxyClient.enStatus = ENUM_RFCCOMPONENTS_PROXY_STATUS_FORWARD;
+		st_ProxyClient.enStatus = ENUM_PROXY_SESSION_SOCKS_STATUS_FORWARD;
 		_tcsxcpy(st_ProxyClient.tszIPAddr, lpszClientAddr);
 		ProxyProtocol_TunnelCore_SetInfo(lpszClientAddr, &st_ProxyClient, sizeof(PROXYPROTOCOL_CLIENTINFO));
 		//判断是代理还是非代理协议

@@ -16,20 +16,20 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 	XCHAR tszMsgBuffer[4096];
 	memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
 
-	ENUM_RFCCOMPONENTS_PROXY_STATUS enSocksStatus;
-	if (!ProxyProtocol_SocksCore_GetStatus(lpszClientAddr, &enSocksStatus))
+	ENUM_PROXY_SESSION_SOCKS_STATUS enSocksStatus;
+	if (!ModuleSession_Socks_GetStatus(lpszClientAddr, &enSocksStatus))
 	{
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,获取状态失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 		return false;
 	}
 	//获取到的状态来处理相对应的事件
-	if (ENUM_RFCCOMPONENTS_PROXY_STATUS_CREATE == enSocksStatus)
+	if (ENUM_PROXY_SESSION_SOCKS_STATUS_CREATE == enSocksStatus)
 	{
 		int nListCount = 0;
 		ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH enListAuths[6];
-		if (!ProxyProtocol_SocksCore_ParseAuth(lpszClientAddr, lpszMsgBuffer, nMsgLen, enListAuths, &nListCount))
+		if (!ProxyProtocol_SocksCore_ParseAuth(lpszMsgBuffer, nMsgLen, enListAuths, &nListCount))
 		{
-			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_NOAUTH);
+			ProxyProtocol_SocksCore_HdrPacket(tszMsgBuffer, &nLen, ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_NOAUTH);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,解析验证协议失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 			return false;
@@ -55,18 +55,18 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 		}
 		if (!bFoundAuth)
 		{
-			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_NOAUTH);
+			ProxyProtocol_SocksCore_HdrPacket(tszMsgBuffer, &nLen, ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_NOAUTH);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,解析验证协议成功,但是验证类型不支持,客户端的支持验证:%s"), lpszClientAddr, tszAuthBuffer);
 			return false;
 		}
-		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_ANONYMOUS);
+		ProxyProtocol_SocksCore_HdrPacket(tszMsgBuffer, &nLen, ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_ANONYMOUS);
 		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
-		//如果是匿名,不会有ENUM_RFCCOMPONENTS_PROXY_STATUS_AUTH步骤
-		ProxyProtocol_SocksCore_SetStatus(lpszClientAddr, ENUM_RFCCOMPONENTS_PROXY_STATUS_USER);
+		//如果是匿名,不会有ENUM_PROXY_SESSION_SOCKS_STATUS_AUTH步骤
+		ModuleSession_Socks_SetStatus(lpszClientAddr, ENUM_PROXY_SESSION_SOCKS_STATUS_USER);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("SOCKS客户端:%s,解析验证协议成功,支持的验证类型:%s"), lpszClientAddr, tszAuthBuffer);
 	}
-	else if (ENUM_RFCCOMPONENTS_PROXY_STATUS_AUTH == enSocksStatus)
+	else if (ENUM_PROXY_SESSION_SOCKS_STATUS_AUTH == enSocksStatus)
 	{
 		XCHAR tszUserName[MAX_PATH];
 		XCHAR tszUserPass[MAX_PATH];
@@ -75,25 +75,25 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 		memset(tszUserName, '\0', MAX_PATH);
 		memset(tszUserPass, '\0', MAX_PATH);
 
-		if (!ProxyProtocol_SocksCore_ParseUser(lpszClientAddr, lpszMsgBuffer, nMsgLen, &enProxyAuth, tszUserName, tszUserPass))
+		if (!ProxyProtocol_SocksCore_ParseUser(lpszMsgBuffer, nMsgLen, &enProxyAuth, tszUserName, tszUserPass))
 		{
-			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_FAILED);
+			ProxyProtocol_SocksCore_HdrPacket(tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_FAILED);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,用户登录验证失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 			return false;
 		}
 		if (enProxyAuth != ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH_USERPASS)
 		{
-			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_FAILED);
+			ProxyProtocol_SocksCore_HdrPacket(tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_FAILED);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,用户登录验证失败,客户端发送的验证类型不支持"), lpszClientAddr);
 			return false;
 		}
-		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_SUCCESS);
+		ProxyProtocol_SocksCore_HdrPacket(tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_SUCCESS);
 		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("SOCKS客户端:%s,用户登录验证成功,使用的验证类型:%d,用户名:%s"), lpszClientAddr, enProxyAuth, tszUserName);
 	}
-	else if (ENUM_RFCCOMPONENTS_PROXY_STATUS_USER == enSocksStatus)
+	else if (ENUM_PROXY_SESSION_SOCKS_STATUS_USER == enSocksStatus)
 	{
 		int nPort = 0;
 		XCHAR tszClientAddr[1024];
@@ -103,9 +103,9 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 
 		memset(tszClientAddr, '\0', sizeof(tszClientAddr));
 		memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
-		if (!ProxyProtocol_SocksCore_ParseConnect(lpszClientAddr, lpszMsgBuffer, nMsgLen, &enCommand, &enIPType, tszClientAddr, &nPort))
+		if (!ProxyProtocol_SocksCore_ParseConnect(lpszMsgBuffer, nMsgLen, &enCommand, &enIPType, tszClientAddr, &nPort))
 		{
-			ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_NETWORK);
+			ProxyProtocol_SocksCore_HdrPacket(tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_NETWORK);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,用户连接失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 			return false;
@@ -152,26 +152,28 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 				BaseLib_OperatorMemory_Free((XPPPMEM)&ppszListAddr, nListCount);
 				if (!XClient_TCPSelect_InsertEx(xhSocksClient, &st_ProxyClient.xhClient, tszClientAddr, nPort))
 				{
-					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,创建客户端连接失败,连接到服务器:%s:%d,错误:%lX"), lpszClientAddr, tszClientAddr, nPort, ProxyProtocol_GetLastError());
+					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,创建客户端连接失败,连接到服务器:%s:%d,错误:%lX"), lpszClientAddr, tszClientAddr, nPort, XClient_GetLastError());
 					return false;
 				}
 			}
 		}
 		//配置客户端信息
-		st_ProxyClient.enStatus = ENUM_RFCCOMPONENTS_PROXY_STATUS_FORWARD;
+		st_ProxyClient.enStatus = ENUM_PROXY_SESSION_SOCKS_STATUS_FORWARD;
 		_tcsxcpy(st_ProxyClient.tszIPAddr, lpszClientAddr);
-		ProxyProtocol_SocksCore_SetInfo(lpszClientAddr, &st_ProxyClient, sizeof(PROXYPROTOCOL_CLIENTINFO));
+
+		ModuleSession_Socks_SetStatus(lpszClientAddr, ENUM_PROXY_SESSION_SOCKS_STATUS_FORWARD);
+		ModuleSession_Socks_SetInfo(lpszClientAddr, &st_ProxyClient, sizeof(PROXYPROTOCOL_CLIENTINFO));
 		//回复结果
-		ProxyProtocol_SocksCore_HdrPacket(lpszClientAddr, tszMsgBuffer, &nLen, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_SUCCESS);
+		ProxyProtocol_SocksCore_PacketConnect(tszMsgBuffer, &nLen, tszClientAddr, nPort, enIPType, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_SUCCESS);
 		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("SOCKS客户端:%s,用户登录验证成功,连接到地址:%s:%d"), lpszClientAddr, tszClientAddr, nPort);
 	}
 	else
 	{
-		//ENUM_RFCCOMPONENTS_PROXY_STATUS_FORWARD 转发
+		//ENUM_PROXY_SESSION_SOCKS_STATUS_FORWARD 转发
 		PROXYPROTOCOL_CLIENTINFO st_ProxyClient;
 		memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
-		if (ProxyProtocol_SocksCore_GetInfo(lpszClientAddr, &st_ProxyClient))
+		if (ModuleSession_Socks_GetInfo(lpszClientAddr, &st_ProxyClient))
 		{
 			XClient_TCPSelect_SendEx(xhSocksClient, st_ProxyClient.xhClient, lpszMsgBuffer, nMsgLen);
 		}
@@ -187,7 +189,7 @@ void CALLBACK XEngine_Socks_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET
 {
 	int nListCount = 0;
 	PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;
-	ProxyProtocol_SocksCore_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
+	ModuleSession_Socks_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
 	for (int i = 0; i < nListCount; i++)
 	{
 		if (xhClient == ppSt_ClientList[i]->xhClient)

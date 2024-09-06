@@ -14,7 +14,7 @@
 bool CALLBACK Network_Callback_SocksLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
 {
 	//客户端连接后要把客户端插入心跳管理器中才有效
-	ProxyProtocol_SocksCore_Create(lpszClientAddr);
+	ModuleSession_Socks_Create(lpszClientAddr);
 	SocketOpt_HeartBeat_InsertAddrEx(xhSocksHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("SOCKS客户端:%s,连接到服务器"), lpszClientAddr);
 	return true;
@@ -119,7 +119,7 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 		//释放客户端
 		int nListCount = 0;
 		PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;
-		ProxyProtocol_SocksCore_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
+		ModuleSession_Socks_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
 		for (int i = 0; i < nListCount; i++)
 		{
 			if (0 == _tcsxnicmp(lpszClientAddr, ppSt_ClientList[i]->tszIPAddr, _tcsxlen(lpszClientAddr)))
@@ -129,7 +129,7 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 			}
 		}
 		BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
-		ProxyProtocol_SocksCore_Delete(lpszClientAddr);
+		ModuleSession_Socks_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("SOCKS客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
 	else if (XENGINE_CLIENT_NETTYPE_TUNNEL == nIPProto)

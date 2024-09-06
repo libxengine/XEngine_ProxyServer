@@ -82,7 +82,6 @@ int main(int argc, char** argv)
 	WSADATA st_WSAData;
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
-
 	bIsRun = true;
 	HELPCOMPONENTS_XLOG_CONFIGURE st_XLogConfig;
 
