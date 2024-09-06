@@ -23,6 +23,13 @@
 /************************************************************************/
 #define ERROR_MODULE_SESSION_SOCKS_PARAMENT 0xC1001        //参数错误
 #define ERROR_MODULE_SESSION_SOCKS_MALLOC 0xC1002          //申请内存失败
-#define ERROR_MODULE_SESSION_SOCKS_NOTFOUND 0xC1011        //没有找到
-#define ERROR_MODULE_SESSION_SOCKS_VERSION 0xC1022           //协议错误
-#define ERROR_MODULE_SESSION_SOCKS_NOTSET 0xC1063            //没有设置客户端数据
+#define ERROR_MODULE_SESSION_SOCKS_NOTFOUND 0xC1003        //没有找到
+#define ERROR_MODULE_SESSION_SOCKS_VERSION 0xC1004           //协议错误
+#define ERROR_MODULE_SESSION_SOCKS_NOTSET 0xC1005            //没有设置客户端数据
+/************************************************************************/
+/*                     隧道代理服务错误                                 */
+/************************************************************************/
+#define ERROR_MODULE_SESSION_TUNNEL_PARAMENT 0xC2001       //参数错误
+#define ERROR_MODULE_SESSION_TUNNEL_MALLOC 0xC2002         //申请内存失败
+#define ERROR_MODULE_SESSION_TUNNEL_NOTFOUND 0xC2003        //没有找到
+#define ERROR_MODULE_SESSION_TUNNEL_NOTSET 0xC2004           //没有设置内容

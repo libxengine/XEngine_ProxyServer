@@ -293,3 +293,159 @@ extern "C" bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_S
 备注：
 *********************************************************************/
 extern "C" bool ModuleSession_Socks_List(XCHAR*** ppptszClientList, int* pInt_ListCount);
+/************************************************************************/
+/*                     隧道代理服务                                     */
+/************************************************************************/
+/********************************************************************
+函数名称：ModuleSession_Tunnel_Create
+函数功能：创建一个隧道代理客户端
+ 参数.一：lpszClientID
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入客户端ID
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Tunnel_Create(LPCXSTR lpszClientID);
+/********************************************************************
+函数名称：ModuleSession_Tunnel_Delete
+函数功能：删除一个指定的客户端
+ 参数.一：lpszClientID
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入客户端ID
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Tunnel_Delete(LPCXSTR lpszClientID);
+/********************************************************************
+函数名称：ModuleSession_Tunnel_SetInfo
+函数功能：设置客户端信息
+ 参数.一：lpszClientID
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要操作的客户端
+ 参数.二：lParam
+  In/Out：In
+  类型：无类型指针
+  可空：N
+  意思：输入要设置的内容
+ 参数.三：nLen
+  In/Out：In
+  类型：整数型
+  可空：N
+  意思：输入自定义内容大小
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XPVOID lParam, int nLen);
+/********************************************************************
+函数名称：ModuleSession_Tunnel_GetInfo
+函数功能：获取客户端信息
+ 参数.一：lpszClientID
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要操作的客户端
+ 参数.二：lParam
+  In/Out：Out
+  类型：无类型指针
+  可空：N
+  意思：输出获取到的内容
+ 参数.三：pInt_Len
+  In/Out：Out
+  类型：整数型指针
+  可空：Y
+  意思：输出自定义内容大小
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, XPVOID lParam, int* pInt_Len = NULL);
+/********************************************************************
+函数名称：ModuleSession_Tunnel_GetList
+函数功能：获取所有自定义数据
+ 参数.一：xpppMem
+  In/Out：Out
+  类型：三级指针
+  可空：N
+  意思：输出获取到的列表
+ 参数.二：pInt_Count
+  In/Out：Out
+  类型：整数型指针
+  可空：N
+  意思：输出列表个数
+ 参数.三：nSize
+  In/Out：Out
+  类型：整数型
+  可空：N
+  意思：输入每个成员的大小
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Tunnel_GetList(XPPPMEM xpppMem, int* pInt_Count, int nSize);
+/********************************************************************
+函数名称：ModuleSession_Tunnel_Packet
+函数功能：解析客户端的隧道代理协议
+ 参数.一：lpszClientID
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入客户端ID
+ 参数.二：lpszMsgBuffer
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要解析的内容
+ 参数.三：nMsgLen
+  In/Out：In
+  类型：整数型
+  可空：N
+  意思：输入内容大小
+ 参数.四：ptszMSGBuffer
+  In/Out：Out
+  类型：字符指针
+  可空：N
+  意思：输出打包的内容
+ 参数.五：pInt_MSGLen
+  In/Out：Out
+  类型：整数型指针
+  可空：N
+  意思：输出打包的大小
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Tunnel_Packet(LPCXSTR lpszClientID, LPCXSTR lpszMsgBuffer, int nMsgLen, XCHAR* ptszMSGBuffer, int* pInt_MSGLen);
+/********************************************************************
+函数名称：ModuleSession_Tunnel_List
+函数功能：获取客户端列表
+ 参数.一：ppptszClientList
+  In/Out：Out
+  类型：三级指针
+  可空：N
+  意思：输出客户端列表,可以为NULL
+ 参数.二：pInt_ListCount
+  In/Out：Out
+  类型：整数型指针
+  可空：N
+  意思：输出列表个数
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Tunnel_List(XCHAR*** ppptszClientList, int* pInt_ListCount);

@@ -25,6 +25,12 @@
     <Filter Include="源文件\ModuleSession_Socks">
       <UniqueIdentifier>{7b3ae0a7-df75-4e49-95eb-1a7760707b4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\ModuleSession_Tunnel">
+      <UniqueIdentifier>{5e76c75b-1ed2-4006-92a1-20d00b90de59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ModuleSession_Tunnel">
+      <UniqueIdentifier>{de4957ba-1faf-41f0-9058-9f219c803ddf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -45,6 +51,9 @@
     <ClInclude Include="ModuleSession_Socks\ModuleSession_Socks.h">
       <Filter>头文件\ModuleSession_Socks</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleSession_Tunnel\ModuleSession_Tunnel.h">
+      <Filter>头文件\ModuleSession_Tunnel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -58,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="ModuleSession_Socks\ModuleSession_Socks.cpp">
       <Filter>源文件\ModuleSession_Socks</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSession_Tunnel\ModuleSession_Tunnel.cpp">
+      <Filter>源文件\ModuleSession_Tunnel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@ LOADHDR = -I ./ -I ../XEngine_ThirdPart/jsoncpp
 LOADSO = 
 LIB = -lXEngine_BaseLib
 LIBEX = 
-OBJECTS = ModuleSession_Forward.o ModuleSession_Socks.o pch.o
+OBJECTS = ModuleSession_Forward.o ModuleSession_Socks.o ModuleSession_Tunnel.o pch.o
 
 ifeq ($(RELEASE),1)
 FLAGS = -c 
@@ -55,7 +55,10 @@ all:$(OBJECTS)
 ModuleSession_Forward.o:./ModuleSession_Forward/ModuleSession_Forward.cpp             
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ModuleSession_Forward/ModuleSession_Forward.cpp 
 ModuleSession_Socks.o:./ModuleSession_Socks/ModuleSession_Socks.cpp             
-	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ModuleSession_Socks/ModuleSession_Socks.cpp 					              
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ModuleSession_Socks/ModuleSession_Socks.cpp
+ModuleSession_Tunnel.o:./ModuleSession_Tunnel/ModuleSession_Tunnel.cpp             
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ModuleSession_Tunnel/ModuleSession_Tunnel.cpp 	
+
 pch.o:./pch.cpp                 		       	    
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./pch.cpp
 

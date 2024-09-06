@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "ModuleSession_Forward/ModuleSession_Forward.h"
 #include "ModuleSession_Socks/ModuleSession_Socks.h"
+#include "ModuleSession_Tunnel/ModuleSession_Tunnel.h"
 /********************************************************************
 //    Created:     2022/06/08  10:10:52
 //    File Name:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleSession\pch.cpp
@@ -17,6 +18,7 @@ XLONG Session_dwErrorCode = 0;
 //////////////////////////////////////////////////////////////////////////
 CModuleSession_Forward m_Forward;
 CModuleSession_Socks m_Socks;
+CModuleSession_Tunnel m_Tunnel;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
@@ -85,4 +87,35 @@ extern "C" bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_S
 extern "C" bool ModuleSession_Socks_List(XCHAR*** ppptszClientList, int* pInt_ListCount)
 {
 	return m_Socks.ModuleSession_Socks_List(ppptszClientList, pInt_ListCount);
+}
+/************************************************************************/
+/*                     隧道代理服务                                     */
+/************************************************************************/
+extern "C" bool ModuleSession_Tunnel_Create(LPCXSTR lpszClientID)
+{
+	return m_Tunnel.ModuleSession_Tunnel_Create(lpszClientID);
+}
+extern "C" bool ModuleSession_Tunnel_Delete(LPCXSTR lpszClientID)
+{
+	return m_Tunnel.ModuleSession_Tunnel_Delete(lpszClientID);
+}
+extern "C" bool ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XPVOID lParam, int nLen)
+{
+	return m_Tunnel.ModuleSession_Tunnel_SetInfo(lpszClientID, lParam, nLen);
+}
+extern "C" bool ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, XPVOID lParam, int* pInt_Len)
+{
+	return m_Tunnel.ModuleSession_Tunnel_GetInfo(lpszClientID, lParam, pInt_Len);
+}
+extern "C" bool ModuleSession_Tunnel_GetList(XPPPMEM xpppMem, int* pInt_Count, int nSize)
+{
+	return m_Tunnel.ModuleSession_Tunnel_GetList(xpppMem, pInt_Count, nSize);
+}
+extern "C" bool ModuleSession_Tunnel_Packet(LPCXSTR lpszClientID, LPCXSTR lpszMsgBuffer, int nMsgLen, XCHAR* ptszMSGBuffer, int* pInt_MSGLen)
+{
+	return m_Tunnel.ModuleSession_Tunnel_Packet(lpszClientID, lpszMsgBuffer, nMsgLen, ptszMSGBuffer, pInt_MSGLen);
+}
+extern "C" bool ModuleSession_Tunnel_List(XCHAR*** ppptszClientList, int* pInt_ListCount)
+{
+	return m_Tunnel.ModuleSession_Tunnel_List(ppptszClientList, pInt_ListCount);
 }

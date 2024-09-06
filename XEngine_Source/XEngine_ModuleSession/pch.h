@@ -23,6 +23,8 @@ using namespace std;
 #include <XEngine_Include/XEngine_ProtocolHdr.h>
 #include <XEngine_Include/XEngine_BaseLib/BaseLib_Define.h>
 #include <XEngine_Include/XEngine_BaseLib/BaseLib_Error.h>
+#include <XEngine_Include/XEngine_BaseLib/Algorithm_Define.h>
+#include <XEngine_Include/XEngine_BaseLib/Algorithm_Error.h>
 #include "ModuleSession_Define.h"
 #include "ModuleSession_Error.h"
 /********************************************************************
@@ -47,4 +49,5 @@ typedef std::string tstring;
 
 #ifdef _MSC_BUILD
 #pragma comment(lib,"XEngine_BaseLib/XEngine_BaseLib")
+#pragma comment(lib,"XEngine_BaseLib/XEngine_Algorithm")
 #endif

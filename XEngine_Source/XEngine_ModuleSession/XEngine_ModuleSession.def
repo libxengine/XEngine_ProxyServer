@@ -17,3 +17,11 @@ EXPORTS
 	ModuleSession_Forward_Bind
 	ModuleSession_Forward_Delete
 	ModuleSession_Forward_Get
+
+	ModuleSession_Tunnel_Create
+	ModuleSession_Tunnel_Delete
+	ModuleSession_Tunnel_SetInfo
+	ModuleSession_Tunnel_GetInfo
+	ModuleSession_Tunnel_GetList
+	ModuleSession_Tunnel_Packet
+	ModuleSession_Tunnel_List
