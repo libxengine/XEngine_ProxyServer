@@ -31,12 +31,16 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 		memset(tszMsgBuffer, '\0', MAX_PATH);
 		if (!ModuleSession_Tunnel_Packet(lpszClientAddr, lpszMsgBuffer, nMsgLen, tszMsgBuffer, &nLen))
 		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("Tunnel客户端:%s,解析协议不成功,可能因为数据不完整,需要等待完整包,错误码:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
+			return false;
+		}
+		if (!ProxyProtocol_TunnelCore_Parse(tszMsgBuffer, nLen, tszIPAddr, &nIPPort, tszAuthInfo, &bProxy))
+		{
 			ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 400);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Tunnel客户端:%s,解析协议失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 			return false;
 		}
-		ProxyProtocol_TunnelCore_Parse(tszMsgBuffer, nLen, tszIPAddr, &nIPPort, tszAuthInfo, &bProxy);
 
 		XCHAR tszConnectAddr[128];
 		memset(tszConnectAddr, '\0', sizeof(tszConnectAddr));
