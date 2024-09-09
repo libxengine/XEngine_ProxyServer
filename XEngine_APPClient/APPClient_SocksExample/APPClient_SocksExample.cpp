@@ -90,7 +90,7 @@ int main(int argc, char** argv)
 		}
 	}
 	//////////////////////////////////////////////////////////////////////////连接
-	ProxyProtocol_SocksClient_ConnectPacket(tszMsgBuffer, &nMsgLen, "www.xyry.org", 80, ENUM_RFCCOMPONENTS_PROXYSOCKS_COMMAND_CONNECT, ENUM_RFCCOMPONENTS_PROXYSOCKS_IPADDR_DOMAIN);
+	ProxyProtocol_SocksClient_ConnectPacket(tszMsgBuffer, &nMsgLen, "www.libxengine.com", 80, ENUM_RFCCOMPONENTS_PROXYSOCKS_COMMAND_CONNECT, ENUM_RFCCOMPONENTS_PROXYSOCKS_IPADDR_DOMAIN);
 	if (!XClient_TCPSelect_SendMsg(m_Socket, tszMsgBuffer, nMsgLen))
 	{
 		printf("发送投递失败！\n");
@@ -106,7 +106,7 @@ int main(int argc, char** argv)
 	int nCode = 0;
 	ProxyProtocol_SocksClient_ConnectParse(tszMsgBuffer, &nCode);
 	//请求
-	LPCXSTR lpszGetHttp = _X("GET / HTTP/1.1\r\nHost: www.xyry.org\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36\r\nAccept: text/html\r\n\r\n");
+	LPCXSTR lpszGetHttp = _X("GET / HTTP/1.1\r\nHost: www.libxengine.com\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36\r\nAccept: text/html\r\n\r\n");
 	if (!XClient_TCPSelect_SendMsg(m_Socket, lpszGetHttp, _tcsxlen(lpszGetHttp)))
 	{
 		printf("发送投递失败！\n");
