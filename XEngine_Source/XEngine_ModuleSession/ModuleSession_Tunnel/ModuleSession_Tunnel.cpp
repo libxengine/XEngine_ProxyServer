@@ -344,6 +344,8 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_Packet(LPCXSTR lpszClientID, LP
     *pInt_MSGLen = stl_MapIterator->second->nHdrLen;
     memcpy(ptszMSGBuffer, stl_MapIterator->second->tszMsgBuffer, stl_MapIterator->second->nHdrLen);
     
+    stl_MapIterator->second->nHdrLen = 0;
+    memset(stl_MapIterator->second->tszMsgBuffer, '\0', sizeof(stl_MapIterator->second->tszMsgBuffer));
     st_Locker.unlock_shared();
     return true;
 }
