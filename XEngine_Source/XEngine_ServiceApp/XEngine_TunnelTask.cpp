@@ -15,9 +15,9 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 	PROXYPROTOCOL_CLIENTINFO st_ProxyClient;
 	memset(&st_ProxyClient, '\0', sizeof(PROXYPROTOCOL_CLIENTINFO));
 
-	ProxyProtocol_TunnelCore_GetInfo(lpszClientAddr, &st_ProxyClient);
+	ModuleSession_Tunnel_GetInfo(lpszClientAddr, &st_ProxyClient);
 	//创建成功就只需要转发
-	if (ENUM_RFCCOMPONENTS_PROXY_STATUS_CREATE == st_ProxyClient.enStatus)
+	if (ENUM_PROXY_SESSION_SOCKS_STATUS_CREATE == st_ProxyClient.enStatus)
 	{
 		int nLen = 0;
 		int nIPPort = 0;
@@ -29,13 +29,19 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 		memset(tszIPAddr, '\0', sizeof(tszIPAddr));
 		memset(tszAuthInfo, '\0', MAX_PATH);
 		memset(tszMsgBuffer, '\0', MAX_PATH);
-		if (!ProxyProtocol_TunnelCore_Parse(lpszClientAddr, lpszMsgBuffer, nMsgLen, tszIPAddr, &nIPPort, tszAuthInfo, &bProxy))
+		if (!ModuleSession_Tunnel_Packet(lpszClientAddr, lpszMsgBuffer, nMsgLen, tszMsgBuffer, &nLen))
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("Tunnel客户端:%s,解析协议不成功,可能因为数据不完整,需要等待完整包,错误码:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
+			return false;
+		}
+		if (!ProxyProtocol_TunnelCore_Parse(tszMsgBuffer, nLen, tszIPAddr, &nIPPort, tszAuthInfo, &bProxy))
 		{
 			ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 400);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Tunnel客户端:%s,解析协议失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 			return false;
 		}
+
 		XCHAR tszConnectAddr[128];
 		memset(tszConnectAddr, '\0', sizeof(tszConnectAddr));
 		//是否为IP地址
@@ -81,9 +87,9 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 			return false;
 		}
 		//设置属于
-		st_ProxyClient.enStatus = ENUM_RFCCOMPONENTS_PROXY_STATUS_FORWARD;
+		st_ProxyClient.enStatus = ENUM_PROXY_SESSION_SOCKS_STATUS_FORWARD;
 		_tcsxcpy(st_ProxyClient.tszIPAddr, lpszClientAddr);
-		ProxyProtocol_TunnelCore_SetInfo(lpszClientAddr, &st_ProxyClient, sizeof(PROXYPROTOCOL_CLIENTINFO));
+		ModuleSession_Tunnel_SetInfo(lpszClientAddr, &st_ProxyClient, sizeof(PROXYPROTOCOL_CLIENTINFO));
 		//判断是代理还是非代理协议
 		if (bProxy)
 		{
@@ -106,23 +112,23 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 	return true;
 }
 
-void CALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_NETCLIENT_TCPEVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
+void CALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
 {
 	int nListCount = 0;
 	PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;
-	ProxyProtocol_TunnelCore_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
+	ModuleSession_Tunnel_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
 	for (int i = 0; i < nListCount; i++)
 	{
 		if (xhClient == ppSt_ClientList[i]->xhClient)
 		{
-			if (ENUM_XENGINE_XCLIENT_SOCKET_TCP_EVENT_RECV == enTCPClientEvents)
+			if (ENUM_XCLIENT_SOCKET_EVENT_RECV == enTCPClientEvents)
 			{
 				if (!XEngine_Network_Send(ppSt_ClientList[i]->tszIPAddr, lpszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL))
 				{
 					SocketOpt_HeartBeat_ForceOutAddrEx(xhTunnelHeart, ppSt_ClientList[i]->tszIPAddr);
 				}
 			}
-			else if (ENUM_XENGINE_XCLIENT_SOCKET_TCP_EVENT_CLOSE == enTCPClientEvents)
+			else if (ENUM_XCLIENT_SOCKET_EVENT_CLOSE == enTCPClientEvents)
 			{
 				//退出处理
 				SocketOpt_HeartBeat_ForceOutAddrEx(xhTunnelHeart, ppSt_ClientList[i]->tszIPAddr);

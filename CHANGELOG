@@ -1,3 +1,23 @@
+XEngine_ProxyServer V1.9.0.1001
+
+增加:XENGINE版本处理和退出等待功能
+更新:匹配XEngineV8.38版本
+修改:从XEngine中移动SOCKS管理代码到会话模块中
+修改:从XEngine中移动tunnel管理代码到会话模块中
+修正:SOCKS连接完成后客户端客户端状态不正确的的问题
+修正:tunnel保持连接数据处理不正确的问题
+修正:tunnel数据未完成处理失败导致的问题
+删除:多余的第三方库jsoncpp
+
+added:xengine version process and getchar with error exit
+update:xengine V8.38 match
+modify:move socks to session module from xengine.
+modify:move tunnel to session module from xengine.
+fixed:socks connect complete client status is incorrect
+fixed:tunnel keep-live connect data process is incorrect
+fixed:is not complete data handle failed when tunnel proxy packet
+delete:json of third-part
+======================================================================================
 XEngine_ProxyServer V1.8.0.1001
 
 增加:信息报告支持
