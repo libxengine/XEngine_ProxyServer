@@ -15,6 +15,7 @@
 #endif //PCH_H
 #include <string.h>
 #include <string>
+#include <list>
 #include <shared_mutex>
 #include <unordered_map>
 using namespace std;
