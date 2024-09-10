@@ -82,11 +82,10 @@ int main(int argc, char** argv)
 	WSADATA st_WSAData;
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 #endif
-
 	bIsRun = true;
-	HELPCOMPONENTS_XLOG_CONFIGURE st_XLogConfig;
+	XENGINE_LIBVERSION st_VERXEngine = {};
+	HELPCOMPONENTS_XLOG_CONFIGURE st_XLogConfig = {};
 
-	memset(&st_XLogConfig, '\0', sizeof(HELPCOMPONENTS_XLOG_CONFIGURE));
 	memset(&st_ServiceConfig, '\0', sizeof(XENGINE_SERVICECONFIG));
 	//初始化参数
 	if (!XEngine_Configure_Parament(argc, argv, &st_ServiceConfig))
@@ -111,6 +110,13 @@ int main(int argc, char** argv)
 	//设置日志打印级别
 	HelpComponents_XLog_SetLogPriority(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化日志系统成功"));
+
+	BaseLib_OperatorVer_XGetStu(&st_VERXEngine);
+	if (st_VERXEngine.nVerCore < 8 || st_VERXEngine.nVerMain < 39)
+	{
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,当前XEngine:%s 版本过低,无法正常使用"), BaseLib_OperatorVer_XNumberStr());
+		goto XENGINE_SERVICEAPP_EXIT;
+	}
 
 	signal(SIGINT, ServiceApp_Stop);
 	signal(SIGTERM, ServiceApp_Stop);
@@ -307,5 +313,6 @@ XENGINE_SERVICEAPP_EXIT:
 #ifdef _MSC_BUILD
 	WSACleanup();
 #endif
+	getchar();
 	return 0;
 }

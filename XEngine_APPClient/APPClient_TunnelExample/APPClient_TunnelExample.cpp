@@ -43,7 +43,7 @@ int main(int argc, char** argv)
 	XCHAR tszMsgBuffer[2048];
 	memset(tszMsgBuffer, '\0', sizeof(tszMsgBuffer));
 
-	ProxyProtocol_TunnelClient_Packet(tszMsgBuffer, &nMsgLen, "www.xyry.org:80", "MTIzMTIzYWE6MTIzMTIz");
+	ProxyProtocol_TunnelClient_Packet(tszMsgBuffer, &nMsgLen, "www.libxengine.com:80", "MTIzMTIzYWE6MTIzMTIz");
 	if (!XClient_TCPSelect_SendMsg(m_Socket, tszMsgBuffer, nMsgLen))
 	{
 		printf("发送投递失败！\n");
@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 	}
 	printf("接受服务器返回数据,内容:%s\n", tszMsgBuffer);
 
-	LPCXSTR lpszGetHttp = _X("GET / HTTP/1.1\r\nHost: www.xyry.org\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36\r\nAccept: text/html\r\n\r\n");
+	LPCXSTR lpszGetHttp = _X("GET / HTTP/1.1\r\nHost: www.libxengine.com\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36\r\nAccept: text/html\r\n\r\n");
 	if (!XClient_TCPSelect_SendMsg(m_Socket, lpszGetHttp, _tcsxlen(lpszGetHttp)))
 	{
 		printf("发送投递失败！\n");

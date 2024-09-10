@@ -37,7 +37,8 @@ macos执行:./XEngine_LINEnv.sh -i 3
 #### sub module
 由于依赖的子模块,在你checkout仓库后,在仓库目录下执行下面的命令拉取子模块  
 git submodule init  
-git submodule update
+git submodule update  
+如果github访问失败,你也可以clone该项目,在主目录下使用命令:git clone https://gitee.com/xengine/XEngine_OPenSource.git XEngine_Source/XEngine_Depend
 
 #### Windows
 使用VS打开并且编译,支持WINDOWS 7SP1以上系统  
@@ -91,14 +92,6 @@ make FLAGS=CleanAll 清理编译
 2.  新建 Feat_xxx 分支
 3.  提交代码
 4.  新建 Pull Request  
-
-## 开发计划
-透传代理  
-支持加密代理  
-转发代理绑定解绑支持附加用户信息  
-转发代理绑定支持拒绝  
-支持UDP转发代理  
-性能优化  
 
 ## 关注我们
 如果你觉得这个软件对你有帮助,请你给我们一个START吧
