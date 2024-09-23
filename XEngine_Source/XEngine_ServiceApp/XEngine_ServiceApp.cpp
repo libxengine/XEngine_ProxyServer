@@ -267,7 +267,7 @@ int main(int argc, char** argv)
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Forward服务没有被启用"));
 	}
 	//发送信息报告
-	if (st_ServiceConfig.st_XReport.bEnable)
+	if (st_ServiceConfig.st_XReport.bEnable && !bIsTest)
 	{
 		if (InfoReport_APIMachine_Send(st_ServiceConfig.st_XReport.tszAPIUrl, st_ServiceConfig.st_XReport.tszServiceName))
 		{
