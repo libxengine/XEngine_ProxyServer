@@ -8,7 +8,7 @@ RELEASE = 0
 UNICODE = 0
 LOADHDR = -I ./ -I ../XEngine_ThirdPart/jsoncpp
 LOADSO = 
-LIB = -lXEngine_BaseLib
+LIB = -lXEngine_BaseLib -lXEngine_Algorithm
 LIBEX = 
 OBJECTS = ModuleSession_Forward.o ModuleSession_Socks.o ModuleSession_Tunnel.o pch.o
 
@@ -16,8 +16,13 @@ ifeq ($(RELEASE),1)
 FLAGS = -c 
 DEBUG = 
 else
-FLAGS = -c -lc_p
-DEBUG = -g -pg 
+	ifeq ($(PLATFORM),mac)
+		FLAGS = -c
+		DEBUG = -g 
+	else
+		FLAGS = -c -lc_p
+		DEBUG = -g -pg 
+	endif
 endif
 
 ifeq ($(UNICODE),1)
