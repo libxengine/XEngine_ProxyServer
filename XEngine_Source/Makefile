@@ -20,15 +20,15 @@ MakeAll:$(XENGINE_MODULES)
 
 libjsoncpp.so:
 ifeq ($(FLAGS), InstallAll)
-	cp $(DEPEND_JSONCPP_PATH)/libjsoncpp.$(FILEEXT) ../XEngine_Release/
+	cp $(THIRDPART_MODULE_JSONCPP)/libjsoncpp.$(FILEEXT) ../XEngine_Release/
 else
-	make -C $(DEPEND_JSONCPP_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
+	make -C $(THIRDPART_MODULE_JSONCPP) PLATFORM=$(PLATFORM) $(FLAGS)
 endif
 libXEngine_InfoReport.so:
 ifeq ($(FLAGS), InstallAll)
-	cp $(DEPEND_REPORT_PATH)/libXEngine_InfoReport.$(FILEEXT) ../XEngine_Release/
+	cp $(THIRDPART_MODULE_REPORT)/libXEngine_InfoReport.$(FILEEXT) ../XEngine_Release/
 else
-	make -C $(DEPEND_REPORT_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
+	make -C $(THIRDPART_MODULE_REPORT) PLATFORM=$(PLATFORM) $(FLAGS)
 endif
 libXEngine_ModuleConfigure.so:
 	make -C $(MODULE_CONFIGURE_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
