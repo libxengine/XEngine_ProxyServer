@@ -43,6 +43,10 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 			printf("Version：%s\n", m_StrVersion.c_str());
 			return false;
 		}
+		else if (0 == _tcsxcmp("-t", argv[i]))
+		{
+			bIsTest = true;
+		}
 	}
 
 	return true;

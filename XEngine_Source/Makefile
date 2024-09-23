@@ -11,6 +11,12 @@ MODULE_PROTOCOL_PATH = ./XEngine_ModuleProtocol
 MODULE_SESSION_PATH = ./XEngine_ModuleSession
 APP_SERVICE_PATH = ./XEngine_ServiceApp
 
+ifeq ($(PLATFORM),linux)
+	FILEEXT = so
+else ifeq ($(PLATFORM),mac)
+	FILEEXT = dylib
+endif
+
 XENGINE_MODULES = libjsoncpp.so libXEngine_InfoReport.so \
 				  libXEngine_ModuleConfigure.so libXEngine_ModuleProtocol.so libXEngine_ModuleSession.so \
 				  XEngine_ServiceApp.exe 
@@ -19,10 +25,17 @@ XENGINE_MODULES = libjsoncpp.so libXEngine_InfoReport.so \
 MakeAll:$(XENGINE_MODULES)
 
 libjsoncpp.so:
+ifeq ($(FLAGS), InstallAll)
+	cp $(THIRDPART_MODULE_JSONCPP)/libjsoncpp.$(FILEEXT) ../XEngine_Release/
+else
 	make -C $(THIRDPART_MODULE_JSONCPP) PLATFORM=$(PLATFORM) $(FLAGS)
+endif
 libXEngine_InfoReport.so:
+ifeq ($(FLAGS), InstallAll)
+	cp $(THIRDPART_MODULE_REPORT)/libXEngine_InfoReport.$(FILEEXT) ../XEngine_Release/
+else
 	make -C $(THIRDPART_MODULE_REPORT) PLATFORM=$(PLATFORM) $(FLAGS)
-
+endif
 libXEngine_ModuleConfigure.so:
 	make -C $(MODULE_CONFIGURE_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
 libXEngine_ModuleProtocol.so:
