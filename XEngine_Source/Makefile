@@ -11,6 +11,12 @@ MODULE_PROTOCOL_PATH = ./XEngine_ModuleProtocol
 MODULE_SESSION_PATH = ./XEngine_ModuleSession
 APP_SERVICE_PATH = ./XEngine_ServiceApp
 
+ifeq ($(PLATFORM),linux)
+	FILEEXT = so
+else ifeq ($(PLATFORM),mac)
+	FILEEXT = dylib
+endif
+
 XENGINE_MODULES = libjsoncpp.so libXEngine_InfoReport.so \
 				  libXEngine_ModuleConfigure.so libXEngine_ModuleProtocol.so libXEngine_ModuleSession.so \
 				  XEngine_ServiceApp.exe 
