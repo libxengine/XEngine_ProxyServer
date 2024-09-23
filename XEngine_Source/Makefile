@@ -30,7 +30,6 @@ ifeq ($(FLAGS), InstallAll)
 else
 	make -C $(DEPEND_REPORT_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
 endif
-
 libXEngine_ModuleConfigure.so:
 	make -C $(MODULE_CONFIGURE_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
 libXEngine_ModuleProtocol.so:
