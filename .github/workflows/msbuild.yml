@@ -75,3 +75,10 @@ jobs:
           ./VSCopy_x86.bat
           ./XEngine_ServiceApp.exe -t
         shell: pwsh
+      
+      #将文件夹打包为 artifact
+      - name: Upload output folder as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: XEngine_ProxyServiceApp
+          path: XEngine_Release/
