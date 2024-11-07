@@ -62,3 +62,9 @@ jobs:
         run: |
             cd XEngine_Release
             ./XEngine_ProxyServiceApp -t
+
+      - name: Upload folder as artifact with ubuntu
+        uses: actions/upload-artifact@v4
+        with:
+          name: XEngine_ProxyServiceApp-x64-Ubuntu
+          path: XEngine_Release/
