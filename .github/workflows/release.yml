@@ -46,6 +46,9 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -al ./
 
+        # 检出代码并包含标签
+      - name: Checkout code
+        uses: actions/checkout@v4
       # 获取最新的标签并提取 X 部分
       - name: Get current version and increment X
         id: version
