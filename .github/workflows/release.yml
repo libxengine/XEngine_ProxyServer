@@ -15,6 +15,11 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Checkout main repository code
+        uses: actions/checkout@v4
+        with:
+          ref: 'develop'
+
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
