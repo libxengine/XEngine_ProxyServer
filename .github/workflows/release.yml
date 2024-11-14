@@ -76,11 +76,11 @@ jobs:
         run: |
           git tag ${{ steps.versioning.outputs.new_tag }}
           git push origin ${{ steps.versioning.outputs.new_tag }}
-          
+
       - name: Generate release notes
         run: |
           # 获取当前标签和上一个标签之间的提交列表，包括提交人
-          release_notes=$(git log ${{ steps.versioning.outputs.pre_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %s - %an" --no-merges)
+          release_notes=$(git log ${{ steps.versioning.outputs.pre_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %s - @%an" --no-merges)
           echo "release_notes<<EOF" >> $GITHUB_ENV
           echo "$release_notes" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
