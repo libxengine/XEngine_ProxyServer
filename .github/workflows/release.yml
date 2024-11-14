@@ -18,6 +18,7 @@ jobs:
       - name: Download artifact
         uses: dawidd6/action-download-artifact@v6
         with:
+          search_artifacts: true
           workflow_search: true
           workflow_conclusion: success
           check_artifacts: false
