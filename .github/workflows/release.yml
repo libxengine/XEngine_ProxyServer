@@ -15,15 +15,33 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Download artifact
+      - name: Download linuxbuild
         uses: dawidd6/action-download-artifact@v6
         with:
-          search_artifacts: true
-          workflow_search: true
+          workflow: linuxbuild.yml
           workflow_conclusion: success
           check_artifacts: false
           skip_unpack: true
           if_no_artifact_found: fail
           path: ./
+      - name: Download macbuild
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: macbuild.yml
+          workflow_conclusion: success
+          check_artifacts: false
+          skip_unpack: true
+          if_no_artifact_found: fail
+          path: ./
+      - name: Download msbuild
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: msbuild.yml
+          workflow_conclusion: success
+          check_artifacts: false
+          skip_unpack: true
+          if_no_artifact_found: fail
+          path: ./
+
       - name: Display structure of downloaded files
         run: ls -al ./
