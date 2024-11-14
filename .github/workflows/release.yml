@@ -15,15 +15,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout main repository code
-        uses: actions/checkout@v4
-        with:
-          ref: 'develop'
-
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v6
         with:
-          name: XEngine_ProxyServiceApp-x64-Ubuntu
+          workflow: msbuild.yml
           path: ./
       - name: Display structure of downloaded files
-        run: ls -al
+        run: ls -al ./
