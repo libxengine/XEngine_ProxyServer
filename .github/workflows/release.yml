@@ -53,21 +53,24 @@ jobs:
           fetch-depth: 0 
       # 获取最新的标签并提取 X 部分
       - name: Get current version and increment X
-        id: version
+        id: versioning
         run: |
-          CURRENT_TAG=$(git describe --tags --abbrev=0)
-          VERSION_PREFIX=$(echo $CURRENT_TAG | sed -E 's/V([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)/V\1/')
-          X=$(echo $CURRENT_TAG | sed -E 's/V([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)/\2/')
-          NEXT_X=$((X + 1))
-          NEXT_TAG="${VERSION_PREFIX}.${NEXT_X}.0.1001"
-          echo "New tag will be: $NEXT_TAG"
-          echo "NEXT_TAG=$NEXT_TAG" >> $GITHUB_ENV
+          # 获取最新的标签，假设标签形式为 V1.X.0.1001
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag: $latest_tag"
+          # 提取 X 的值并递增
+          base=$(echo $latest_tag | cut -d '.' -f 1-2)
+          patch=$(echo $latest_tag | cut -d '.' -f 3)
+          build=$(echo $latest_tag | cut -d '.' -f 4)
+          new_version="$base.$((patch + 1)).$build"
+          echo "New version: $new_version"
+          echo "::set-output name=new_tag::$new_version"
 
       # 创建并推送新的 Git 标签
       - name: Create and push new tag
         run: |
-          git tag ${{ env.NEXT_TAG }}
-          git push origin ${{ env.NEXT_TAG }}
+          git tag ${{ steps.versioning.outputs.new_tag }}
+          git push origin ${{ steps.versioning.outputs.new_tag }}
         
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -76,7 +79,7 @@ jobs:
         with:
           draft: false
           prerelease: false
-          tag_name: ${{ env.NEXT_TAG }}
+          tag_name: ${{ steps.versioning.outputs.new_tag }}
           files: |
             XEngine_ProxyServiceApp-x64-Mac.zip
             XEngine_ProxyServiceApp-x64-Ubuntu.zip
