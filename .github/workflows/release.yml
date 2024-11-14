@@ -45,3 +45,13 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -al ./
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            XEngine_ProxyServiceApp-x64-Mac.zip
+            XEngine_ProxyServiceApp-x64-Ubuntu.zip
+            XEngine_ProxyServiceApp-x64-Windows.zip
+            XEngine_ProxyServiceApp-x86-Windows.zip
