@@ -291,7 +291,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHA
 		
 		if (!stl_MapSrcIterator->second.bAnony)
 		{
-			auto stl_MapDstIterator = stl_MapSession.find(stl_MapSrcIterator->second.tszSrcAddr);
+			auto stl_MapDstIterator = stl_MapSession.find(stl_MapSrcIterator->second.tszDstAddr);
 			if (stl_MapDstIterator == stl_MapSession.end())
 			{
 				stl_MapDstIterator->second.bForward = false;
