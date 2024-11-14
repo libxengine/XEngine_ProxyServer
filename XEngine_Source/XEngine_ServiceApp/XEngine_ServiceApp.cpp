@@ -16,6 +16,7 @@ XHANDLE xhForwardSocket = NULL;
 XHANDLE xhForwardHeart = NULL;
 XHANDLE xhForwardPacket = NULL;
 XHANDLE xhForwardPool = NULL;
+XHANDLE xhForwardClient = NULL;
 //配置文件
 XENGINE_SERVICECONFIG st_ServiceConfig;
 
@@ -286,6 +287,14 @@ int main(int argc, char** argv)
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Forward线程池服务成功,启动个数:%d"), st_ServiceConfig.st_XMax.nForwardThread);
+		//客户端
+		xhForwardClient = XClient_TCPSelect_StartEx(XEngine_Forward_CBRecv);
+		if (NULL == xhForwardClient)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动Forward客户端服务失败,错误：%lX"), XClient_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Forward客户端服务成功"));
 	}
 	else
 	{

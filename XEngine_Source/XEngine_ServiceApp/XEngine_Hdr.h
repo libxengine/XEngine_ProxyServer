@@ -88,6 +88,7 @@ extern XHANDLE xhForwardSocket;
 extern XHANDLE xhForwardHeart;
 extern XHANDLE xhForwardPacket;
 extern XHANDLE xhForwardPool;
+extern XHANDLE xhForwardClient;
 //配置文件
 extern XENGINE_SERVICECONFIG st_ServiceConfig;
 
