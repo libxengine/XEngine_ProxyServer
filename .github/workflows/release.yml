@@ -69,7 +69,16 @@ jobs:
           new_version="$major.$new_minor.$patch.$build"
           echo "New version: $new_version"
           echo "new_tag=$new_version" >> $GITHUB_OUTPUT
+          echo "pre_tag=$latest_tag" >> $GITHUB_OUTPUT
 
+      - name: Generate release notes
+        run: |
+          # 获取当前标签和上一个标签之间的提交列表，包括提交人
+          release_notes=$(git log ${{ steps.versioning.outputs.pre_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %s - %an" --no-merges)
+          echo "release_notes<<EOF" >> $GITHUB_ENV
+          echo "$release_notes" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+            
       # 创建并推送新的 Git 标签
       - name: Create and push new tag
         run: |
@@ -84,6 +93,8 @@ jobs:
           draft: false
           prerelease: false
           tag_name: ${{ steps.versioning.outputs.new_tag }}
+          name: XEngine_ProxyServiceApp ${{ steps.versioning.outputs.new_tag }}
+          body: ${{ env.release_notes }}
           files: |
             ./XEngine_ProxyServiceApp-x64-Mac.zip
             ./XEngine_ProxyServiceApp-x64-Ubuntu.zip
