@@ -16,6 +16,7 @@ XHANDLE xhForwardSocket = NULL;
 XHANDLE xhForwardHeart = NULL;
 XHANDLE xhForwardPacket = NULL;
 XHANDLE xhForwardPool = NULL;
+XHANDLE xhForwardClient = NULL;
 //配置文件
 XENGINE_SERVICECONFIG st_ServiceConfig;
 
@@ -76,12 +77,37 @@ static int ServiceApp_Deamon()
 #endif
 	return 0;
 }
+#ifdef _MSC_BUILD
+LONG WINAPI Coredump_ExceptionFilter(EXCEPTION_POINTERS* pExceptionPointers)
+{
+	static int i = 0;
+	XCHAR tszFileStr[MAX_PATH] = {};
+	XCHAR tszTimeStr[128] = {};
+	BaseLib_OperatorTime_TimeToStr(tszTimeStr);
+	_xstprintf(tszFileStr, _X("./XEngine_Coredump/dumpfile_%s_%d.dmp"), tszTimeStr, i++);
 
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_FATAL, _X("主程序:软件崩溃,写入dump:%s"), tszFileStr);
+	HANDLE hDumpFile = CreateFileA(tszFileStr, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (INVALID_HANDLE_VALUE != hDumpFile)
+	{
+		MINIDUMP_EXCEPTION_INFORMATION st_DumpInfo = {};
+		st_DumpInfo.ExceptionPointers = pExceptionPointers;
+		st_DumpInfo.ThreadId = GetCurrentThreadId();
+		st_DumpInfo.ClientPointers = TRUE;
+		// 写入 dump 文件
+		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hDumpFile, MiniDumpNormal, &st_DumpInfo, NULL, NULL);
+		CloseHandle(hDumpFile);
+	}
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+#endif
 int main(int argc, char** argv)
 {
 #ifdef _MSC_BUILD
 	WSADATA st_WSAData;
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
+
+	SetUnhandledExceptionFilter(Coredump_ExceptionFilter);
 #endif
 	bIsRun = true;
 	int nRet = 0;
@@ -261,6 +287,14 @@ int main(int argc, char** argv)
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Forward线程池服务成功,启动个数:%d"), st_ServiceConfig.st_XMax.nForwardThread);
+		//客户端
+		xhForwardClient = XClient_TCPSelect_StartEx(XEngine_Forward_CBRecv);
+		if (NULL == xhForwardClient)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动Forward客户端服务失败,错误：%lX"), XClient_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Forward客户端服务成功"));
 	}
 	else
 	{
@@ -287,7 +321,7 @@ int main(int argc, char** argv)
 
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("所有服务成功启动,服务运行中,XEngine版本:%s%s,服务版本:%s,发行次数:%d。。。"), BaseLib_OperatorVer_XNumberStr(), BaseLib_OperatorVer_XTypeStr(), st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str(), st_ServiceConfig.st_XVer.pStl_ListVer->size());
 
-	while (bIsRun)
+	while (true)
 	{
 		if (bIsTest)
 		{

@@ -23,7 +23,9 @@ typedef struct
 	XENGINE_PROTOCOL_USERAUTH st_UserAuth;
 	XCHAR tszSrcAddr[128];
 	XCHAR tszDstAddr[128];
+	XNETHANDLE xhClient;
 	bool bForward;
+	bool bAnony;
 }SESSION_FORWARD, * LPSESSION_FORWARD;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
@@ -76,8 +78,8 @@ extern "C" bool ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENGINE_PROTOCOL_
 *********************************************************************/
 extern "C" bool ModuleSession_Forward_List(SESSION_FORWARD * **pppSt_ListUser, int* pInt_Count, LPCXSTR lpszAddr = NULL);
 /********************************************************************
-函数名称：ModuleSession_Forward_Bind
-函数功能：绑定转发需求
+函数名称：ModuleSession_Forward_BindNamed
+函数功能：命名绑定转发需求
  参数.一：lpszSrcAddr
   In/Out：In
   类型：常量字符指针
@@ -93,7 +95,31 @@ extern "C" bool ModuleSession_Forward_List(SESSION_FORWARD * **pppSt_ListUser, i
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
+extern "C" bool ModuleSession_Forward_BindNamed(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
+/********************************************************************
+函数名称：ModuleSession_Forward_BindNamed
+函数功能：匿名绑定转发需求
+ 参数.一：lpszSrcAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入绑定的原始地址
+ 参数.二：lpszDstAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输出绑定的目标地址
+ 参数.三：xhClient
+  In/Out：In
+  类型：句柄
+  可空：N
+  意思：输入绑定的客户端
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Forward_BindAnony(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr, XNETHANDLE xhClient);
 /********************************************************************
 函数名称：ModuleSession_Forward_Delete
 函数功能：删除用户
@@ -132,7 +158,6 @@ extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAd
 备注：
 *********************************************************************/
 extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* ptszDstAddr = NULL);
-
 /************************************************************************/
 /*                     SOCK代理服务器导出函数                           */
 /************************************************************************/

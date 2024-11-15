@@ -11,6 +11,7 @@
 #ifdef _MSC_BUILD
 #include <Windows.h>
 #include <tchar.h>
+#include <minidumpapiset.h>
 #else
 #include <unistd.h>
 #include <sys/wait.h>
@@ -87,6 +88,7 @@ extern XHANDLE xhForwardSocket;
 extern XHANDLE xhForwardHeart;
 extern XHANDLE xhForwardPacket;
 extern XHANDLE xhForwardPool;
+extern XHANDLE xhForwardClient;
 //配置文件
 extern XENGINE_SERVICECONFIG st_ServiceConfig;
 
@@ -144,4 +146,5 @@ typedef struct
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_Packets.lib")
 #pragma comment(lib,"XEngine_RfcComponents/RfcComponents_ProxyProtocol.lib")
 #pragma comment(lib,"Ws2_32.lib")
+#pragma comment(lib,"Dbghelp.lib")
 #endif
