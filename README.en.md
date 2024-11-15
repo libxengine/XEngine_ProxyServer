@@ -6,6 +6,9 @@ As long as the repository is not in suspended state, we will maintain and develo
 c c++ SOCKS5代理服务 HTTP Tunnel隧道代理服务 tcp转发服务  
 c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service  
 
+## Notice
+Starting from 2024.11.15, the compiled release version will only be released on github.
+
 #### Software Architecture
 the software developed based on xengine,using c/c++ development  
 This software is a standard proxy server that supports Socks5 and HTTP tunnel proxy  
