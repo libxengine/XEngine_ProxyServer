@@ -95,7 +95,7 @@ jobs:
           prerelease: false
           tag_name: ${{ steps.versioning.outputs.new_tag }}
           name: XEngine_ProxyServiceApp ${{ steps.versioning.outputs.new_tag }}
-          body: ${{ env.release_notes }}
+          body: ${{ env.modified_logs }}
           files: |
             ./XEngine_ProxyServiceApp-x64-Mac.zip
             ./XEngine_ProxyServiceApp-x64-Ubuntu.zip
