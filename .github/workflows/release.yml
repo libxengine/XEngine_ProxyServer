@@ -47,7 +47,6 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -al ./
 
-      # 获取最新的标签并提取 X 部分
       - name: Get current version and increment X
         id: versioning
         run: |
@@ -66,7 +65,6 @@ jobs:
           echo "new_tag=$new_version" >> $GITHUB_OUTPUT
           echo "prev_tag=$latest_tag" >> $GITHUB_OUTPUT
 
-      # 创建并推送新的 Git 标签
       - name: Create and push new tag
         run: |
           git tag ${{ steps.versioning.outputs.new_tag }}
@@ -74,8 +72,9 @@ jobs:
 
       - name: Generate release notes
         run: |
-          logs=$(git log ${{ steps.versioning.outputs.prev_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %H - %s - %an" --no-merges)
+          logs=$(git log ${{ steps.versioning.outputs.prev_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"%H - %s - %an" --no-merges)
           release_notes=$(echo "$logs" | sed 's/ - qyt$/ - @xengine-qyt/')
+          echo "$release_notes"
           echo "release_notes=$release_notes" >> $GITHUB_ENV
         
       - name: Release

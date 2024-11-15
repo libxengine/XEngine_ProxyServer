@@ -3,6 +3,9 @@ name: macos build workflows
 on:
   push:
     branches: [ "develop" ]
+    paths:
+      - 'XEngine_Source/**'
+      - 'XEngine_Release/**'
   
 permissions:
   contents: read
