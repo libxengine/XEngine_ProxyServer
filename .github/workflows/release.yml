@@ -3,7 +3,7 @@ name: release packet
 on:
   push:
     branches: 
-      - master
+      - devleop
   
 jobs:
   build:
