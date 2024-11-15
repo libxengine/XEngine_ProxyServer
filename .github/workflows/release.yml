@@ -80,11 +80,10 @@ jobs:
       - name: Generate release notes
         run: |
           # 获取当前标签和上一个标签之间的提交列表，包括提交人的电子邮件
-          release_notes=$(git log ${{ steps.versioning.outputs.pre_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %H - %s - %an" --no-merges)
-          modified_logs=$(echo "$release_notes" | sed 's/ - qyt$/ - xengine-qyt/')
-          echo "modified_logs<<EOF" >> $GITHUB_ENV
-          echo "$modified_logs" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          logs=$(git log ${{ steps.versioning.outputs.pre_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %H - %an" --no-merges)
+          logs=$(git log ${{ steps.versioning.outputs.pre_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %H - %s - %an" --no-merges)
+          release_notes=$(echo "$logs" | sed 's/ - qyt$/ - xengine-qyt/')
+          echo "release_notes=$release_notes" >> $GITHUB_ENV
         
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -95,7 +94,7 @@ jobs:
           prerelease: false
           tag_name: ${{ steps.versioning.outputs.new_tag }}
           name: XEngine_ProxyServiceApp ${{ steps.versioning.outputs.new_tag }}
-          body: ${{ env.modified_logs }}
+          body: ${{ env.release_notes }}
           files: |
             ./XEngine_ProxyServiceApp-x64-Mac.zip
             ./XEngine_ProxyServiceApp-x64-Ubuntu.zip
