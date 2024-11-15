@@ -80,14 +80,10 @@ jobs:
       - name: Generate release notes
         run: |
           # 获取当前标签和上一个标签之间的提交列表，包括提交人的电子邮件
-          git log ${{ steps.versioning.outputs.prev_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty="%H %ae" --no-merges > commit_emails.txt
-          echo "release_notes<<EOF" >> $GITHUB_ENV
-          while read commit email; do
-            user=$(curl -s "https://api.github.com/search/users?q=$email+in:email" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" | jq -r '.items[0].login')
-            commit_message=$(git log -1 --pretty=%s $commit)
-            commit_url="https://github.com/${{ github.repository }}/commit/$commit"
-            echo "* [$commit_message]($commit_url) - @$user" >> $GITHUB_ENV
-          done < commit_emails.txt
+          release_notes=$(git log ${{ steps.versioning.outputs.pre_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %H - %s - %an" --no-merges)
+          modified_logs=$(echo "$release_notes" | sed 's/ - qyt$/ - xengine-qyt/')
+          echo "modified_logs<<EOF" >> $GITHUB_ENV
+          echo "$modified_logs" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
         
       - name: Release
