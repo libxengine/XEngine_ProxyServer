@@ -74,7 +74,6 @@ jobs:
 
       - name: Generate release notes
         run: |
-          # 获取当前标签和上一个标签之间的提交列表，包括提交人的电子邮件
           logs=$(git log ${{ steps.versioning.outputs.prev_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %H - %s - %an" --no-merges)
           release_notes=$(echo "$logs" | sed 's/ - qyt$/ - @xengine-qyt/')
           echo "release_notes=$release_notes" >> $GITHUB_ENV
