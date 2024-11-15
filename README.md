@@ -3,6 +3,9 @@
 本仓库有开发和主分支,如果要使用,请使用master分支下的代码  
 只要仓库不是在暂停状态,那么就会有人一直维护和开发,请放心使用  
 
+## 注意
+自2024.11.15起.编译发布版本将只在github上面发布.
+
 ## 介绍
 c c++ SOCKS5代理服务 HTTP Tunnel隧道代理服务 tcp转发服务  
 c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service  
