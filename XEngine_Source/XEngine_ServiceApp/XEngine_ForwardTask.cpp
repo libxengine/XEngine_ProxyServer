@@ -71,7 +71,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 		{
 			pSt_ProtocolHdr->wReserve = 401;
 			pSt_ProtocolHdr->unPacketSize = 0;
-			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREP;
+			pSt_ProtocolHdr->unOperatorCode = pSt_ProtocolHdr->unOperatorCode + 1;
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求转发协议:%d 失败,因为没有登录"), lpszClientAddr, pSt_ProtocolHdr->unOperatorCode);
 			return false;
@@ -91,7 +91,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_FORWARD);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求可用转发列表成功"), lpszClientAddr);
 		}
-		else if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREQ == pSt_ProtocolHdr->unOperatorCode)
+		else if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_NAMEDREQ == pSt_ProtocolHdr->unOperatorCode)
 		{
 			XCHAR tszSrcAddr[128];
 			XCHAR tszDstAddr[128];
@@ -100,13 +100,13 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			memset(tszDstAddr, '\0', sizeof(tszDstAddr));
 
 			ModuleProtocol_Parse_ForwardBind(lpszMsgBuffer, nMsgLen, tszSrcAddr, tszDstAddr);
-			if (!ModuleSession_Forward_Bind(lpszClientAddr, tszDstAddr))
+			if (!ModuleSession_Forward_BindNamed(lpszClientAddr, tszDstAddr))
 			{
 				pSt_ProtocolHdr->wReserve = 404;
 				pSt_ProtocolHdr->unPacketSize = 0;
-				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREP;
+				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_NAMEDREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求命名绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr);
 				return false;
 			}
 			//先告知对方要转发数据
@@ -114,11 +114,74 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			pSt_ProtocolHdr->unPacketSize = 0;
 			XEngine_Network_Send(tszDstAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
 			//最后返回结果
-			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREP;
+			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_NAMEDREP;
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求绑定转发地址:%s 成功"), lpszClientAddr, tszDstAddr);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求命名绑定转发地址:%s 成功"), lpszClientAddr, tszDstAddr);
+		}
+		else if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREQ == pSt_ProtocolHdr->unOperatorCode)
+		{
+			XCHAR tszSrcAddr[128];
+			XCHAR tszDstAddr[128];
+
+			memset(tszSrcAddr, '\0', sizeof(tszSrcAddr));
+			memset(tszDstAddr, '\0', sizeof(tszDstAddr));
+
+			ModuleProtocol_Parse_ForwardBind(lpszMsgBuffer, nMsgLen, tszSrcAddr, tszDstAddr);
+			//匿名绑定,请求连接
+			int nPort = 0;
+			XNETHANDLE xhClient = 0;
+			BaseLib_OperatorIPAddr_SegAddr(tszDstAddr, &nPort);
+			if (!XClient_TCPSelect_InsertEx(xhForwardClient, &xhClient, tszDstAddr, nPort))
+			{
+				pSt_ProtocolHdr->wReserve = 500;
+				pSt_ProtocolHdr->unPacketSize = 0;
+				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
+				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 失败,网络连接错误,错误码:%lX"), lpszClientAddr, tszDstAddr, XClient_GetLastError());
+				return false;
+			}
+			if (!ModuleSession_Forward_BindAnony(lpszClientAddr, tszDstAddr, xhClient))
+			{
+				pSt_ProtocolHdr->wReserve = 404;
+				pSt_ProtocolHdr->unPacketSize = 0;
+				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
+				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr);
+				return false;
+			}
+			//返回结果
+			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
+			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 成功"), lpszClientAddr, tszDstAddr);
 		}
 	}
 	
 	return true;
+}
+void CALLBACK XEngine_Forward_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
+{
+	int nListCount = 0;
+	SESSION_FORWARD** ppSt_ClientList;
+	ModuleSession_Forward_List(&ppSt_ClientList, &nListCount);
+	for (int i = 0; i < nListCount; i++)
+	{
+		if (xhClient == ppSt_ClientList[i]->xhClient)
+		{
+			if (ENUM_XCLIENT_SOCKET_EVENT_RECV == enTCPClientEvents)
+			{
+				if (!XEngine_Network_Send(ppSt_ClientList[i]->tszSrcAddr, lpszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_FORWARD))
+				{
+					SocketOpt_HeartBeat_ForceOutAddrEx(xhForwardHeart, ppSt_ClientList[i]->tszSrcAddr);
+				}
+			}
+			else if (ENUM_XCLIENT_SOCKET_EVENT_CLOSE == enTCPClientEvents)
+			{
+				//退出处理
+				SocketOpt_HeartBeat_ForceOutAddrEx(xhForwardHeart, ppSt_ClientList[i]->tszSrcAddr);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端:%s,离开服务器,客户端主动断开"), ppSt_ClientList[i]->tszSrcAddr);
+			}
+			break;
+		}
+	}
+	BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 }

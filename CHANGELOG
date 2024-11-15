@@ -1,3 +1,29 @@
+XEngine_ProxyServer V1.10.0.1001
+
+增加:WINDOWS COREDUMP支持
+增加:工作流支持
+增加:启动测试参数
+优化:启动参数解析
+修改:启动测试的时候关闭报告
+修改:forward转发的绑定修改为命名绑定,并且增加了匿名绑定支持
+修正:子模块文件件不正确的问题
+修正:MACOS下编译问题
+修正:某些时候退出崩溃
+修正:forward删除目标客户端导致的问题
+删除:getchar 函数启动的时候
+
+added:crash core-dump support for windows
+added:workflows
+added:test start mode parameter
+improved:start parameter parse
+modify:disable report info when test start
+modify:bind modify to named and add anonymous for forward of bind
+fixed:sub module dir is incorrect
+fixed:make build error on mac
+fixed:crashed when exist
+fixed:delete dest client for forward
+delete:getchar() when test start
+======================================================================================
 XEngine_ProxyServer V1.9.0.1001
 
 增加:XENGINE版本处理和退出等待功能

@@ -1,0 +1,96 @@
+name: release packet
+
+on:
+  push:
+    branches: 
+      - master
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+        # 检出代码并包含标签
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Download linuxbuild
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: linuxbuild.yml
+          workflow_conclusion: success
+          check_artifacts: false
+          skip_unpack: true
+          if_no_artifact_found: fail
+          path: ./
+      - name: Download macbuild
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: macbuild.yml
+          workflow_conclusion: success
+          check_artifacts: false
+          skip_unpack: true
+          if_no_artifact_found: fail
+          path: ./
+      - name: Download msbuild
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: msbuild.yml
+          workflow_conclusion: success
+          check_artifacts: false
+          skip_unpack: true
+          if_no_artifact_found: fail
+          path: ./
+
+      - name: Display structure of downloaded files
+        run: ls -al ./
+
+      # 获取最新的标签并提取 X 部分
+      - name: Get current version and increment X
+        id: versioning
+        run: |
+          # 获取最新的标签，假设标签形式为 V1.X.0.1001
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag: $latest_tag"
+          # 提取 X 的值并递增
+          major=$(echo $latest_tag | cut -d '.' -f 1)
+          minor=$(echo $latest_tag | cut -d '.' -f 2)
+          patch=$(echo $latest_tag | cut -d '.' -f 3)
+          build=$(echo $latest_tag | cut -d '.' -f 4)
+
+          new_minor=$((minor + 1))
+          new_version="$major.$new_minor.$patch.$build"
+          echo "New version: $new_version"
+          echo "new_tag=$new_version" >> $GITHUB_OUTPUT
+          echo "prev_tag=$latest_tag" >> $GITHUB_OUTPUT
+
+      # 创建并推送新的 Git 标签
+      - name: Create and push new tag
+        run: |
+          git tag ${{ steps.versioning.outputs.new_tag }}
+          git push origin ${{ steps.versioning.outputs.new_tag }}
+
+      - name: Generate release notes
+        run: |
+          # 获取当前标签和上一个标签之间的提交列表，包括提交人的电子邮件
+          logs=$(git log ${{ steps.versioning.outputs.prev_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %H - %s - %an" --no-merges)
+          release_notes=$(echo "$logs" | sed 's/ - qyt$/ - @xengine-qyt/')
+          echo "release_notes=$release_notes" >> $GITHUB_ENV
+        
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: false
+          prerelease: false
+          tag_name: ${{ steps.versioning.outputs.new_tag }}
+          name: XEngine_ProxyServiceApp ${{ steps.versioning.outputs.new_tag }}
+          body: ${{ env.release_notes }}
+          files: |
+            ./XEngine_ProxyServiceApp-x64-Mac.zip
+            ./XEngine_ProxyServiceApp-x64-Ubuntu.zip
+            ./XEngine_ProxyServiceApp-x64-Windows.zip
+            ./XEngine_ProxyServiceApp-x86-Windows.zip

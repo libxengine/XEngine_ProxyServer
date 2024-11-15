@@ -41,9 +41,13 @@ extern "C" bool ModuleSession_Forward_List(SESSION_FORWARD * **pppSt_ListUser, i
 {
 	return m_Forward.ModuleSession_Forward_List(pppSt_ListUser, pInt_Count, lpszAddr);
 }
-extern "C" bool ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr)
+extern "C" bool ModuleSession_Forward_BindNamed(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr)
 {
-	return m_Forward.ModuleSession_Forward_Bind(lpszSrcAddr, lpszDstAddr);
+	return m_Forward.ModuleSession_Forward_BindNamed(lpszSrcAddr, lpszDstAddr);
+}
+extern "C" bool ModuleSession_Forward_BindAnony(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr, XNETHANDLE xhClient)
+{
+	return m_Forward.ModuleSession_Forward_BindAnony(lpszSrcAddr, lpszDstAddr, xhClient);
 }
 extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAddr)
 {

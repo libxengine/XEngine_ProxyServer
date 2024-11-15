@@ -130,8 +130,8 @@ bool CModuleSession_Forward::ModuleSession_Forward_List(SESSION_FORWARD*** pppSt
 	return true;
 }
 /********************************************************************
-函数名称：ModuleSession_Forward_Bind
-函数功能：绑定转发需求
+函数名称：ModuleSession_Forward_BindNamed
+函数功能：命名绑定转发需求
  参数.一：lpszSrcAddr
   In/Out：In
   类型：常量字符指针
@@ -147,7 +147,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_List(SESSION_FORWARD*** pppSt
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Forward::ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr)
+bool CModuleSession_Forward::ModuleSession_Forward_BindNamed(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr)
 {
 	Session_IsErrorOccur = false;
 
@@ -182,6 +182,64 @@ bool CModuleSession_Forward::ModuleSession_Forward_Bind(LPCXSTR lpszSrcAddr, LPC
 
 	stl_MapDstIterator->second.bForward = true;
 	_tcsxcpy(stl_MapDstIterator->second.tszDstAddr, lpszSrcAddr);
+	st_Locker.unlock_shared();
+	return true;
+}
+/********************************************************************
+函数名称：ModuleSession_Forward_BindNamed
+函数功能：匿名绑定转发需求
+ 参数.一：lpszSrcAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入绑定的原始地址
+ 参数.二：lpszDstAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输出绑定的目标地址
+ 参数.三：xhClient
+  In/Out：In
+  类型：句柄
+  可空：N
+  意思：输入绑定的客户端
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+bool CModuleSession_Forward::ModuleSession_Forward_BindAnony(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr, XNETHANDLE xhClient)
+{
+	Session_IsErrorOccur = false;
+
+	if ((NULL == lpszSrcAddr) || (NULL == lpszDstAddr))
+	{
+		Session_IsErrorOccur = true;
+		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_PARAMENT;
+		return false;
+	}
+	st_Locker.lock_shared();
+	//查找
+	auto stl_MapIterator = stl_MapSession.find(lpszSrcAddr);
+	if (stl_MapIterator == stl_MapSession.end())
+	{
+		Session_IsErrorOccur = true;
+		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_NOTFOUND;
+		st_Locker.unlock_shared();
+		return false;
+	}
+	//如果设置过,不允许在设置
+	if (stl_MapIterator->second.bForward)
+	{
+		Session_IsErrorOccur = true;
+		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_BIND;
+		st_Locker.unlock_shared();
+		return false;
+	}
+	stl_MapIterator->second.xhClient = xhClient;
+	stl_MapIterator->second.bAnony = true;
+	stl_MapIterator->second.bForward = true;
+	_tcsxcpy(stl_MapIterator->second.tszDstAddr, lpszDstAddr);
 	st_Locker.unlock_shared();
 	return true;
 }
@@ -231,11 +289,14 @@ bool CModuleSession_Forward::ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHA
 			_tcsxcpy(ptszDstAddr, stl_MapSrcIterator->second.tszDstAddr);
 		}
 		
-		auto stl_MapDstIterator = stl_MapSession.find(stl_MapSrcIterator->second.tszSrcAddr);
-		if (stl_MapDstIterator == stl_MapSession.end())
+		if (!stl_MapSrcIterator->second.bAnony)
 		{
-			stl_MapDstIterator->second.bForward = false;
-			memset(stl_MapDstIterator->second.tszDstAddr, '\0', sizeof(stl_MapDstIterator->second.tszDstAddr));
+			auto stl_MapDstIterator = stl_MapSession.find(stl_MapSrcIterator->second.tszDstAddr);
+			if (stl_MapDstIterator == stl_MapSession.end())
+			{
+				stl_MapDstIterator->second.bForward = false;
+				memset(stl_MapDstIterator->second.tszDstAddr, '\0', sizeof(stl_MapDstIterator->second.tszDstAddr));
+			}
 		}
 	}
 	stl_MapSession.erase(stl_MapSrcIterator);
