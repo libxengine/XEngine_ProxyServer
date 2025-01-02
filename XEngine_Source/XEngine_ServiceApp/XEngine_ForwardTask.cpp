@@ -34,10 +34,10 @@ XHTHREAD CALLBACK XEngine_Forward_Thread(XPVOID lParam)
 			if (HelpComponents_Datas_GetMemoryEx(xhForwardPacket, ppSt_ListClient[i]->tszClientAddr, &ptszMsgBuffer, &nMsgLen, &st_ProtocolHdr))
 			{
 				XEngine_Forward_Handle(ppSt_ListClient[i]->tszClientAddr, ptszMsgBuffer, nMsgLen, &st_ProtocolHdr);
-				BaseLib_OperatorMemory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
+				BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
 			}
 		}
-		BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ListClient, nListCount);
+		BaseLib_Memory_Free((XPPPMEM)&ppSt_ListClient, nListCount);
 	}
 	return 0;
 }
@@ -87,7 +87,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LISTREP;
 			ModuleSession_Forward_List(&ppSt_ListUser, &nListCount, lpszClientAddr);
 			ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, pSt_ProtocolHdr, &ppSt_ListUser, nListCount);
-			BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ListUser, nListCount);
+			BaseLib_Memory_Free((XPPPMEM)&ppSt_ListUser, nListCount);
 			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_FORWARD);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求可用转发列表成功"), lpszClientAddr);
 		}
@@ -130,7 +130,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			//匿名绑定,请求连接
 			int nPort = 0;
 			XNETHANDLE xhClient = 0;
-			BaseLib_OperatorIPAddr_SegAddr(tszDstAddr, &nPort);
+			APIAddr_IPAddr_SegAddr(tszDstAddr, &nPort);
 			if (!XClient_TCPSelect_InsertEx(xhForwardClient, &xhClient, tszDstAddr, nPort))
 			{
 				pSt_ProtocolHdr->wReserve = 500;
@@ -183,5 +183,5 @@ void CALLBACK XEngine_Forward_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCK
 			break;
 		}
 	}
-	BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
+	BaseLib_Memory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 }

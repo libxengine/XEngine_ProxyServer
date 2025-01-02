@@ -7,7 +7,7 @@ c c++ SOCKS5代理服务 HTTP Tunnel隧道代理服务 tcp转发服务
 c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service  
 
 ## Notice
-Starting from 2024.11.15, the compiled release version will only be released on github.
+the compiled release version will only be released on github.
 
 #### Software Architecture
 the software developed based on xengine,using c/c++ development  
@@ -27,7 +27,7 @@ this software support following features
 ## install
 
 #### XEngine Evn
-you must install XEngine,need V8.15 or above,install XEngine can be refer to xengine Readme docment  
+you must install XEngine,need V9.x or above,install XEngine can be refer to xengine Readme docment  
 GITEE:https://gitee.com/xyry/libxengine  
 GITHUB:https://github.com/libxengine/xengine
 

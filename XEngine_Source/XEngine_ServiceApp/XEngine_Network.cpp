@@ -128,7 +128,7 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 				break;
 			}
 		}
-		BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
+		BaseLib_Memory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 		ModuleSession_Socks_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("SOCKS客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
@@ -159,7 +159,7 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 				break;
 			}
 		}
-		BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
+		BaseLib_Memory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 		ModuleSession_Tunnel_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Tunnel客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}

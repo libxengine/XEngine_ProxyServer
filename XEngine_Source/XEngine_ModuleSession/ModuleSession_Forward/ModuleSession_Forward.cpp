@@ -112,7 +112,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_List(SESSION_FORWARD*** pppSt
 	{
 		*pInt_Count = stl_MapSession.size() - 1;   //减去自己
 	}
-	BaseLib_OperatorMemory_Malloc((XPPPMEM)pppSt_ListUser, *pInt_Count, sizeof(SESSION_FORWARD));
+	BaseLib_Memory_Malloc((XPPPMEM)pppSt_ListUser, *pInt_Count, sizeof(SESSION_FORWARD));
 	//遍历
 	auto stl_MapIterator = stl_MapSession.begin();
 	for (int i = 0; stl_MapIterator != stl_MapSession.end(); stl_MapIterator++, i++)

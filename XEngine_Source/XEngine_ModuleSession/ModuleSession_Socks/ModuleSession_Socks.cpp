@@ -249,7 +249,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetList(XPPPMEM xpppMem, int* pIn
 	st_Locker.lock_shared();
 
 	*pInt_Count = stl_MapClients.size();
-	BaseLib_OperatorMemory_Malloc(xpppMem, *pInt_Count, nSize);
+	BaseLib_Memory_Malloc(xpppMem, *pInt_Count, nSize);
 
 	unordered_map<tstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.begin();
 	for (int i = 0; stl_MapIterator != stl_MapClients.end(); stl_MapIterator++, i++)
@@ -379,7 +379,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_List(XCHAR*** ppptszClientList, i
 	*pInt_ListCount = stl_MapClients.size();
 	if (NULL != ppptszClientList)
 	{
-		BaseLib_OperatorMemory_Malloc((XPPPMEM)ppptszClientList, stl_MapClients.size(), 128);
+		BaseLib_Memory_Malloc((XPPPMEM)ppptszClientList, stl_MapClients.size(), 128);
 		auto stl_MapIterator = stl_MapClients.begin();
 		for (int i = 0; stl_MapIterator != stl_MapClients.end(); stl_MapIterator++)
 		{

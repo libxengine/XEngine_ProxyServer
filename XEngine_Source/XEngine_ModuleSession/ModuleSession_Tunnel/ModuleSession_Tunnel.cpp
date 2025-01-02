@@ -261,7 +261,7 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_GetList(XPPPMEM xpppMem, int* p
 	st_Locker.lock_shared();
 
 	*pInt_Count = stl_MapClient.size();
-	BaseLib_OperatorMemory_Malloc(xpppMem, *pInt_Count, nSize);
+	BaseLib_Memory_Malloc(xpppMem, *pInt_Count, nSize);
 	unordered_map<tstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.begin();
     for (int i = 0; stl_MapIterator != stl_MapClient.end(); stl_MapIterator++, i++)
 	{
@@ -375,7 +375,7 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_List(XCHAR*** ppptszClientList,
 	*pInt_ListCount = stl_MapClient.size();
 	if (NULL != ppptszClientList)
 	{
-		BaseLib_OperatorMemory_Malloc((XPPPMEM)ppptszClientList, stl_MapClient.size(), 128);
+		BaseLib_Memory_Malloc((XPPPMEM)ppptszClientList, stl_MapClient.size(), 128);
 		auto stl_MapIterator = stl_MapClient.begin();
 		for (int i = 0; stl_MapIterator != stl_MapClient.end(); stl_MapIterator++)
 		{
