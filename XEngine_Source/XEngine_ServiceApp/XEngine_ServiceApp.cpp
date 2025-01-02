@@ -139,13 +139,6 @@ int main(int argc, char** argv)
 	HelpComponents_XLog_SetLogPriority(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化日志系统成功"));
 
-	BaseLib_Version_XGetStu(&st_VERXEngine);
-	if (st_VERXEngine.nVerCore < 8 || st_VERXEngine.nVerMain < 39)
-	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,当前XEngine:%s 版本过低,无法正常使用"), BaseLib_Version_XNumberStr());
-		goto XENGINE_SERVICEAPP_EXIT;
-	}
-
 	signal(SIGINT, ServiceApp_Stop);
 	signal(SIGTERM, ServiceApp_Stop);
 	signal(SIGABRT, ServiceApp_Stop);
