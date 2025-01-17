@@ -57,7 +57,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Insert(LPCXSTR lpszAddr, XENG
 	memcpy(&st_Forward.st_UserAuth, pSt_UserAuth, sizeof(XENGINE_PROTOCOL_USERAUTH));
 
 	st_Locker.lock();
-	unordered_map<tstring, SESSION_FORWARD>::const_iterator stl_MapIterator = stl_MapSession.find(lpszAddr);
+	unordered_map<xstring, SESSION_FORWARD>::const_iterator stl_MapIterator = stl_MapSession.find(lpszAddr);
 	if (stl_MapIterator != stl_MapSession.end())
 	{
 		Session_IsErrorOccur = true;

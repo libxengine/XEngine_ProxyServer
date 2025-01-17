@@ -42,12 +42,6 @@ using namespace std;
 extern bool Session_IsErrorOccur;
 extern XLONG Session_dwErrorCode;
 
-#ifdef _UNICODE
-typedef std::wstring tstring;
-#else
-typedef std::string tstring;
-#endif
-
 #ifdef _MSC_BUILD
 #pragma comment(lib,"XEngine_BaseLib/XEngine_BaseLib")
 #pragma comment(lib,"XEngine_BaseLib/XEngine_Algorithm")

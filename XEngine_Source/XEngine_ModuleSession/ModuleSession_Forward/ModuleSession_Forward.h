@@ -26,5 +26,5 @@ public:
 private:
 	shared_mutex st_Locker;
 private:
-	unordered_map<tstring, SESSION_FORWARD> stl_MapSession;
+	unordered_map<xstring, SESSION_FORWARD> stl_MapSession;
 };

@@ -17,7 +17,7 @@ typedef struct
     int nHdrLen;                                     //HTTP头大小
     int nPosLen;                                     //HTTP当前大小
     int nCtmLen;                                     //自定义内容大小
-    list<tstring>* pStl_ListField;                   //HTTP字段
+    list<xstring>* pStl_ListField;                   //HTTP字段
     XPVOID lParam;
 }PROXYTUNNEL_CLIENTINFO,*LPPROXYTUNNEL_CLIENTINFO;
 
@@ -38,5 +38,5 @@ public:
 private:
 	shared_mutex st_Locker;
 private:
-    unordered_map<tstring,PROXYTUNNEL_CLIENTINFO *> stl_MapClient;
+    unordered_map<xstring,PROXYTUNNEL_CLIENTINFO *> stl_MapClient;
 };
