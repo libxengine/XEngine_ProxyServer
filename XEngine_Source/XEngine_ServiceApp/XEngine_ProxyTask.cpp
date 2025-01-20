@@ -15,9 +15,11 @@ void CALLBACK XEngine_Proxy_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET
 	SESSION_FORWARD st_ProxyInfo = {};
 	if (!ModuleSession_Proxy_GetForToken(xhClient, &st_ProxyInfo))
 	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Proxy客户端:%lld,获取转发地址信息失败,地址:%s,端口:%d,错误码:%lX"), xhToken, st_ProxyInfo.tszSrcAddr, st_ProxyInfo.tszDstAddr, ModuleSession_GetLastError());
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Proxy客户端:%lld,获取转发地址信息失败,原始地址:%s,目标地址:%s,错误码:%lX"), xhToken, st_ProxyInfo.tszSrcAddr, st_ProxyInfo.tszDstAddr, ModuleSession_GetLastError());
 		return;
 	}
+	XEngine_Network_Send(st_ProxyInfo.tszSrcAddr, lpszMsgBuffer, nMsgLen, XENGINE_CLIENT_NETTYPE_PROXY);
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _X("Proxy客户端:%lld,转发数据成功,原始地址:%s,目标地址:%s,大小:%d"), xhToken, st_ProxyInfo.tszSrcAddr, st_ProxyInfo.tszDstAddr, nMsgLen);
 }
 
 bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
@@ -35,7 +37,7 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 	}
 	SocketOpt_HeartBeat_InsertAddrEx(xhProxyHeart, lpszClientAddr);
 	ModuleSession_Proxy_Insert(lpszClientAddr, st_ServiceConfig.st_XProxy.tszIPAddr, xhClient);
-	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,连接到服务器"), lpszClientAddr);
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,连接到服务器:%s 成功"), lpszClientAddr, st_ServiceConfig.st_XProxy.tszIPAddr);
 	return true;
 }
 bool XEngine_Proxy_Recvmsg(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int nMsgLen)
@@ -51,6 +53,7 @@ bool XEngine_Proxy_Recvmsg(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int nM
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Proxy客户端:%s,转发数据失败,源地址:%s,目地址:%s,错误码:%lX"), lpszClientAddr, st_ProxyInfo.tszSrcAddr, st_ProxyInfo.tszDstAddr, XClient_GetLastError());
 		return false;
 	}
+	SocketOpt_HeartBeat_ActiveAddrEx(xhProxyHeart, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _X("Proxy客户端:%s,转发数据成功,源地址:%s,目地址:%s,大小:%d"), lpszClientAddr, st_ProxyInfo.tszSrcAddr, st_ProxyInfo.tszDstAddr, nMsgLen);
 	return true;
 }
