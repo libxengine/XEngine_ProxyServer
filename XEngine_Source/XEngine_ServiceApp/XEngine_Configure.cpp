@@ -37,6 +37,10 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 		{
 			pSt_Configure->bDeamon = _ttxoi(argv[++i]);
 		}
+		else if (0 == _tcsxcmp("-l", argv[i]))
+		{
+			pSt_Configure->st_XLog.nLogLeave = _ttxoi(argv[++i]);
+		}
 		else if (0 == _tcsxcmp("-v", argv[i]))
 		{
 			string m_StrVersion = st_ServiceConfig.st_XVer.pStl_ListVer->front();
