@@ -15,11 +15,11 @@ void CALLBACK XEngine_Proxy_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET
 	SESSION_FORWARD st_ProxyInfo = {};
 	if (!ModuleSession_Proxy_GetForToken(xhClient, &st_ProxyInfo))
 	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Proxy客户端:%lld,获取转发地址信息失败,原始地址:%s,目标地址:%s,错误码:%lX"), xhToken, st_ProxyInfo.tszSrcAddr, st_ProxyInfo.tszDstAddr, ModuleSession_GetLastError());
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Proxy客户端:%lld,获取转发地址信息失败,原始地址:%s,目标地址:%s,错误码:%lX"), xhClient, st_ProxyInfo.tszSrcAddr, st_ProxyInfo.tszDstAddr, ModuleSession_GetLastError());
 		return;
 	}
 	XEngine_Network_Send(st_ProxyInfo.tszSrcAddr, lpszMsgBuffer, nMsgLen, XENGINE_CLIENT_NETTYPE_PROXY);
-	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _X("Proxy客户端:%lld,转发数据成功,原始地址:%s,目标地址:%s,大小:%d"), xhToken, st_ProxyInfo.tszSrcAddr, st_ProxyInfo.tszDstAddr, nMsgLen);
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _X("Proxy客户端:%lld,转发数据成功,原始地址:%s,目标地址:%s,大小:%d"), xhClient, st_ProxyInfo.tszSrcAddr, st_ProxyInfo.tszDstAddr, nMsgLen);
 }
 
 bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
