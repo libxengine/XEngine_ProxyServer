@@ -86,6 +86,7 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	pSt_ServerConfig->nSocksPort = st_JsonRoot["nSocksPort"].asInt();
 	pSt_ServerConfig->nTunnelPort = st_JsonRoot["nTunnelPort"].asInt();
 	pSt_ServerConfig->nForwardPort = st_JsonRoot["nForwardPort"].asInt();
+	pSt_ServerConfig->nProxyPort = st_JsonRoot["nProxyPort"].asInt();
 
 	if (st_JsonRoot["XMax"].empty() || (4 != st_JsonRoot["XMax"].size()))
 	{
@@ -136,7 +137,7 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	_tcsxcpy(pSt_ServerConfig->st_XReport.tszAPIUrl, st_JsonXReport["tszAPIUrl"].asCString());
 	_tcsxcpy(pSt_ServerConfig->st_XReport.tszServiceName, st_JsonXReport["tszServiceName"].asCString());
 
-	if (st_JsonRoot["XProxy"].empty() || (4 != st_JsonRoot["XProxy"].size()))
+	if (st_JsonRoot["XProxy"].empty() || (2 != st_JsonRoot["XProxy"].size()))
 	{
 		Config_IsErrorOccur = true;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XPROXY;
@@ -144,9 +145,7 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	}
 	Json::Value st_JsonXProxy = st_JsonRoot["XProxy"];
 	pSt_ServerConfig->st_XProxy.bEnable = st_JsonXProxy["bEnable"].asBool();
-	pSt_ServerConfig->st_XProxy.nSrcPort = st_JsonXProxy["nSrcPort"].asInt();
-	pSt_ServerConfig->st_XProxy.nDstPort = st_JsonXProxy["nDstPort"].asInt();
-	_tcsxcpy(pSt_ServerConfig->st_XProxy.tszDstIPAddr, st_JsonXProxy["tszDstIPAddr"].asCString());
+	_tcsxcpy(pSt_ServerConfig->st_XProxy.tszIPAddr, st_JsonXProxy["tszIPAddr"].asCString());
 
 	return true;
 }

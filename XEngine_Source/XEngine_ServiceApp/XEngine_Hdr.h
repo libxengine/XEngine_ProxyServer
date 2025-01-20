@@ -96,6 +96,7 @@ extern XHANDLE xhForwardClient;
 //代理转发服务器
 extern XHANDLE xhProxySocket;
 extern XHANDLE xhProxyHeart;
+extern XHANDLE xhProxyClient;
 //配置文件
 extern XENGINE_SERVICECONFIG st_ServiceConfig;
 

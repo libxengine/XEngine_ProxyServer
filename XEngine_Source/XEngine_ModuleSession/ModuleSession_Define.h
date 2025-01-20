@@ -474,3 +474,106 @@ extern "C" bool ModuleSession_Tunnel_Packet(LPCXSTR lpszClientID, LPCXSTR lpszMs
 备注：
 *********************************************************************/
 extern "C" bool ModuleSession_Tunnel_List(XCHAR*** ppptszClientList, int* pInt_ListCount);
+/************************************************************************/
+/*                     全转发代理服务                                   */
+/************************************************************************/
+/********************************************************************
+函数名称：ModuleSession_Proxy_Insert
+函数功能：插入一条记录到会话中
+ 参数.一：lpszSrcIPAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要插入的源客户端
+ 参数.二：lpszDstIPAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要插入的目标客户端
+ 参数.三：xhClient
+  In/Out：In
+  类型：句柄
+  可空：N
+  意思：输入客户端句柄
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Proxy_Insert(LPCXSTR lpszSrcIPAddr, LPCXSTR lpszDstIPAddr, XNETHANDLE xhClient);
+/********************************************************************
+函数名称：ModuleSession_Proxy_GetForAddr
+函数功能：通过地址获取客户端信息
+ 参数.一：lpszIPAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要获取的客户端
+ 参数.二：pSt_ProxyInfo
+  In/Out：Out
+  类型：数据结构指针
+  可空：N
+  意思：输出获取到的信息
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Proxy_GetForAddr(LPCXSTR lpszIPAddr, SESSION_FORWARD* pSt_ProxyInfo);
+/********************************************************************
+函数名称：ModuleSession_Proxy_GetForToken
+函数功能：通过TOKEN获取客户端信息
+ 参数.一：xhToken
+  In/Out：In
+  类型：句柄
+  可空：N
+  意思：输入要获取的客户端
+ 参数.二：pSt_ProxyInfo
+  In/Out：Out
+  类型：数据结构指针
+  可空：N
+  意思：输出获取到的信息
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Proxy_GetForToken(XNETHANDLE xhToken, SESSION_FORWARD* pSt_ProxyInfo);
+/********************************************************************
+函数名称：ModuleSession_Proxy_List
+函数功能：获取列表
+ 参数.一：pppSt_ListUser
+  In/Out：Out
+  类型：三级指针
+  可空：N
+  意思：输出列表
+ 参数.二：pInt_Count
+  In/Out：Out
+  类型：整数型指针
+  可空：N
+  意思：输出列表个数
+ 参数.三：lpszAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：Y
+  意思：输入忽略地址
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Proxy_List(SESSION_FORWARD*** pppSt_ListUser, int* pInt_Count, LPCXSTR lpszAddr = NULL);
+/********************************************************************
+函数名称：ModuleSession_Proxy_Delete
+函数功能：删除用户
+ 参数.一：lpszAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要删除的客户端
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Proxy_Delete(LPCXSTR lpszIPAddr);

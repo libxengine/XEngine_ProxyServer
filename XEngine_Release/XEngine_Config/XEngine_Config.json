@@ -4,6 +4,7 @@
   "nSocksPort": 5400,
   "nTunnelPort": 5401,
   "nForwardPort": 5402,
+  "nProxyPort": 5403,
   "XMax": {
     "nMaxClient": 10000,
     "nMaxQueue": 10000,
@@ -30,8 +31,6 @@
   },
   "XProxy": {
     "bEnable": false,
-    "nSrcPort": 5410,
-    "nDstPort": 5411,
-    "tszDstIPAddr": "10.0.1.89"
+    "tszIPAddr": "10.0.1.89:5411"
   }
 }

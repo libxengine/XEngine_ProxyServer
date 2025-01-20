@@ -20,6 +20,7 @@ typedef struct tag_XEngine_ServiceConfig
 	int nSocksPort;                           //Socks端口,<=0不启用
 	int nTunnelPort;                          //Tunnel服务端口
 	int nForwardPort;                         //数据转发端口
+	int nProxyPort;                           //全代理转发
 	struct
 	{
 		int nMaxClient;                       //最大客户端个数
@@ -50,9 +51,7 @@ typedef struct tag_XEngine_ServiceConfig
 	}st_XReport;
 	struct
 	{
-		XCHAR tszDstIPAddr[128];
-		int nSrcPort;
-		int nDstPort;
+		XCHAR tszIPAddr[128];
 		bool bEnable;
 	}st_XProxy;
 	struct  

@@ -173,6 +173,7 @@
     <ClInclude Include="ModuleSession_Define.h" />
     <ClInclude Include="ModuleSession_Error.h" />
     <ClInclude Include="ModuleSession_Forward\ModuleSession_Forward.h" />
+    <ClInclude Include="ModuleSession_Proxy\ModuleSession_Proxy.h" />
     <ClInclude Include="ModuleSession_Socks\ModuleSession_Socks.h" />
     <ClInclude Include="ModuleSession_Tunnel\ModuleSession_Tunnel.h" />
     <ClInclude Include="pch.h" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ModuleSession_Forward\ModuleSession_Forward.cpp" />
+    <ClCompile Include="ModuleSession_Proxy\ModuleSession_Proxy.cpp" />
     <ClCompile Include="ModuleSession_Socks\ModuleSession_Socks.cpp" />
     <ClCompile Include="ModuleSession_Tunnel\ModuleSession_Tunnel.cpp" />
     <ClCompile Include="pch.cpp">

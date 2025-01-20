@@ -31,6 +31,12 @@
     <Filter Include="源文件\ModuleSession_Tunnel">
       <UniqueIdentifier>{de4957ba-1faf-41f0-9058-9f219c803ddf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\ModuleSession_Proxy">
+      <UniqueIdentifier>{41572a49-c102-48df-9347-b3eeb5128a7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ModuleSession_Proxy">
+      <UniqueIdentifier>{400cf379-58e3-4e86-908b-30d26dcc792a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -54,6 +60,9 @@
     <ClInclude Include="ModuleSession_Tunnel\ModuleSession_Tunnel.h">
       <Filter>头文件\ModuleSession_Tunnel</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleSession_Proxy\ModuleSession_Proxy.h">
+      <Filter>头文件\ModuleSession_Proxy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -70,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="ModuleSession_Tunnel\ModuleSession_Tunnel.cpp">
       <Filter>源文件\ModuleSession_Tunnel</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSession_Proxy\ModuleSession_Proxy.cpp">
+      <Filter>源文件\ModuleSession_Proxy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

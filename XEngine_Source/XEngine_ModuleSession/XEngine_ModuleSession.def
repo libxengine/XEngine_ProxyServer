@@ -26,3 +26,9 @@ EXPORTS
 	ModuleSession_Tunnel_GetList
 	ModuleSession_Tunnel_Packet
 	ModuleSession_Tunnel_List
+
+	ModuleSession_Proxy_Insert
+	ModuleSession_Proxy_GetForAddr
+	ModuleSession_Proxy_GetForToken
+	ModuleSession_Proxy_List
+	ModuleSession_Proxy_Delete
