@@ -145,14 +145,14 @@ int main(int argc, char** argv)
 	st_XLogConfig.XLog_MaxBackupFile = st_ServiceConfig.st_XLog.nMaxCount;
 	st_XLogConfig.XLog_MaxSize = st_ServiceConfig.st_XLog.nMaxSize;
 	_tcsxcpy(st_XLogConfig.tszFileName, st_ServiceConfig.st_XLog.tszLogFile);
-	xhLog = HelpComponents_XLog_Init(st_ServiceConfig.st_XLog.nLogLeave, &st_XLogConfig);
+	xhLog = HelpComponents_XLog_Init(st_ServiceConfig.st_XLog.nLogType, &st_XLogConfig);
 	if (NULL == xhLog)
 	{
 		printf("启动服务中,启动日志失败,错误：%lX", XLog_GetLastError());
 		goto XENGINE_SERVICEAPP_EXIT;
 	}
 	//设置日志打印级别
-	HelpComponents_XLog_SetLogPriority(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO);
+	HelpComponents_XLog_SetLogPriority(xhLog, st_ServiceConfig.st_XLog.nLogLeave);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化日志系统成功"));
 
 	signal(SIGINT, ServiceApp_Stop);
