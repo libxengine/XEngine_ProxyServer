@@ -11,7 +11,7 @@ LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_Cryption -l
       -lXEngine_ModuleConfigure -lXEngine_ModuleSession -lXEngine_ModuleProtocol  \
 	  -ljsoncpp -lXEngine_InfoReport
 LIBEX = 
-OBJECTS = XEngine_Configure.o XEngine_Network.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ForwardTask.o XEngine_ServiceApp.o
+OBJECTS = XEngine_Configure.o XEngine_Network.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ForwardTask.o XEngine_ProxyTask.o XEngine_ServiceApp.o
 
 ifeq ($(RELEASE),1)
 FLAGS = -c 
@@ -63,6 +63,8 @@ XEngine_TunnelTask.o:./XEngine_TunnelTask.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_TunnelTask.cpp
 XEngine_ForwardTask.o:./XEngine_ForwardTask.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_ForwardTask.cpp
+XEngine_ProxyTask.o:./XEngine_ProxyTask.cpp
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_ProxyTask.cpp
 
 XEngine_ServiceApp.o:./XEngine_ServiceApp.cpp             
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_ServiceApp.cpp   

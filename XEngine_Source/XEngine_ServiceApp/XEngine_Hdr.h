@@ -64,6 +64,7 @@ using namespace std;
 #include "XEngine_SocksTask.h"
 #include "XEngine_TunnelTask.h"
 #include "XEngine_ForwardTask.h"
+#include "XEngine_ProxyTask.h"
 /********************************************************************
 //    Created:     2021/12/02  16:34:41
 //    File Name:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_ServiceApp\XEngine_Hdr.h
@@ -92,6 +93,9 @@ extern XHANDLE xhForwardHeart;
 extern XHANDLE xhForwardPacket;
 extern XHANDLE xhForwardPool;
 extern XHANDLE xhForwardClient;
+//代理转发服务器
+extern XHANDLE xhProxySocket;
+extern XHANDLE xhProxyHeart;
 //配置文件
 extern XENGINE_SERVICECONFIG st_ServiceConfig;
 
@@ -99,6 +103,7 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 #define XENGINE_CLIENT_NETTYPE_SOCKS 1
 #define XENGINE_CLIENT_NETTYPE_TUNNEL 2
 #define XENGINE_CLIENT_NETTYPE_FORWARD 3
+#define XENGINE_CLIENT_NETTYPE_PROXY 4
 //关闭模式
 #define XENGINE_CLIENT_CLOSE_NETWORK 1
 #define XENGINE_CLIENT_CLOSE_HEARTBEAT 2

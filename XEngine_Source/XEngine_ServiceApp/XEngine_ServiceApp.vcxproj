@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="XEngine_Configure.cpp" />
     <ClCompile Include="XEngine_ForwardTask.cpp" />
+    <ClCompile Include="XEngine_ProxyTask.cpp" />
     <ClCompile Include="XEngine_TunnelTask.cpp" />
     <ClCompile Include="XEngine_Network.cpp" />
     <ClCompile Include="XEngine_ServiceApp.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="XEngine_Configure.h" />
     <ClInclude Include="XEngine_ForwardTask.h" />
     <ClInclude Include="XEngine_Hdr.h" />
+    <ClInclude Include="XEngine_ProxyTask.h" />
     <ClInclude Include="XEngine_TunnelTask.h" />
     <ClInclude Include="XEngine_Network.h" />
     <ClInclude Include="XEngine_SocksTask.h" />

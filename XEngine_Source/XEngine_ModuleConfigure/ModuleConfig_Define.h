@@ -33,6 +33,7 @@ typedef struct tag_XEngine_ServiceConfig
 		int nSocksTimeOut;                    //TCP超时时间
 		int nTunnelTimeOut;                   //HTTP超时时间
 		int nForwardTimeOut;                  //转发超时时间
+		int nProxyTimeout;                    //代理超时时间
 	}st_XTime;                                //次数*时间=超时
 	struct
 	{
@@ -47,6 +48,13 @@ typedef struct tag_XEngine_ServiceConfig
 		XCHAR tszAPIUrl[MAX_PATH];
 		XCHAR tszServiceName[128];
 	}st_XReport;
+	struct
+	{
+		XCHAR tszDstIPAddr[128];
+		int nSrcPort;
+		int nDstPort;
+		bool bEnable;
+	}st_XProxy;
 	struct  
 	{
 		list<string>* pStl_ListVer;

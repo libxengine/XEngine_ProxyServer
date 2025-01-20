@@ -17,6 +17,9 @@ XHANDLE xhForwardHeart = NULL;
 XHANDLE xhForwardPacket = NULL;
 XHANDLE xhForwardPool = NULL;
 XHANDLE xhForwardClient = NULL;
+
+XHANDLE xhProxySocket = NULL;
+XHANDLE xhProxyHeart = NULL;
 //配置文件
 XENGINE_SERVICECONFIG st_ServiceConfig;
 
@@ -39,6 +42,9 @@ void ServiceApp_Stop(int signo)
 		NetCore_TCPXCore_DestroyEx(xhForwardSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhForwardHeart);
 		ManagePool_Thread_NQDestroy(xhForwardPool);
+		//销毁proxy资源
+		NetCore_TCPXCore_DestroyEx(xhProxySocket);
+		SocketOpt_HeartBeat_DestoryEx(xhProxyHeart);
 		//销毁日志资源
 		HelpComponents_XLog_Destroy(xhLog);
 	}
@@ -300,6 +306,39 @@ int main(int argc, char** argv)
 	{
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Forward服务没有被启用"));
 	}
+	//启动全代理协议服务
+	if (st_ServiceConfig.st_XProxy.nSrcPort > 0)
+	{
+		//启动心跳
+		if (st_ServiceConfig.st_XTime.nProxyTimeout > 0)
+		{
+			xhProxyHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nProxyTimeout, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_ProxyHeart);
+			if (NULL == xhForwardHeart)
+			{
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化Proxy心跳服务失败,错误：%lX"), NetCore_GetLastError());
+				goto XENGINE_SERVICEAPP_EXIT;
+			}
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Proxy心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nProxyTimeout, st_ServiceConfig.st_XTime.nTimeCheck);
+		}
+		else
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Proxy心跳服务被设置为不启用"));
+		}
+		//网络
+		xhProxySocket = NetCore_TCPXCore_StartEx(st_ServiceConfig.st_XProxy.nSrcPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread);
+		if (NULL == xhProxySocket)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启动Proxy网络服务器失败,错误：%lX"), NetCore_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Proxy网络服务器成功,Proxy源端口:%d,目标端口:%d,目标地址:%s,IO:%d"), st_ServiceConfig.st_XProxy.nSrcPort, st_ServiceConfig.st_XProxy.nDstPort, st_ServiceConfig.st_XProxy.tszDstIPAddr, st_ServiceConfig.st_XMax.nIOThread);
+		NetCore_TCPXCore_RegisterCallBackEx(xhProxySocket, Network_Callback_ProxyLogin, Network_Callback_ProxyRecv, Network_Callback_ProxyLeave);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,注册Proxy网络事件成功"));
+	}
+	else
+	{
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Proxy服务没有被启用"));
+	}
 	//发送信息报告
 	if (st_ServiceConfig.st_XReport.bEnable && !bIsTest)
 	{
@@ -356,6 +395,9 @@ XENGINE_SERVICEAPP_EXIT:
 		NetCore_TCPXCore_DestroyEx(xhForwardSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhForwardHeart);
 		ManagePool_Thread_NQDestroy(xhForwardPool);
+		//销毁proxy资源
+		NetCore_TCPXCore_DestroyEx(xhProxySocket);
+		SocketOpt_HeartBeat_DestoryEx(xhProxyHeart);
 		//销毁日志资源
 		HelpComponents_XLog_Destroy(xhLog);
 	}
