@@ -22,7 +22,7 @@ public:
 	bool ModuleSession_Forward_BindNamed(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr);
 	bool ModuleSession_Forward_BindAnony(LPCXSTR lpszSrcAddr, LPCXSTR lpszDstAddr, XNETHANDLE xhClient);
 	bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR* ptszDstAddr = NULL);
-	bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* ptszDstAddr = NULL);
+	bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, SESSION_FORWARD *pSt_ForwardClinet = NULL);
 private:
 	shared_mutex st_Locker;
 private:

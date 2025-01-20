@@ -147,17 +147,17 @@ extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAd
   类型：常量字符指针
   可空：N
   意思：输入要操作的客户端
- 参数.二：ptszDstAddr
+ 参数.二：pSt_ForwardClinet
   In/Out：Out
-  类型：字符指针
+  类型：数据结构指针
   可空：Y
-  意思：输出对端地址
+  意思：输出信息
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* ptszDstAddr = NULL);
+extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, SESSION_FORWARD* pSt_ForwardClinet = NULL);
 /************************************************************************/
 /*                     SOCK代理服务器导出函数                           */
 /************************************************************************/

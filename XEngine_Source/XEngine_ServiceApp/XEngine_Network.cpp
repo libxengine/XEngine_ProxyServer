@@ -68,13 +68,11 @@ bool CALLBACK Network_Callback_ForwardLogin(LPCXSTR lpszClientAddr, XSOCKET hSoc
 }
 void CALLBACK Network_Callback_ForwardRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam)
 {
-	XCHAR tszDstAddr[128];
-	memset(tszDstAddr, '\0', sizeof(tszDstAddr));
-
-	if (ModuleSession_Forward_Get(lpszClientAddr, tszDstAddr))
+	SESSION_FORWARD st_ForwardClinet = {};
+	if (ModuleSession_Forward_Get(lpszClientAddr, &st_ForwardClinet))
 	{
 		//如果有转发,直接转发
-		XEngine_Network_Send(tszDstAddr, lpszRecvMsg, nMsgLen, XENGINE_CLIENT_NETTYPE_FORWARD);
+		XEngine_Network_Send(st_ForwardClinet.tszDstAddr, lpszRecvMsg, nMsgLen, XENGINE_CLIENT_NETTYPE_FORWARD);
 	}
 	else
 	{
@@ -195,6 +193,12 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 			SocketOpt_HeartBeat_DeleteAddrEx(xhForwardHeart, lpszClientAddr);
 			NetCore_TCPXCore_CloseForClientEx(xhForwardSocket, lpszClientAddr);
 		}
+		SESSION_FORWARD st_ForwardInfo = {};
+		if (ModuleSession_Forward_Get(lpszClientAddr, &st_ForwardInfo))
+		{
+			XClient_TCPSelect_DeleteEx(xhForwardClient, st_ForwardInfo.xhClient);
+		}
+		ModuleSession_Proxy_Delete(lpszClientAddr);
 		HelpComponents_Datas_DeleteEx(xhForwardPacket, lpszClientAddr);
 		ModuleSession_Forward_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
@@ -214,6 +218,12 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 			SocketOpt_HeartBeat_DeleteAddrEx(xhProxyHeart, lpszClientAddr);
 			NetCore_TCPXCore_CloseForClientEx(xhProxySocket, lpszClientAddr);
 		}
+		SESSION_FORWARD st_ProxyInfo = {};
+		if (ModuleSession_Proxy_GetForAddr(lpszClientAddr, &st_ProxyInfo))
+		{
+			XClient_TCPSelect_DeleteEx(xhProxyClient, st_ProxyInfo.xhClient);
+		}
+		ModuleSession_Proxy_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
 	else

@@ -55,9 +55,9 @@ extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAd
 {
 	return m_Forward.ModuleSession_Forward_Delete(lpszAddr, ptszDstAddr);
 }
-extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR * ptszDstAddr)
+extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, SESSION_FORWARD* pSt_ForwardClinet)
 {
-	return m_Forward.ModuleSession_Forward_Get(lpszAddr, ptszDstAddr);
+	return m_Forward.ModuleSession_Forward_Get(lpszAddr, pSt_ForwardClinet);
 }
 /************************************************************************/
 /*                     SOCK代理服务器导出函数                           */

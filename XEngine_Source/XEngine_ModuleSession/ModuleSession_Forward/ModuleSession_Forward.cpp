@@ -311,21 +311,21 @@ bool CModuleSession_Forward::ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHA
   类型：常量字符指针
   可空：N
   意思：输入要操作的客户端
- 参数.二：ptszDstAddr
+ 参数.二：pSt_ForwardClinet
   In/Out：Out
-  类型：字符指针
+  类型：数据结构指针
   可空：Y
-  意思：输出对端地址
+  意思：输出信息
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Forward::ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* ptszDstAddr)
+bool CModuleSession_Forward::ModuleSession_Forward_Get(LPCXSTR lpszAddr, SESSION_FORWARD* pSt_ForwardClinet)
 {
 	Session_IsErrorOccur = false;
 
-	if ((NULL == lpszAddr) || (NULL == ptszDstAddr))
+	if ((NULL == lpszAddr))
 	{
 		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_FORWARD_PARAMENT;
@@ -341,7 +341,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* 
 		st_Locker.unlock_shared();
 		return false;
 	}
-	if (NULL == ptszDstAddr)
+	if (NULL == pSt_ForwardClinet)
 	{
 		st_Locker.unlock_shared();
 		return true;
@@ -354,7 +354,7 @@ bool CModuleSession_Forward::ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR* 
 		st_Locker.unlock_shared();
 		return false;
 	}
-	_tcsxcpy(ptszDstAddr, stl_MapIterator->second.tszDstAddr);
+	*pSt_ForwardClinet = stl_MapIterator->second;
 	st_Locker.unlock_shared();
 	return true;
 }
