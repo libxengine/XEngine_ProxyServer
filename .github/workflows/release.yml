@@ -14,7 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: 'develop'
           fetch-depth: 0 
 
       - name: Download ubuntubuild
@@ -25,7 +24,7 @@ jobs:
           check_artifacts: false
           skip_unpack: true
           if_no_artifact_found: fail
-          path: ./
+          path: ./XRelease/
       - name: Download macbuild
         uses: dawidd6/action-download-artifact@v6
         with:
@@ -34,7 +33,7 @@ jobs:
           check_artifacts: false
           skip_unpack: true
           if_no_artifact_found: fail
-          path: ./
+          path: ./XRelease/
       - name: Download msbuild
         uses: dawidd6/action-download-artifact@v6
         with:
@@ -43,10 +42,10 @@ jobs:
           check_artifacts: false
           skip_unpack: true
           if_no_artifact_found: fail
-          path: ./
+          path: ./XRelease/
 
       - name: Display structure of downloaded files
-        run: ls -al ./
+        run: ls -al ./XRelease/
 
       - name: Get current version and increment X
         id: versioning
@@ -88,8 +87,4 @@ jobs:
           tag_name: ${{ steps.versioning.outputs.new_tag }}
           name: XEngine_ProxyServiceApp ${{ steps.versioning.outputs.new_tag }}
           body_path: release_notes.txt
-          files: |
-            ./XEngine_ProxyServiceApp-x64-Mac.zip
-            ./XEngine_ProxyServiceApp-x64-Ubuntu.zip
-            ./XEngine_ProxyServiceApp-x64-Windows.zip
-            ./XEngine_ProxyServiceApp-x86-Windows.zip
+          files: ./XRelease/*.zip
