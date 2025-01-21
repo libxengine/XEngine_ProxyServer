@@ -1,3 +1,31 @@
+XEngine_ProxyServer V1.11.0.1001
+
+增加:全代理转发模式支持
+增加:设置日志级别参数支持
+更新:依赖库
+更新:匹配XEngineV9版本
+更新:VS2022字符集从ANSI修改为UNICODE
+更新:编译器版本升级到C++20,C17
+修改:转发获取客户端类型
+修改:配置参数名称
+修正:打印乱码的问题
+修正:转发支持客户端没有正确释放的问题
+修正:日志级别和日志类型错误的问题
+删除:XEngine的版本判断代码
+
+added:full proxy forward supported
+added:set log level for parameter
+update:depend library
+update:match xengine v9
+update:character set modify to unicode from ansi on vs2022
+update:compiler version to c++20 and c17
+modify:get client info for forward get function
+modify:configure field name
+fixed:print Garbled characters
+fixed:forward not free client when destroy
+fixed:log level and type is incorrect
+delete:xengine version judgment
+======================================================================================
 XEngine_ProxyServer V1.10.0.1001
 
 增加:WINDOWS COREDUMP支持
