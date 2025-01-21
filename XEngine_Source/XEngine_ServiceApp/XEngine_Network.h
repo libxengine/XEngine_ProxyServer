@@ -25,6 +25,11 @@ bool CALLBACK Network_Callback_ForwardLogin(LPCXSTR lpszClientAddr, XSOCKET hSoc
 void CALLBACK Network_Callback_ForwardRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam);
 void CALLBACK Network_Callback_ForwardLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);
 void CALLBACK Network_Callback_ForwardHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam);
+//Forward相关
+bool CALLBACK Network_Callback_ProxyLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);
+void CALLBACK Network_Callback_ProxyRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam);
+void CALLBACK Network_Callback_ProxyLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);
+void CALLBACK Network_Callback_ProxyHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam);
 //关闭与发送
 void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType);
 bool XEngine_Network_Send(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int nMsgLen, int nIPProto);

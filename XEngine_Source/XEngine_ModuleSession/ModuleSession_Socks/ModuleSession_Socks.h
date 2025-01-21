@@ -41,5 +41,5 @@ public:
 private:
 	shared_mutex st_Locker;             
 private:
-	unordered_map<tstring, RFCPROTOCOL_SOCKS5CLIENT*> stl_MapClients;
+	unordered_map<xstring, RFCPROTOCOL_SOCKS5CLIENT*> stl_MapClients;
 };

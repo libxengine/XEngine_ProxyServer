@@ -1,4 +1,4 @@
-CC = g++ -Wall -std=c++17 -fPIC
+CC = g++ -Wall -std=c++20 -fPIC
 PLATFORM = linux
 PLATVER = 
 PLATDIR = 
@@ -10,7 +10,7 @@ LOADHDR = -I ./ -I ../XEngine_ThirdPart/jsoncpp
 LOADSO = 
 LIB = -lXEngine_BaseLib -lXEngine_Algorithm
 LIBEX = 
-OBJECTS = ModuleSession_Forward.o ModuleSession_Socks.o ModuleSession_Tunnel.o pch.o
+OBJECTS = ModuleSession_Forward.o ModuleSession_Socks.o ModuleSession_Tunnel.o ModuleSession_Proxy.o pch.o
 
 ifeq ($(RELEASE),1)
 FLAGS = -c 
@@ -63,6 +63,8 @@ ModuleSession_Socks.o:./ModuleSession_Socks/ModuleSession_Socks.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ModuleSession_Socks/ModuleSession_Socks.cpp
 ModuleSession_Tunnel.o:./ModuleSession_Tunnel/ModuleSession_Tunnel.cpp             
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ModuleSession_Tunnel/ModuleSession_Tunnel.cpp 	
+ModuleSession_Proxy.o:./ModuleSession_Proxy/ModuleSession_Proxy.cpp             
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ModuleSession_Proxy/ModuleSession_Proxy.cpp 
 
 pch.o:./pch.cpp                 		       	    
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./pch.cpp

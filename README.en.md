@@ -1,13 +1,14 @@
+[中文](README.md) ||  [English](README.en.md)  
 # XEngine_ProxyServer
 we have a development and a master branch. If you want to use it, please use the code under the master branch  
 As long as the repository is not in suspended state, we will maintain and develop it all the time, please use it with confidence  
 
 #### Description
-c c++ SOCKS5代理服务 HTTP Tunnel隧道代理服务 tcp转发服务  
-c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service  
+c c++ SOCKS5代理服务,HTTP Tunnel隧道代理服务,tcp转发服务,负载代理转发  
+c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service,proxy forward service  
 
 ## Notice
-Starting from 2024.11.15, the compiled release version will only be released on github.
+the compiled release version will only be released on github.
 
 #### Software Architecture
 the software developed based on xengine,using c/c++ development  
@@ -17,22 +18,23 @@ This software is a standard proxy server that supports Socks5 and HTTP tunnel pr
 this software support following features  
 1. SOCKS5 proxy  
 2. Tunnel proxy  
-3. TCP forward proxy
+3. TCP forward proxy(forward)
 4. operator log  
 5. encrypt Communication(planning)  
 6. load balanc(planning)  
 7. custom cert proxy protocol(planning)  
 8. multilevel proxy(planning)
+9. lb proxy(proxy)
 
 ## install
 
 #### XEngine Evn
-you must install XEngine,need V8.15 or above,install XEngine can be refer to xengine Readme docment  
-GITEE:https://gitee.com/xyry/libxengine  
-GITHUB:https://github.com/libxengine/xengine
+you must install XEngine,need V9.x or above,install XEngine can be refer to xengine Readme docment  
+GITEE:https://gitee.com/libxengine/libxengine  
+GITHUB:https://github.com/libxengine/libxengine
 
 ##### fast to deployment 
-git clone https://gitee.com/xyry/libxengine.git or git clone https://github.com/libxengine/xengine.git  
+git clone https://gitee.com/libxengine/libxengine.git or git clone https://github.com/libxengine/libxengine.git  
 window Exection XEngine_WINEnv.bat   
 Linux Exection:sudo ./XEngine_LINEnv.sh -i 3  
 Macos Exection:./XEngine_LINEnv.sh -i 3
@@ -44,7 +46,7 @@ git submodule update
 
 #### Windows
 use vs open and compile,suport windows 7sp1 and above  
-Just Run it,use XEngine_AuthorizeApp
+Just Run it
 
 #### Linux
 use makefile compile,UBUNTU22.04 x64 or RockyLinux9 x64  
@@ -82,7 +84,7 @@ Refer to Linux
 You can refer to the document under the docment directory. It contains API protocol and service description.  
 
 ## Test Server Address
-Address:app.xyry.org  
+Address:app.libxengine.com  
 Port:Socks5 5400,HTTP Tunnel 5401,Forward 5402
 
 ## Participate in contribution

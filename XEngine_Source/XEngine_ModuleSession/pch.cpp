@@ -2,6 +2,7 @@
 #include "ModuleSession_Forward/ModuleSession_Forward.h"
 #include "ModuleSession_Socks/ModuleSession_Socks.h"
 #include "ModuleSession_Tunnel/ModuleSession_Tunnel.h"
+#include "ModuleSession_Proxy/ModuleSession_Proxy.h"
 /********************************************************************
 //    Created:     2022/06/08  10:10:52
 //    File Name:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleSession\pch.cpp
@@ -19,6 +20,7 @@ XLONG Session_dwErrorCode = 0;
 CModuleSession_Forward m_Forward;
 CModuleSession_Socks m_Socks;
 CModuleSession_Tunnel m_Tunnel;
+CModuleSession_Proxy m_Proxy;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
@@ -53,9 +55,9 @@ extern "C" bool ModuleSession_Forward_Delete(LPCXSTR lpszAddr, XCHAR * ptszDstAd
 {
 	return m_Forward.ModuleSession_Forward_Delete(lpszAddr, ptszDstAddr);
 }
-extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, XCHAR * ptszDstAddr)
+extern "C" bool ModuleSession_Forward_Get(LPCXSTR lpszAddr, SESSION_FORWARD* pSt_ForwardClinet)
 {
-	return m_Forward.ModuleSession_Forward_Get(lpszAddr, ptszDstAddr);
+	return m_Forward.ModuleSession_Forward_Get(lpszAddr, pSt_ForwardClinet);
 }
 /************************************************************************/
 /*                     SOCK代理服务器导出函数                           */
@@ -122,4 +124,27 @@ extern "C" bool ModuleSession_Tunnel_Packet(LPCXSTR lpszClientID, LPCXSTR lpszMs
 extern "C" bool ModuleSession_Tunnel_List(XCHAR*** ppptszClientList, int* pInt_ListCount)
 {
 	return m_Tunnel.ModuleSession_Tunnel_List(ppptszClientList, pInt_ListCount);
+}
+/************************************************************************/
+/*                     全转发代理服务                                   */
+/************************************************************************/
+extern "C" bool ModuleSession_Proxy_Insert(LPCXSTR lpszSrcIPAddr, LPCXSTR lpszDstIPAddr, XNETHANDLE xhClient)
+{
+	return m_Proxy.ModuleSession_Proxy_Insert(lpszSrcIPAddr, lpszDstIPAddr, xhClient);
+}
+extern "C" bool ModuleSession_Proxy_GetForAddr(LPCXSTR lpszIPAddr, SESSION_FORWARD* pSt_ProxyInfo)
+{
+	return m_Proxy.ModuleSession_Proxy_GetForAddr(lpszIPAddr, pSt_ProxyInfo);
+}
+extern "C" bool ModuleSession_Proxy_GetForToken(XNETHANDLE xhToken, SESSION_FORWARD* pSt_ProxyInfo)
+{
+	return m_Proxy.ModuleSession_Proxy_GetForToken(xhToken, pSt_ProxyInfo);
+}
+extern "C" bool ModuleSession_Proxy_List(SESSION_FORWARD*** pppSt_ListUser, int* pInt_Count, LPCXSTR lpszAddr)
+{
+	return m_Proxy.ModuleSession_Proxy_List(pppSt_ListUser, pInt_Count, lpszAddr);
+}
+extern "C" bool ModuleSession_Proxy_Delete(LPCXSTR lpszIPAddr)
+{
+	return m_Proxy.ModuleSession_Proxy_Delete(lpszIPAddr);
 }

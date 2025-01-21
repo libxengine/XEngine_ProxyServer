@@ -127,12 +127,12 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 			{
 				int nListCount = 0;
 				XCHAR** ppszListAddr;
-				ENUM_APIHELP_DOMAINTYPE enDomainType;
-				APIHELP_DOMAIN st_APIUrl;
+				ENUM_NETHELP_APIADDR_DOMAIN_TYPE enDomainType;
+				APIADDR_DOMAIN st_APIUrl;
 
-				memset(&st_APIUrl, '\0', sizeof(APIHELP_DOMAIN));
+				memset(&st_APIUrl, '\0', sizeof(APIADDR_DOMAIN));
 
-				APIHelp_Domain_GetInfo(tszClientAddr, &st_APIUrl, &enDomainType);
+				APIAddr_Domain_GetInfo(tszClientAddr, &st_APIUrl, &enDomainType);
 				memset(tszClientAddr, '\0', sizeof(tszClientAddr));
 				if (_tcsxlen(st_APIUrl.tszSubDomain) > 0)
 				{
@@ -150,7 +150,7 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 				}
 				memset(tszClientAddr, '\0', sizeof(tszClientAddr));
 				_tcsxcpy(tszClientAddr, ppszListAddr[0]);   //随便选择一个IP地址
-				BaseLib_OperatorMemory_Free((XPPPMEM)&ppszListAddr, nListCount);
+				BaseLib_Memory_Free((XPPPMEM)&ppszListAddr, nListCount);
 				if (!XClient_TCPSelect_InsertEx(xhSocksClient, &st_ProxyClient.xhClient, tszClientAddr, nPort))
 				{
 					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,创建客户端连接失败,连接到服务器:%s:%d,错误:%lX"), lpszClientAddr, tszClientAddr, nPort, XClient_GetLastError());
@@ -211,5 +211,5 @@ void CALLBACK XEngine_Socks_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET
 			break;
 		}
 	}
-	BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
+	BaseLib_Memory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 }

@@ -53,7 +53,7 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_Create(LPCXSTR lpszClientID)
     }
     memset(pSt_TunnelInfo, '\0', sizeof(PROXYTUNNEL_CLIENTINFO));
 
-    pSt_TunnelInfo->pStl_ListField = new list<tstring>;
+    pSt_TunnelInfo->pStl_ListField = new list<xstring>;
     if (NULL == pSt_TunnelInfo->pStl_ListField)
     {
 		Session_IsErrorOccur = true;
@@ -85,7 +85,7 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_Delete(LPCXSTR lpszClientID)
     Session_IsErrorOccur = false;
 
     st_Locker.lock();
-    unordered_map<tstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.find(lpszClientID);
+    unordered_map<xstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.find(lpszClientID);
     if (stl_MapIterator != stl_MapClient.end())
     {
 		if (NULL != stl_MapIterator->second->lParam)
@@ -137,7 +137,7 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, X
         return false;
 	}
 	st_Locker.lock_shared();
-	unordered_map<tstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.find(lpszClientID);
+	unordered_map<xstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.find(lpszClientID);
 	if (stl_MapIterator == stl_MapClient.end())
 	{
 		Session_IsErrorOccur = true;
@@ -206,7 +206,7 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, X
 		return false;
 	}
 	st_Locker.lock_shared();
-	unordered_map<tstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.find(lpszClientID);
+	unordered_map<xstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.find(lpszClientID);
 	if (stl_MapIterator == stl_MapClient.end())
 	{
 		Session_IsErrorOccur = true;
@@ -261,8 +261,8 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_GetList(XPPPMEM xpppMem, int* p
 	st_Locker.lock_shared();
 
 	*pInt_Count = stl_MapClient.size();
-	BaseLib_OperatorMemory_Malloc(xpppMem, *pInt_Count, nSize);
-	unordered_map<tstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.begin();
+	BaseLib_Memory_Malloc(xpppMem, *pInt_Count, nSize);
+	unordered_map<xstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.begin();
     for (int i = 0; stl_MapIterator != stl_MapClient.end(); stl_MapIterator++, i++)
 	{
 		//是否设置有值
@@ -323,7 +323,7 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_Packet(LPCXSTR lpszClientID, LP
 		return false;
     }
     st_Locker.lock_shared();
-    unordered_map<tstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.find(lpszClientID);
+    unordered_map<xstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.find(lpszClientID);
     if (stl_MapIterator == stl_MapClient.end())
     {
 		Session_IsErrorOccur = true;
@@ -375,7 +375,7 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_List(XCHAR*** ppptszClientList,
 	*pInt_ListCount = stl_MapClient.size();
 	if (NULL != ppptszClientList)
 	{
-		BaseLib_OperatorMemory_Malloc((XPPPMEM)ppptszClientList, stl_MapClient.size(), 128);
+		BaseLib_Memory_Malloc((XPPPMEM)ppptszClientList, stl_MapClient.size(), 128);
 		auto stl_MapIterator = stl_MapClient.begin();
 		for (int i = 0; stl_MapIterator != stl_MapClient.end(); stl_MapIterator++)
 		{

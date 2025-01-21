@@ -45,7 +45,7 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 		XCHAR tszConnectAddr[128];
 		memset(tszConnectAddr, '\0', sizeof(tszConnectAddr));
 		//是否为IP地址
-		if (BaseLib_OperatorIPAddr_IsIPV4Addr(tszIPAddr))
+		if (APIAddr_IPAddr_IsIPV4Addr(tszIPAddr))
 		{
 			_tcsxcpy(tszConnectAddr, tszIPAddr);
 		}
@@ -53,12 +53,12 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 		{
 			int nListCount = 0;
 			XCHAR** ppszListAddr;
-			ENUM_APIHELP_DOMAINTYPE enDomainType;
-			APIHELP_DOMAIN st_APIUrl;
+			ENUM_NETHELP_APIADDR_DOMAIN_TYPE enDomainType;
+			APIADDR_DOMAIN st_APIUrl;
 
-			memset(&st_APIUrl, '\0', sizeof(APIHELP_DOMAIN));
+			memset(&st_APIUrl, '\0', sizeof(APIADDR_DOMAIN));
 
-			APIHelp_Domain_GetInfo(tszIPAddr, &st_APIUrl, &enDomainType);
+			APIAddr_Domain_GetInfo(tszIPAddr, &st_APIUrl, &enDomainType);
 			memset(tszIPAddr, '\0', sizeof(tszIPAddr));
 			if (_tcsxlen(st_APIUrl.tszSubDomain) > 0)
 			{
@@ -77,7 +77,7 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 				return false;
 			}
 			_tcsxcpy(tszConnectAddr, ppszListAddr[0]);   //随便选择一个IP地址
-			BaseLib_OperatorMemory_Free((XPPPMEM)&ppszListAddr, nListCount);
+			BaseLib_Memory_Free((XPPPMEM)&ppszListAddr, nListCount);
 		}
 		if (!XClient_TCPSelect_InsertEx(xhTunnelClient, &st_ProxyClient.xhClient, tszConnectAddr, nIPPort))
 		{
@@ -137,5 +137,5 @@ void CALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKE
 			break;
 		}
 	}
-	BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
+	BaseLib_Memory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 }

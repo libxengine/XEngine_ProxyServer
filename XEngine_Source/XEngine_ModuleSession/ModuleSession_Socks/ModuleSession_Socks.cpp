@@ -78,7 +78,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_Delete(LPCXSTR lpszClientID)
 	Session_IsErrorOccur = false;
 
 	st_Locker.lock();
-	unordered_map<tstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
+	unordered_map<xstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
 	if (stl_MapIterator != stl_MapClients.end())
 	{
 		if (NULL != stl_MapIterator->second->lParam)
@@ -125,7 +125,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XPV
 		return false;
 	}
 	st_Locker.lock();
-	unordered_map<tstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
+	unordered_map<xstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
 	if (stl_MapIterator == stl_MapClients.end())
 	{
 		Session_IsErrorOccur = true;
@@ -195,7 +195,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XPV
 		return false;
 	}
 	st_Locker.lock_shared();
-	unordered_map<tstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
+	unordered_map<xstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
 	if (stl_MapIterator == stl_MapClients.end())
 	{
 		Session_IsErrorOccur = true;
@@ -249,9 +249,9 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetList(XPPPMEM xpppMem, int* pIn
 	st_Locker.lock_shared();
 
 	*pInt_Count = stl_MapClients.size();
-	BaseLib_OperatorMemory_Malloc(xpppMem, *pInt_Count, nSize);
+	BaseLib_Memory_Malloc(xpppMem, *pInt_Count, nSize);
 
-	unordered_map<tstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.begin();
+	unordered_map<xstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.begin();
 	for (int i = 0; stl_MapIterator != stl_MapClients.end(); stl_MapIterator++, i++)
 	{
 		//是否设置有值
@@ -293,7 +293,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, E
 		return false;
 	}
 	st_Locker.lock_shared();
-	unordered_map<tstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
+	unordered_map<xstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
 	if (stl_MapIterator == stl_MapClients.end())
 	{
 		Session_IsErrorOccur = true;
@@ -334,7 +334,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, E
 		return false;
 	}
 	st_Locker.lock_shared();
-	unordered_map<tstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
+	unordered_map<xstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
 	if (stl_MapIterator == stl_MapClients.end())
 	{
 		Session_IsErrorOccur = true;
@@ -379,7 +379,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_List(XCHAR*** ppptszClientList, i
 	*pInt_ListCount = stl_MapClients.size();
 	if (NULL != ppptszClientList)
 	{
-		BaseLib_OperatorMemory_Malloc((XPPPMEM)ppptszClientList, stl_MapClients.size(), 128);
+		BaseLib_Memory_Malloc((XPPPMEM)ppptszClientList, stl_MapClients.size(), 128);
 		auto stl_MapIterator = stl_MapClients.begin();
 		for (int i = 0; stl_MapIterator != stl_MapClients.end(); stl_MapIterator++)
 		{

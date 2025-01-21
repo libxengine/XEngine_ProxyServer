@@ -20,6 +20,7 @@ typedef struct tag_XEngine_ServiceConfig
 	int nSocksPort;                           //Socks端口,<=0不启用
 	int nTunnelPort;                          //Tunnel服务端口
 	int nForwardPort;                         //数据转发端口
+	int nProxyPort;                           //全代理转发
 	struct
 	{
 		int nMaxClient;                       //最大客户端个数
@@ -30,9 +31,10 @@ typedef struct tag_XEngine_ServiceConfig
 	struct
 	{
 		int nTimeCheck;                       //检测次数
-		int nSocksTimeOut;                    //TCP超时时间
-		int nTunnelTimeOut;                   //HTTP超时时间
-		int nForwardTimeOut;                  //转发超时时间
+		int nSocksTimeout;                    //TCP超时时间
+		int nTunnelTimeout;                   //HTTP超时时间
+		int nForwardTimeout;                  //转发超时时间
+		int nProxyTimeout;                    //代理超时时间
 	}st_XTime;                                //次数*时间=超时
 	struct
 	{
@@ -40,6 +42,7 @@ typedef struct tag_XEngine_ServiceConfig
 		int nMaxSize;                         //最大日志大小
 		int nMaxCount;                        //最大日志个数
 		int nLogLeave;                        //日志等级
+		int nLogType;                         //日志类型
 	}st_XLog;
 	struct
 	{
@@ -47,6 +50,11 @@ typedef struct tag_XEngine_ServiceConfig
 		XCHAR tszAPIUrl[MAX_PATH];
 		XCHAR tszServiceName[128];
 	}st_XReport;
+	struct
+	{
+		XCHAR tszIPAddr[128];
+		bool bEnable;
+	}st_XProxy;
 	struct  
 	{
 		list<string>* pStl_ListVer;

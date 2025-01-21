@@ -23,7 +23,7 @@
 //需要优先配置XEngine
 //WINDOWS支持VS2022 x86 debug 编译调试
 //linux使用下面的命令编译
-//g++ -std=c++17 -Wall -g APPClient_TunnelExample.cpp -o APPClient_TunnelExample.exe -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol
+//g++ -std=c++20 -Wall -g APPClient_TunnelExample.cpp -o APPClient_TunnelExample.exe -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol
 int main(int argc, char** argv)
 {
 #ifdef _MSC_BUILD

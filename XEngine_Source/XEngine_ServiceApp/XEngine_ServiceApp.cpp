@@ -17,6 +17,10 @@ XHANDLE xhForwardHeart = NULL;
 XHANDLE xhForwardPacket = NULL;
 XHANDLE xhForwardPool = NULL;
 XHANDLE xhForwardClient = NULL;
+
+XHANDLE xhProxySocket = NULL;
+XHANDLE xhProxyHeart = NULL;
+XHANDLE xhProxyClient = NULL;
 //配置文件
 XENGINE_SERVICECONFIG st_ServiceConfig;
 
@@ -39,6 +43,11 @@ void ServiceApp_Stop(int signo)
 		NetCore_TCPXCore_DestroyEx(xhForwardSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhForwardHeart);
 		ManagePool_Thread_NQDestroy(xhForwardPool);
+		XClient_TCPSelect_StopEx(xhForwardClient);
+		//销毁proxy资源
+		NetCore_TCPXCore_DestroyEx(xhProxySocket);
+		SocketOpt_HeartBeat_DestoryEx(xhProxyHeart);
+		XClient_TCPSelect_StopEx(xhProxyClient);
 		//销毁日志资源
 		HelpComponents_XLog_Destroy(xhLog);
 	}
@@ -83,7 +92,7 @@ LONG WINAPI Coredump_ExceptionFilter(EXCEPTION_POINTERS* pExceptionPointers)
 	static int i = 0;
 	XCHAR tszFileStr[MAX_PATH] = {};
 	XCHAR tszTimeStr[128] = {};
-	BaseLib_OperatorTime_TimeToStr(tszTimeStr);
+	BaseLib_Time_TimeToStr(tszTimeStr);
 	_xstprintf(tszFileStr, _X("./XEngine_Coredump/dumpfile_%s_%d.dmp"), tszTimeStr, i++);
 
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_FATAL, _X("主程序:软件崩溃,写入dump:%s"), tszFileStr);
@@ -108,6 +117,13 @@ int main(int argc, char** argv)
 	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
 
 	SetUnhandledExceptionFilter(Coredump_ExceptionFilter);
+#ifndef _DEBUG
+	if (setlocale(LC_ALL, ".UTF8") == NULL)
+	{
+		fprintf(stderr, "Error setting locale.\n");
+		return 1;
+	}
+#endif
 #endif
 	bIsRun = true;
 	int nRet = 0;
@@ -129,22 +145,15 @@ int main(int argc, char** argv)
 	st_XLogConfig.XLog_MaxBackupFile = st_ServiceConfig.st_XLog.nMaxCount;
 	st_XLogConfig.XLog_MaxSize = st_ServiceConfig.st_XLog.nMaxSize;
 	_tcsxcpy(st_XLogConfig.tszFileName, st_ServiceConfig.st_XLog.tszLogFile);
-	xhLog = HelpComponents_XLog_Init(st_ServiceConfig.st_XLog.nLogLeave, &st_XLogConfig);
+	xhLog = HelpComponents_XLog_Init(st_ServiceConfig.st_XLog.nLogType, &st_XLogConfig);
 	if (NULL == xhLog)
 	{
 		printf("启动服务中,启动日志失败,错误：%lX", XLog_GetLastError());
 		goto XENGINE_SERVICEAPP_EXIT;
 	}
 	//设置日志打印级别
-	HelpComponents_XLog_SetLogPriority(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO);
+	HelpComponents_XLog_SetLogPriority(xhLog, st_ServiceConfig.st_XLog.nLogLeave);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化日志系统成功"));
-
-	BaseLib_OperatorVer_XGetStu(&st_VERXEngine);
-	if (st_VERXEngine.nVerCore < 8 || st_VERXEngine.nVerMain < 39)
-	{
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,当前XEngine:%s 版本过低,无法正常使用"), BaseLib_OperatorVer_XNumberStr());
-		goto XENGINE_SERVICEAPP_EXIT;
-	}
 
 	signal(SIGINT, ServiceApp_Stop);
 	signal(SIGTERM, ServiceApp_Stop);
@@ -154,15 +163,15 @@ int main(int argc, char** argv)
 	if (st_ServiceConfig.nSocksPort > 0)
 	{
 		//启动心跳
-		if (st_ServiceConfig.st_XTime.nSocksTimeOut > 0)
+		if (st_ServiceConfig.st_XTime.nSocksTimeout > 0)
 		{
-			xhSocksHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_SocksHeart);
+			xhSocksHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nSocksTimeout, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_SocksHeart);
 			if (NULL == xhSocksHeart)
 			{
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化Socks心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
 			}
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Socks心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nSocksTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Socks心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nSocksTimeout, st_ServiceConfig.st_XTime.nTimeCheck);
 		}
 		else
 		{
@@ -196,15 +205,15 @@ int main(int argc, char** argv)
 	if (st_ServiceConfig.nTunnelPort > 0)
 	{
 		//启动心跳
-		if (st_ServiceConfig.st_XTime.nTunnelTimeOut > 0)
+		if (st_ServiceConfig.st_XTime.nTunnelTimeout > 0)
 		{
-			xhTunnelHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_TunnelHeart);
+			xhTunnelHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nTunnelTimeout, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_TunnelHeart);
 			if (NULL == xhTunnelHeart)
 			{
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化Tunnel心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
 			}
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Tunnel心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nTunnelTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Tunnel心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nTunnelTimeout, st_ServiceConfig.st_XTime.nTimeCheck);
 		}
 		else
 		{
@@ -245,15 +254,15 @@ int main(int argc, char** argv)
 		}
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Forward组包器成功"));
 		//启动心跳
-		if (st_ServiceConfig.st_XTime.nForwardTimeOut > 0)
+		if (st_ServiceConfig.st_XTime.nForwardTimeout > 0)
 		{
-			xhForwardHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_ForwardHeart);
+			xhForwardHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nForwardTimeout, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_ForwardHeart);
 			if (NULL == xhForwardHeart)
 			{
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化Forward心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
 			}
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Forward心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nForwardTimeOut, st_ServiceConfig.st_XTime.nTimeCheck);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Forward心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nForwardTimeout, st_ServiceConfig.st_XTime.nTimeCheck);
 		}
 		else
 		{
@@ -271,7 +280,7 @@ int main(int argc, char** argv)
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,注册Forward网络事件成功"));
 		//任务池
 		THREADPOOL_PARAMENT** ppSt_ListParam;
-		BaseLib_OperatorMemory_Malloc((XPPPMEM)&ppSt_ListParam, st_ServiceConfig.st_XMax.nForwardThread, sizeof(THREADPOOL_PARAMENT));
+		BaseLib_Memory_Malloc((XPPPMEM)&ppSt_ListParam, st_ServiceConfig.st_XMax.nForwardThread, sizeof(THREADPOOL_PARAMENT));
 		for (int i = 0; i < st_ServiceConfig.st_XMax.nForwardThread; i++)
 		{
 			int* pInt_Pos = new int;
@@ -300,6 +309,47 @@ int main(int argc, char** argv)
 	{
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Forward服务没有被启用"));
 	}
+	//启动全代理协议服务
+	if (st_ServiceConfig.nProxyPort > 0)
+	{
+		//启动心跳
+		if (st_ServiceConfig.st_XTime.nProxyTimeout > 0)
+		{
+			xhProxyHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nProxyTimeout, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_ProxyHeart);
+			if (NULL == xhForwardHeart)
+			{
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化Proxy心跳服务失败,错误：%lX"), NetCore_GetLastError());
+				goto XENGINE_SERVICEAPP_EXIT;
+			}
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化Proxy心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nProxyTimeout, st_ServiceConfig.st_XTime.nTimeCheck);
+		}
+		else
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Proxy心跳服务被设置为不启用"));
+		}
+		//网络
+		xhProxySocket = NetCore_TCPXCore_StartEx(st_ServiceConfig.nProxyPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread);
+		if (NULL == xhProxySocket)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启动Proxy网络服务器失败,错误：%lX"), NetCore_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Proxy网络服务器成功,Proxy端口:%d,目标地址:%s,IO:%d"), st_ServiceConfig.nProxyPort, st_ServiceConfig.st_XProxy.tszIPAddr, st_ServiceConfig.st_XMax.nIOThread);
+		NetCore_TCPXCore_RegisterCallBackEx(xhProxySocket, Network_Callback_ProxyLogin, Network_Callback_ProxyRecv, Network_Callback_ProxyLeave);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,注册Proxy网络事件成功"));
+		//客户端
+		xhProxyClient = XClient_TCPSelect_StartEx(XEngine_Proxy_CBRecv);
+		if (NULL == xhProxyClient)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动Proxy客户端服务失败,错误：%lX"), XClient_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Proxy客户端服务成功"));
+	}
+	else
+	{
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,Proxy服务没有被启用"));
+	}
 	//发送信息报告
 	if (st_ServiceConfig.st_XReport.bEnable && !bIsTest)
 	{
@@ -319,7 +369,7 @@ int main(int argc, char** argv)
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中，信息报告给API服务器没有启用"));
 	}
 
-	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("所有服务成功启动,服务运行中,XEngine版本:%s%s,服务版本:%s,发行次数:%d。。。"), BaseLib_OperatorVer_XNumberStr(), BaseLib_OperatorVer_XTypeStr(), st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str(), st_ServiceConfig.st_XVer.pStl_ListVer->size());
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("所有服务成功启动,服务运行中,XEngine版本:%s%s,服务版本:%s,发行次数:%d。。。"), BaseLib_Version_XNumberStr(), BaseLib_Version_XTypeStr(), st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str(), st_ServiceConfig.st_XVer.pStl_ListVer->size());
 
 	while (true)
 	{
@@ -356,6 +406,11 @@ XENGINE_SERVICEAPP_EXIT:
 		NetCore_TCPXCore_DestroyEx(xhForwardSocket);
 		SocketOpt_HeartBeat_DestoryEx(xhForwardHeart);
 		ManagePool_Thread_NQDestroy(xhForwardPool);
+		XClient_TCPSelect_StopEx(xhForwardClient);
+		//销毁proxy资源
+		NetCore_TCPXCore_DestroyEx(xhProxySocket);
+		SocketOpt_HeartBeat_DestoryEx(xhProxyHeart);
+		XClient_TCPSelect_StopEx(xhProxyClient);
 		//销毁日志资源
 		HelpComponents_XLog_Destroy(xhLog);
 	}

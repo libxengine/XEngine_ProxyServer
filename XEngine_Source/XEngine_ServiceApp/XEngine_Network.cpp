@@ -68,13 +68,11 @@ bool CALLBACK Network_Callback_ForwardLogin(LPCXSTR lpszClientAddr, XSOCKET hSoc
 }
 void CALLBACK Network_Callback_ForwardRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam)
 {
-	XCHAR tszDstAddr[128];
-	memset(tszDstAddr, '\0', sizeof(tszDstAddr));
-
-	if (ModuleSession_Forward_Get(lpszClientAddr, tszDstAddr))
+	SESSION_FORWARD st_ForwardClinet = {};
+	if (ModuleSession_Forward_Get(lpszClientAddr, &st_ForwardClinet))
 	{
 		//如果有转发,直接转发
-		XEngine_Network_Send(tszDstAddr, lpszRecvMsg, nMsgLen, XENGINE_CLIENT_NETTYPE_FORWARD);
+		XEngine_Network_Send(st_ForwardClinet.tszDstAddr, lpszRecvMsg, nMsgLen, XENGINE_CLIENT_NETTYPE_FORWARD);
 	}
 	else
 	{
@@ -94,6 +92,23 @@ void CALLBACK Network_Callback_ForwardLeave(LPCXSTR lpszClientAddr, XSOCKET hSoc
 void CALLBACK Network_Callback_ForwardHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam)
 {
 	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_FORWARD, XENGINE_CLIENT_CLOSE_HEARTBEAT);
+}
+//////////////////////////////////////////////////////////////////////////Forward相关
+bool CALLBACK Network_Callback_ProxyLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
+{
+	return XEngine_Proxy_Connect(lpszClientAddr);
+}
+void CALLBACK Network_Callback_ProxyRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam)
+{
+	XEngine_Proxy_Recvmsg(lpszClientAddr, lpszRecvMsg, nMsgLen);
+}
+void CALLBACK Network_Callback_ProxyLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
+{
+	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_PROXY, XENGINE_CLIENT_CLOSE_NETWORK);
+}
+void CALLBACK Network_Callback_ProxyHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam)
+{
+	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_PROXY, XENGINE_CLIENT_CLOSE_HEARTBEAT);
 }
 //////////////////////////////////////////////////////////////////////////网络IO关闭操作
 void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
@@ -128,7 +143,7 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 				break;
 			}
 		}
-		BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
+		BaseLib_Memory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 		ModuleSession_Socks_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("SOCKS客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
@@ -159,7 +174,7 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 				break;
 			}
 		}
-		BaseLib_OperatorMemory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
+		BaseLib_Memory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 		ModuleSession_Tunnel_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Tunnel客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
@@ -178,9 +193,38 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 			SocketOpt_HeartBeat_DeleteAddrEx(xhForwardHeart, lpszClientAddr);
 			NetCore_TCPXCore_CloseForClientEx(xhForwardSocket, lpszClientAddr);
 		}
+		SESSION_FORWARD st_ForwardInfo = {};
+		if (ModuleSession_Forward_Get(lpszClientAddr, &st_ForwardInfo))
+		{
+			XClient_TCPSelect_DeleteEx(xhForwardClient, st_ForwardInfo.xhClient);
+		}
+		ModuleSession_Proxy_Delete(lpszClientAddr);
 		HelpComponents_Datas_DeleteEx(xhForwardPacket, lpszClientAddr);
 		ModuleSession_Forward_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
+	}
+	else if (XENGINE_CLIENT_NETTYPE_PROXY == nIPProto)
+	{
+		if (XENGINE_CLIENT_CLOSE_NETWORK == nCloseType)
+		{
+			SocketOpt_HeartBeat_DeleteAddrEx(xhProxyHeart, lpszClientAddr);
+		}
+		else if (XENGINE_CLIENT_CLOSE_HEARTBEAT == nCloseType)
+		{
+			NetCore_TCPXCore_CloseForClientEx(xhProxySocket, lpszClientAddr);
+		}
+		else
+		{
+			SocketOpt_HeartBeat_DeleteAddrEx(xhProxyHeart, lpszClientAddr);
+			NetCore_TCPXCore_CloseForClientEx(xhProxySocket, lpszClientAddr);
+		}
+		SESSION_FORWARD st_ProxyInfo = {};
+		if (ModuleSession_Proxy_GetForAddr(lpszClientAddr, &st_ProxyInfo))
+		{
+			XClient_TCPSelect_DeleteEx(xhProxyClient, st_ProxyInfo.xhClient);
+		}
+		ModuleSession_Proxy_Delete(lpszClientAddr);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
 	else
 	{
@@ -219,6 +263,15 @@ bool XEngine_Network_Send(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int nMs
 			return false;
 		}
 		SocketOpt_HeartBeat_ActiveAddrEx(xhForwardHeart, lpszClientAddr);
+	}
+	else if (XENGINE_CLIENT_NETTYPE_PROXY == nIPProto)
+	{
+		if (!NetCore_TCPXCore_SendEx(xhProxySocket, lpszClientAddr, lpszMsgBuffer, nMsgLen, 1, 1))
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Proxy客户端:%s,发送数据失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
+			return false;
+		}
+		SocketOpt_HeartBeat_ActiveAddrEx(xhProxyHeart, lpszClientAddr);
 	}
 	else 
 	{

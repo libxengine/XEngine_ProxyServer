@@ -5,7 +5,11 @@
 #pragma comment(lib,"XEngine_BaseLib/XEngine_BaseLib.lib")
 #pragma comment(lib,"XEngine_Client/XClient_Socket.lib")
 #pragma comment(lib,"XEngine_RfcComponents/RfcComponents_ProxyProtocol")
-#pragma comment(lib,"../../XEngine_Source//Debug/jsoncpp")
+#ifdef _WIN64
+#pragma comment(lib,"../../XEngine_Source/x64/Debug/jsoncpp")
+#else
+#pragma comment(lib,"../../XEngine_Source/Debug/jsoncpp")
+#endif
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +30,7 @@
 //需要优先配置XEngine
 //WINDOWS支持VS2022 x86 debug 编译调试
 //linux使用下面的命令编译
-//g++ -std=c++17 -Wall -g APPClient_ForwardExample.cpp -o APPClient_ForwardExample.exe -I ../../XEngine_Source/XEngine_ThirdPart/jsoncpp -L ../../XEngine_Source/XEngine_ThirdPart/jsoncpp -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol -ljsoncpp 
+//g++ -std=c++20 -Wall -g APPClient_ForwardExample.cpp -o APPClient_ForwardExample.exe -I ../../XEngine_Source/XEngine_Depend/XEngine_Module/jsoncpp -L ../../XEngine_Source/XEngine_Depend/XEngine_Module/jsoncpp -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol -ljsoncpp 
 
 int main(int argc, char** argv)
 {
@@ -79,7 +83,7 @@ int main(int argc, char** argv)
 		printf("接受数据失败！\n");
 		return 0;
 	}
-	BaseLib_OperatorMemory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
+	BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
 	//列举
 	st_ProtocolHdr.wHeader = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_HEADER;
 	st_ProtocolHdr.wTail = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_TAIL;
@@ -109,7 +113,7 @@ int main(int argc, char** argv)
 	{
 		return false;
 	}
-	BaseLib_OperatorMemory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
+	BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
 	if (st_JsonAddr["Count"].asInt() > 0)
 	{
 		//请求绑定
@@ -123,7 +127,7 @@ int main(int argc, char** argv)
 		st_ProtocolHdr.byVersion = 0;
 		st_ProtocolHdr.unPacketSize = st_JsonRoot.toStyledString().length();
 		st_ProtocolHdr.unOperatorType = ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_USER_FORWARD;
-		st_ProtocolHdr.unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREQ;
+		st_ProtocolHdr.unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_NAMEDREQ;
 		if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCXSTR)&st_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR)))
 		{
 			printf("发送失败！\n");
@@ -140,7 +144,7 @@ int main(int argc, char** argv)
 			printf("接受数据失败！\n");
 			return 0;
 		}
-		BaseLib_OperatorMemory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
+		BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
 		//成功后发送数据
 		for (int i = 0; i < 10; i++)
 		{
@@ -172,12 +176,12 @@ int main(int argc, char** argv)
 				if (XClient_TCPSelect_RecvPkt(m_Socket, &ptszMsgBuffer, &nMsgLen, &st_ProtocolHdr))
 				{
 					//收到转发请求
-					if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_BINDREQ == st_ProtocolHdr.unOperatorCode)
+					if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_NAMEDREQ == st_ProtocolHdr.unOperatorCode)
 					{
 						bGet = true;
 						printf("get forward\n");
 					}
-					BaseLib_OperatorMemory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
+					BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
 				}
 			}
 		}		

@@ -4,11 +4,11 @@
 只要仓库不是在暂停状态,那么就会有人一直维护和开发,请放心使用  
 
 ## 注意
-自2024.11.15起.编译发布版本将只在github上面发布.
+编译发布版本将只在github上面发布.
 
 ## 介绍
-c c++ SOCKS5代理服务 HTTP Tunnel隧道代理服务 tcp转发服务  
-c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service  
+c c++ SOCKS5代理服务,HTTP Tunnel隧道代理服务,tcp转发服务,负载代理转发  
+c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service,proxy forward service  
 
 ## 软件架构
 此软件基于XEngine开发.采用C/C++作为开发语言  
@@ -17,22 +17,23 @@ c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service
 此软件支持以下特性  
 1. SOCKS5代理
 2. Tunnel代理
-3. TCP数据转发服务
+3. TCP数据转发服务(forward)
 4. 操作日志
 5. 加密通信(planning)
 6. 负载均衡(planning)
 7. 自定义证书代理协议(planning)
 8. 多级代理(planning)
+9. 全负载代理(proxy)
 
 ## 安装教程
 
 #### XEngine环境
-必须安装XEngine,版本需要V8.15或者以上版本,安装XEngine可以参考其Readme文档  
-GITEE:https://gitee.com/xyry/libxengine  
-GITHUB:https://github.com/libxengine/xengine
+必须安装XEngine,版本需要V9.x或者以上版本,安装XEngine可以参考其Readme文档  
+GITEE:https://gitee.com/libxengine/libxengine  
+GITHUB:https://github.com/libxengine/libxengine
 
 ###### 快速部署
-git clone https://gitee.com/xyry/libxengine.git 或者 git clone https://github.com/libxengine/xengine.git  
+git clone https://gitee.com/libxengine/libxengine.git 或者 git clone https://github.com/libxengine/libxengine.git  
 window执行XEngine_WINEnv.bat 脚本.  
 Linux执行:sudo ./XEngine_LINEnv.sh -i 3  
 macos执行:./XEngine_LINEnv.sh -i 3  
@@ -45,7 +46,7 @@ git submodule update
 
 #### Windows
 使用VS打开并且编译,支持WINDOWS 7SP1以上系统  
-直接运行即可,使用XEngine_AuthorizeApp
+直接运行即可
 
 #### Linux
 Linux使用Makefile编译,UBUNTU22.04 x64或者RockyLinux9 x64  
@@ -86,7 +87,7 @@ make FLAGS=CleanAll 清理编译
 你可以参考docment目录下的文档.里面包含了API协议和服务说明.
 
 ## 测试服务器
-地址:app.xyry.org  
+地址:app.libxengine.com  
 端口:Socks5 5400,HTTP Tunnel 5401,Forward 5402
 
 ## 参与贡献
