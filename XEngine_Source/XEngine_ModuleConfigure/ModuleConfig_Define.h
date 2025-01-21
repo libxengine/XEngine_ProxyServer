@@ -31,9 +31,9 @@ typedef struct tag_XEngine_ServiceConfig
 	struct
 	{
 		int nTimeCheck;                       //检测次数
-		int nSocksTimeOut;                    //TCP超时时间
-		int nTunnelTimeOut;                   //HTTP超时时间
-		int nForwardTimeOut;                  //转发超时时间
+		int nSocksTimeout;                    //TCP超时时间
+		int nTunnelTimeout;                   //HTTP超时时间
+		int nForwardTimeout;                  //转发超时时间
 		int nProxyTimeout;                    //代理超时时间
 	}st_XTime;                                //次数*时间=超时
 	struct

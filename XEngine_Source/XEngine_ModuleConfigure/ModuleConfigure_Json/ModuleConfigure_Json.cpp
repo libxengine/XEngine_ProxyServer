@@ -82,7 +82,7 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 		return false;
 	}
 	_tcsxcpy(pSt_ServerConfig->tszIPAddr, st_JsonRoot["tszIPAddr"].asCString());
-	pSt_ServerConfig->bDeamon = st_JsonRoot["bDeamon"].asInt();
+	pSt_ServerConfig->bDeamon = st_JsonRoot["bDeamon"].asBool();
 	pSt_ServerConfig->nSocksPort = st_JsonRoot["nSocksPort"].asInt();
 	pSt_ServerConfig->nTunnelPort = st_JsonRoot["nTunnelPort"].asInt();
 	pSt_ServerConfig->nForwardPort = st_JsonRoot["nForwardPort"].asInt();
@@ -108,9 +108,9 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	}
 	Json::Value st_JsonXTime = st_JsonRoot["XTime"];
 	pSt_ServerConfig->st_XTime.nTimeCheck = st_JsonXTime["nTimeCheck"].asInt();
-	pSt_ServerConfig->st_XTime.nSocksTimeOut = st_JsonXTime["nSocksTimeOut"].asInt();
-	pSt_ServerConfig->st_XTime.nTunnelTimeOut = st_JsonXTime["nTunnelTimeOut"].asInt();
-	pSt_ServerConfig->st_XTime.nForwardTimeOut = st_JsonXTime["nForwardTimeOut"].asInt();
+	pSt_ServerConfig->st_XTime.nSocksTimeout = st_JsonXTime["nSocksTimeout"].asInt();
+	pSt_ServerConfig->st_XTime.nTunnelTimeout = st_JsonXTime["nTunnelTimeout"].asInt();
+	pSt_ServerConfig->st_XTime.nForwardTimeout = st_JsonXTime["nForwardTimeout"].asInt();
 	pSt_ServerConfig->st_XTime.nProxyTimeout = st_JsonXTime["nProxyTimeout"].asInt();
 
 	if (st_JsonRoot["XLog"].empty() || (5 != st_JsonRoot["XLog"].size()))
