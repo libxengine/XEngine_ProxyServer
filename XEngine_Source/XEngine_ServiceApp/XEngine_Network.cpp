@@ -71,8 +71,34 @@ void CALLBACK Network_Callback_ForwardRecv(LPCXSTR lpszClientAddr, XSOCKET hSock
 	SESSION_FORWARD st_ForwardClinet = {};
 	if (ModuleSession_Forward_Get(lpszClientAddr, &st_ForwardClinet))
 	{
-		//如果有转发,直接转发
-		XEngine_Network_Send(st_ForwardClinet.tszDstAddr, lpszRecvMsg, nMsgLen, XENGINE_CLIENT_NETTYPE_FORWARD);
+		if (st_ForwardClinet.bForward)
+		{
+			if (st_ForwardClinet.bAnony)
+			{
+				//匿名转发
+				if (XClient_TCPSelect_SendEx(xhForwardClient, st_ForwardClinet.xhClient, lpszRecvMsg, nMsgLen))
+				{
+					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _X("Forward客户端:%s,匿名转发数据成功,大小:%d"), lpszClientAddr, nMsgLen);
+				}
+				else
+				{
+					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端:%s,匿名转发数据失败,大小:%d,错误:%lX"), lpszClientAddr, nMsgLen, XClient_GetLastError());
+				}
+			}
+			else
+			{
+				//非匿名转发
+				XEngine_Network_Send(st_ForwardClinet.tszDstAddr, lpszRecvMsg, nMsgLen, XENGINE_CLIENT_NETTYPE_FORWARD);
+			}
+		}
+		else
+		{
+			//没有绑定转发,投递到包中处理
+			if (!HelpComponents_Datas_PostEx(xhForwardPacket, lpszClientAddr, lpszRecvMsg, nMsgLen))
+			{
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端:%s,投递数据包失败,大小:%d,错误:%lX"), lpszClientAddr, nMsgLen, Packets_GetLastError());
+			}
+		}
 	}
 	else
 	{
