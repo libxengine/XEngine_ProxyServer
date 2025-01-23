@@ -137,7 +137,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 失败,网络连接错误,错误码:%lX"), lpszClientAddr, tszDstAddr, XClient_GetLastError());
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s:%d 失败,网络连接错误,错误码:%lX"), lpszClientAddr, tszDstAddr, nPort, XClient_GetLastError());
 				return false;
 			}
 			if (!ModuleSession_Forward_BindAnony(lpszClientAddr, tszDstAddr, xhClient))
@@ -146,13 +146,13 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s:%d 失败,错误:%lX"), lpszClientAddr, tszDstAddr, nPort);
 				return false;
 			}
 			//返回结果
 			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 成功"), lpszClientAddr, tszDstAddr);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s:%d 成功"), lpszClientAddr, tszDstAddr, nPort);
 		}
 	}
 	
