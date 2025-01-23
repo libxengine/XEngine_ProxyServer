@@ -120,24 +120,23 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 		}
 		else if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREQ == pSt_ProtocolHdr->unOperatorCode)
 		{
-			XCHAR tszSrcAddr[128];
-			XCHAR tszDstAddr[128];
-
-			memset(tszSrcAddr, '\0', sizeof(tszSrcAddr));
-			memset(tszDstAddr, '\0', sizeof(tszDstAddr));
+			XCHAR tszSrcAddr[128] = {};
+			XCHAR tszDstAddr[128] = {};
+			XCHAR tszTmpAddr[128] = {};
 
 			ModuleProtocol_Parse_ForwardBind(lpszMsgBuffer, nMsgLen, tszSrcAddr, tszDstAddr);
 			//匿名绑定,请求连接
 			int nPort = 0;
 			XNETHANDLE xhClient = 0;
-			APIAddr_IPAddr_SegAddr(tszDstAddr, &nPort);
-			if (!XClient_TCPSelect_InsertEx(xhForwardClient, &xhClient, tszDstAddr, nPort))
+			_tcsxcpy(tszTmpAddr, tszDstAddr);
+			APIAddr_IPAddr_SegAddr(tszTmpAddr, &nPort);
+			if (!XClient_TCPSelect_InsertEx(xhForwardClient, &xhClient, tszTmpAddr, nPort))
 			{
 				pSt_ProtocolHdr->wReserve = 500;
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s:%d 失败,网络连接错误,错误码:%lX"), lpszClientAddr, tszDstAddr, nPort, XClient_GetLastError());
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 失败,网络连接错误,错误码:%lX"), lpszClientAddr, tszDstAddr, XClient_GetLastError());
 				return false;
 			}
 			if (!ModuleSession_Forward_BindAnony(lpszClientAddr, tszDstAddr, xhClient))
@@ -146,13 +145,13 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s:%d 失败,错误:%lX"), lpszClientAddr, tszDstAddr, nPort);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr, ModuleSession_GetLastError());
 				return false;
 			}
 			//返回结果
 			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s:%d 成功"), lpszClientAddr, tszDstAddr, nPort);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 成功"), lpszClientAddr, tszDstAddr);
 		}
 	}
 	
