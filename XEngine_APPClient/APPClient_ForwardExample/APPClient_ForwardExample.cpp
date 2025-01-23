@@ -32,12 +32,8 @@
 //linux使用下面的命令编译
 //g++ -std=c++20 -Wall -g APPClient_ForwardExample.cpp -o APPClient_ForwardExample.exe -I ../../XEngine_Source/XEngine_Depend/XEngine_Module/jsoncpp -L ../../XEngine_Source/XEngine_Depend/XEngine_Module/jsoncpp -lXEngine_BaseLib -lXClient_Socket -lRfcComponents_ProxyProtocol -ljsoncpp 
 
-int main(int argc, char** argv)
+int Proxy_NamedTest()
 {
-#ifdef _MSC_BUILD
-	WSADATA st_WSAData;
-	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
-#endif
 	XSOCKET m_Socket;
 	LPCXSTR lpszServiceAddr = _X("127.0.0.1");
 	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5402))
@@ -184,11 +180,113 @@ int main(int argc, char** argv)
 					BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
 				}
 			}
-		}		
+		}
 	}
 
-	std::this_thread::sleep_for(std::chrono::seconds(20000));
 	XClient_TCPSelect_Close(m_Socket);
+	return 0;
+}
+int Proxy_AnonyTest()
+{
+	XSOCKET m_Socket;
+	LPCXSTR lpszServiceAddr = _X("127.0.0.1");
+	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5402))
+	{
+		printf("连接失败！错误:%lX\n", XClient_GetLastError());
+		return 0;
+	}
+	printf("连接成功！\n");
+
+	int nMsgLen = 0;
+	XENGINE_PROTOCOLHDR st_ProtocolHdr;
+	XENGINE_PROTOCOL_USERAUTH st_UserAuth;
+
+	memset(&st_ProtocolHdr, '\0', sizeof(XENGINE_PROTOCOLHDR));
+	memset(&st_UserAuth, '\0', sizeof(XENGINE_PROTOCOL_USERAUTH));
+	//登录
+	st_ProtocolHdr.wHeader = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_HEADER;
+	st_ProtocolHdr.wTail = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_TAIL;
+	st_ProtocolHdr.byIsReply = true;
+	st_ProtocolHdr.byVersion = 0;
+	st_ProtocolHdr.unPacketSize = sizeof(XENGINE_PROTOCOL_USERAUTH);
+	st_ProtocolHdr.unOperatorType = ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_AUTH;
+	st_ProtocolHdr.unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LOGREQ;
+
+	_tcsxcpy(st_UserAuth.tszUserName, "test");
+
+	if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCXSTR)&st_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR)))
+	{
+		printf("发送失败！\n");
+		return 0;
+	}
+	if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCXSTR)&st_UserAuth, sizeof(XENGINE_PROTOCOL_USERAUTH)))
+	{
+		printf("发送失败！\n");
+		return 0;
+	}
+
+	nMsgLen = 0;
+	XCHAR* ptszMsgBuffer = NULL;
+	memset(&st_ProtocolHdr, '\0', sizeof(XENGINE_PROTOCOLHDR));
+	if (!XClient_TCPSelect_RecvPkt(m_Socket, &ptszMsgBuffer, &nMsgLen, &st_ProtocolHdr))
+	{
+		printf("接受数据失败！\n");
+		return 0;
+	}
+	BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
+	//匿名转发请求
+	Json::Value st_JsonRoot;
+	st_JsonRoot["tszDstAddr"] = "127.0.0.1:5401";
+
+	st_ProtocolHdr.wHeader = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_HEADER;
+	st_ProtocolHdr.wTail = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_TAIL;
+	st_ProtocolHdr.byIsReply = true;
+	st_ProtocolHdr.byVersion = 0;
+	st_ProtocolHdr.unPacketSize = st_JsonRoot.toStyledString().length();
+	st_ProtocolHdr.unOperatorType = ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_USER_FORWARD;
+	st_ProtocolHdr.unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREQ;
+	if (!XClient_TCPSelect_SendMsg(m_Socket, (LPCXSTR)&st_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR)))
+	{
+		printf("发送失败！\n");
+		return 0;
+	}
+	if (!XClient_TCPSelect_SendMsg(m_Socket, st_JsonRoot.toStyledString().c_str(), st_ProtocolHdr.unPacketSize))
+	{
+		printf("发送失败！\n");
+		return 0;
+	}
+	nMsgLen = 2048;
+	if (!XClient_TCPSelect_RecvPkt(m_Socket, &ptszMsgBuffer, &nMsgLen, &st_ProtocolHdr))
+	{
+		printf("接受数据失败！\n");
+		return 0;
+	}
+	BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
+	//成功后发送数据
+	XClient_TCPSelect_SendMsg(m_Socket, "hello", 5);
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	printf("send 5 str\n");
+	//接受数据
+	nMsgLen = 2048;
+	XCHAR tszMsgBuffer[2048] = {};
+	if (XClient_TCPSelect_RecvMsg(m_Socket, tszMsgBuffer, &nMsgLen))
+	{
+		printf("%s\n", tszMsgBuffer);
+	}
+
+	XClient_TCPSelect_Close(m_Socket);
+	return 0;
+}
+
+int main(int argc, char** argv)
+{
+#ifdef _MSC_BUILD
+	WSADATA st_WSAData;
+	WSAStartup(MAKEWORD(2, 2), &st_WSAData);
+#endif
+	
+	Proxy_AnonyTest();
+	Proxy_NamedTest();
 #ifdef _MSC_BUILD
 	WSACleanup();
 #endif
