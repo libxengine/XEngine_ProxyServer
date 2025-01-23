@@ -106,7 +106,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_NAMEDREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求命名绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求命名绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr, ModuleSession_GetLastError());
 				return false;
 			}
 			//先告知对方要转发数据
