@@ -37,9 +37,29 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 		{
 			pSt_Configure->bDeamon = _ttxoi(argv[++i]);
 		}
-		else if (0 == _tcsxcmp("-l", argv[i]))
+		else if (0 == _tcsxcmp("-ps", argv[i]))
+		{
+			st_ServiceConfig.nSocksPort = _ttxoi(argv[++i]);
+		}
+		else if (0 == _tcsxcmp("-pt", argv[i]))
+		{
+			st_ServiceConfig.nTunnelPort = _ttxoi(argv[++i]);
+		}
+		else if (0 == _tcsxcmp("-pf", argv[i]))
+		{
+			st_ServiceConfig.nForwardPort = _ttxoi(argv[++i]);
+		}
+		else if (0 == _tcsxcmp("-pp", argv[i]))
+		{
+			st_ServiceConfig.nProxyPort = _ttxoi(argv[++i]);
+		}
+		else if (0 == _tcsxcmp("-ll", argv[i]))
 		{
 			pSt_Configure->st_XLog.nLogLeave = _ttxoi(argv[++i]);
+		}
+		else if (0 == _tcsxcmp("-lt", argv[i]))
+		{
+			pSt_Configure->st_XLog.nLogType = _ttxoi(argv[++i]);
 		}
 		else if (0 == _tcsxcmp("-v", argv[i]))
 		{
