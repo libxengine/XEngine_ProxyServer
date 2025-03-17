@@ -113,20 +113,20 @@ jobs:
         if: matrix.configuration == 'Release' && matrix.platform == 'x64'
         uses: actions/upload-artifact@v4
         with:
-          name: XEngine_ProxyServiceApp-x86_32-Windows
+          name: XEngine_ProxyServiceApp-Windows_x86_32
           path: XEngine_Release/
           retention-days: 1
       - name: Upload folder as artifact with x64
         if: matrix.configuration == 'Release' && matrix.platform == 'x64'
         uses: actions/upload-artifact@v4
         with:
-          name: XEngine_ProxyServiceApp-x86_64-Windows
+          name: XEngine_ProxyServiceApp-Windows_x86_64
           path: XEngine_Release/
           retention-days: 1
       - name: Upload folder as artifact with ARM64
         if: matrix.configuration == 'Release' && matrix.platform == 'ARM64'
         uses: actions/upload-artifact@v4
         with:
-          name: XEngine_ProxyServiceApp-ARM64-Windows
+          name: XEngine_ProxyServiceApp-Windows_ARM64
           path: XEngine_Release/
           retention-days: 1
