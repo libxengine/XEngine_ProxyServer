@@ -19,6 +19,7 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 	ENUM_PROXY_SESSION_SOCKS_STATUS enSocksStatus;
 	if (!ModuleSession_Socks_GetStatus(lpszClientAddr, &enSocksStatus))
 	{
+		SocketOpt_HeartBeat_ForceOutAddrEx(xhSocksHeart, lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("SOCKS客户端:%s,获取状态失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 		return false;
 	}
