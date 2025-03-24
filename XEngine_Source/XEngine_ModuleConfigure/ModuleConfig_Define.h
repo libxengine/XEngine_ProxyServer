@@ -52,8 +52,9 @@ typedef struct tag_XEngine_ServiceConfig
 	}st_XReport;
 	struct
 	{
-		XCHAR tszIPAddr[128];
 		bool bEnable;
+		XCHAR tszIPAddr[128];
+		std::list<xstring>* pStl_ListIPAddr;
 	}st_XProxy;
 	struct  
 	{
