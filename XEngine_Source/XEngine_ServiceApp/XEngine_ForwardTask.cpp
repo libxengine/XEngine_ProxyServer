@@ -69,7 +69,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 	{
 		if (!ModuleSession_Forward_Get(lpszClientAddr))
 		{
-			pSt_ProtocolHdr->wReserve = 401;
+			pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_NOTLOGIN;
 			pSt_ProtocolHdr->unPacketSize = 0;
 			pSt_ProtocolHdr->unOperatorCode = pSt_ProtocolHdr->unOperatorCode + 1;
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
@@ -102,7 +102,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			ModuleProtocol_Parse_ForwardBind(lpszMsgBuffer, nMsgLen, tszSrcAddr, tszDstAddr);
 			if (!ModuleSession_Forward_BindNamed(lpszClientAddr, tszDstAddr))
 			{
-				pSt_ProtocolHdr->wReserve = 404;
+				pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_NOTFOUND;
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_NAMEDREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
@@ -132,7 +132,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			APIAddr_IPAddr_SegAddr(tszTmpAddr, &nPort);
 			if (!XClient_TCPSelect_InsertEx(xhForwardClient, &xhClient, tszTmpAddr, nPort))
 			{
-				pSt_ProtocolHdr->wReserve = 500;
+				pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_SERVER;
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
@@ -141,7 +141,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			}
 			if (!ModuleSession_Forward_BindAnony(lpszClientAddr, tszDstAddr, xhClient))
 			{
-				pSt_ProtocolHdr->wReserve = 404;
+				pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_NOTFOUND;
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
