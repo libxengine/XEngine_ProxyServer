@@ -334,7 +334,7 @@ int main(int argc, char** argv)
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启动Proxy网络服务器失败,错误：%lX"), NetCore_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Proxy网络服务器成功,Proxy端口:%d,配置个数:%d,IO:%d"), st_ServiceConfig.nProxyPort, st_ServiceConfig.st_XProxy.pStl_ListIPAddr->size(), st_ServiceConfig.st_XMax.nIOThread);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Proxy网络服务器成功,Proxy端口:%d,默认地址:%s 配置个数:%d,IO:%d"), st_ServiceConfig.nProxyPort, st_ServiceConfig.st_XProxy.tszDefaultAddr, st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->size(), st_ServiceConfig.st_XMax.nIOThread);
 		NetCore_TCPXCore_RegisterCallBackEx(xhProxySocket, Network_Callback_ProxyLogin, Network_Callback_ProxyRecv, Network_Callback_ProxyLeave);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,注册Proxy网络事件成功"));
 		//客户端

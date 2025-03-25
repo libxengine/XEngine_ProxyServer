@@ -23,8 +23,8 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 	APIAddr_IPAddr_SegAddr(tszSrcIPAddr, &nSrcPort);
 
 	bool bFound = false;
-	auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListIPAddr->begin();
-	for (; stl_ListIterator != st_ServiceConfig.st_XProxy.pStl_ListIPAddr->end(); stl_ListIterator++)
+	auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->begin();
+	for (; stl_ListIterator != st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->end(); stl_ListIterator++)
 	{
 		XCHAR tszTmpIPAddr[128] = {};
 		_stxscanf(stl_ListIterator->c_str(), _X("%[^-]-%s"), tszTmpIPAddr, tszDstIPAddr);
@@ -54,7 +54,7 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 
 	if (!bFound)
 	{
-		_tcsxcpy(tszDstIPAddr, st_ServiceConfig.st_XProxy.tszIPAddr);
+		_tcsxcpy(tszDstIPAddr, st_ServiceConfig.st_XProxy.tszDefaultAddr);
 		APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转未命中,使用默认地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
 	}
