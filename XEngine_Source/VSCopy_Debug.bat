@@ -1,4 +1,5 @@
 copy /y "D:\XEngine\XEngine_SourceCode\Debug\XEngine_BaseLib.dll" "./"
+copy /y "D:\XEngine\XEngine_SourceCode\Debug\XEngine_BaseSafe.dll" "./"	
 copy /y "D:\XEngine\XEngine_SourceCode\Debug\XEngine_Algorithm.dll" "./"
 copy /y "D:\XEngine\XEngine_SourceCode\Debug\XEngine_Core.dll" "./"
 copy /y "D:\XEngine\XEngine_SourceCode\Debug\XEngine_Cryption.dll" "./"
@@ -16,3 +17,4 @@ copy /y "D:\XEngine\XEngine_SourceCode\Debug\HelpComponents_Packets.dll" "./"
 copy /y "D:\XEngine\XEngine_SourceCode\Debug\RfcComponents_ProxyProtocol.dll" "./"
 
 copy /y "D:\XEngine\XEngine_SourceCode\Debug\XEngine_SystemApi.dll" "./"
+copy /y "D:\XEngine\XEngine_SourceCode\Debug\XEngine_SystemConfig.dll" "./"

@@ -31,12 +31,14 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 		memset(tszMsgBuffer, '\0', MAX_PATH);
 		if (!ModuleSession_Tunnel_Packet(lpszClientAddr, lpszMsgBuffer, nMsgLen, tszMsgBuffer, &nLen))
 		{
+			ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, ERROR_XENGINE_PROXY_PROTOCOL_FORMAT);
+			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("Tunnel客户端:%s,解析协议不成功,可能因为数据不完整,需要等待完整包,错误码:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 			return false;
 		}
 		if (!ProxyProtocol_TunnelCore_Parse(tszMsgBuffer, nLen, tszIPAddr, &nIPPort, tszAuthInfo, &bProxy))
 		{
-			ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 400);
+			ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, ERROR_XENGINE_PROXY_PROTOCOL_SERVER);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Tunnel客户端:%s,解析协议失败,错误:%lX"), lpszClientAddr, ProxyProtocol_GetLastError());
 			return false;
@@ -71,7 +73,7 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 
 			if (!XSocket_Api_DomainToAddr(tszIPAddr, &ppszListAddr, &nListCount))
 			{
-				ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 500);
+				ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, ERROR_XENGINE_PROXY_PROTOCOL_DOMAIN);
 				XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Tunnel客户端:%s,解析域名:%s,失败,错误:%lX"), lpszClientAddr, tszIPAddr, ProxyProtocol_GetLastError());
 				return false;
@@ -81,7 +83,7 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 		}
 		if (!XClient_TCPSelect_InsertEx(xhTunnelClient, &st_ProxyClient.xhClient, tszConnectAddr, nIPPort))
 		{
-			ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, 500);
+			ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, ERROR_XENGINE_PROXY_PROTOCOL_SERVER);
 			XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_TUNNEL);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Tunnel客户端:%s,创建客户端连接失败,连接到服务器:%s:%d,错误:%lX"), lpszClientAddr, tszConnectAddr, nIPPort, ProxyProtocol_GetLastError());
 			return false;

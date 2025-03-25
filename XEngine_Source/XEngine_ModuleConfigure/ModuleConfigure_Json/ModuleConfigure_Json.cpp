@@ -138,16 +138,23 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	_tcsxcpy(pSt_ServerConfig->st_XReport.tszAPIUrl, st_JsonXReport["tszAPIUrl"].asCString());
 	_tcsxcpy(pSt_ServerConfig->st_XReport.tszServiceName, st_JsonXReport["tszServiceName"].asCString());
 
-	if (st_JsonRoot["XProxy"].empty() || (2 != st_JsonRoot["XProxy"].size()))
+	if (st_JsonRoot["XProxy"].empty())
 	{
 		Config_IsErrorOccur = true;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XPROXY;
 		return false;
 	}
 	Json::Value st_JsonXProxy = st_JsonRoot["XProxy"];
-	pSt_ServerConfig->st_XProxy.bEnable = st_JsonXProxy["bEnable"].asBool();
-	_tcsxcpy(pSt_ServerConfig->st_XProxy.tszIPAddr, st_JsonXProxy["tszIPAddr"].asCString());
 
+	pSt_ServerConfig->st_XProxy.pStl_ListRuleAddr = new list<xstring>;
+	_tcsxcpy(pSt_ServerConfig->st_XProxy.tszDefaultAddr, st_JsonXProxy["tszDefaultAddr"].asCString());
+	if (!st_JsonXProxy["tszRuleIPAddr"].isNull())
+	{
+		for (unsigned int i = 0; i < st_JsonXProxy["tszRuleIPAddr"].size(); i++)
+		{
+			pSt_ServerConfig->st_XProxy.pStl_ListRuleAddr->push_back(st_JsonXProxy["tszRuleIPAddr"][i].asCString());
+		}
+	}
 	return true;
 }
 /********************************************************************

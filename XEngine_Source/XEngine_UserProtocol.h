@@ -29,6 +29,15 @@ typedef enum en_XEngine_XUser_Protocol
 ///////////////////////////////////////////////////////////////////////////
 //                          导出的数据结构
 ///////////////////////////////////////////////////////////////////////////
+#define ERROR_XENGINE_PROXY_PROTOCOL_FORMAT 0x01                           //协议格式内容错误
+#define ERROR_XENGINE_PROXY_PROTOCOL_SERVER 0x02                           //服务器内部处理错误
+#define ERROR_XENGINE_PROXY_PROTOCOL_DOMAIN 0x03                           //域名转IP错误
+#define ERROR_XENGINE_PROXY_PROTOCOL_NOTLOGIN 0x04                         //未登录
+#define ERROR_XENGINE_PROXY_PROTOCOL_NOTFOUND 0x05                         //未找到
+#define ERROR_XENGINE_PROXY_PROTOCOL_NOTSUPPORT 0x06                       //不支持
+///////////////////////////////////////////////////////////////////////////
+//                          导出的数据结构
+///////////////////////////////////////////////////////////////////////////
 #pragma pack(push)
 #pragma pack(1)
 

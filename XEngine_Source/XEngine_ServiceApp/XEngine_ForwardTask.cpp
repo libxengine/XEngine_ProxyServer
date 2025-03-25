@@ -63,13 +63,20 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，设置的用户：%s，登录到服务器"), lpszClientAddr, st_UserAuth.tszUserName);
 		}
+		else
+		{
+			pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_NOTSUPPORT;
+			pSt_ProtocolHdr->unPacketSize = 0;
+			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，发送了不支持的验证协议：%d"), lpszClientAddr, pSt_ProtocolHdr->unOperatorCode);
+		}
 	}
-	//处理转发协议
-	if (ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_USER_FORWARD == pSt_ProtocolHdr->unOperatorType)
+	else if (ENUM_XENGINE_COMMUNICATION_PROTOCOL_TYPE_USER_FORWARD == pSt_ProtocolHdr->unOperatorType)
 	{
+		//处理转发协议
 		if (!ModuleSession_Forward_Get(lpszClientAddr))
 		{
-			pSt_ProtocolHdr->wReserve = 401;
+			pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_NOTLOGIN;
 			pSt_ProtocolHdr->unPacketSize = 0;
 			pSt_ProtocolHdr->unOperatorCode = pSt_ProtocolHdr->unOperatorCode + 1;
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
@@ -102,11 +109,11 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			ModuleProtocol_Parse_ForwardBind(lpszMsgBuffer, nMsgLen, tszSrcAddr, tszDstAddr);
 			if (!ModuleSession_Forward_BindNamed(lpszClientAddr, tszDstAddr))
 			{
-				pSt_ProtocolHdr->wReserve = 404;
+				pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_NOTFOUND;
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_NAMEDREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求命名绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求命名绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr, ModuleSession_GetLastError());
 				return false;
 			}
 			//先告知对方要转发数据
@@ -120,20 +127,19 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 		}
 		else if (XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREQ == pSt_ProtocolHdr->unOperatorCode)
 		{
-			XCHAR tszSrcAddr[128];
-			XCHAR tszDstAddr[128];
-
-			memset(tszSrcAddr, '\0', sizeof(tszSrcAddr));
-			memset(tszDstAddr, '\0', sizeof(tszDstAddr));
+			XCHAR tszSrcAddr[128] = {};
+			XCHAR tszDstAddr[128] = {};
+			XCHAR tszTmpAddr[128] = {};
 
 			ModuleProtocol_Parse_ForwardBind(lpszMsgBuffer, nMsgLen, tszSrcAddr, tszDstAddr);
 			//匿名绑定,请求连接
 			int nPort = 0;
 			XNETHANDLE xhClient = 0;
-			APIAddr_IPAddr_SegAddr(tszDstAddr, &nPort);
-			if (!XClient_TCPSelect_InsertEx(xhForwardClient, &xhClient, tszDstAddr, nPort))
+			_tcsxcpy(tszTmpAddr, tszDstAddr);
+			APIAddr_IPAddr_SegAddr(tszTmpAddr, &nPort);
+			if (!XClient_TCPSelect_InsertEx(xhForwardClient, &xhClient, tszTmpAddr, nPort))
 			{
-				pSt_ProtocolHdr->wReserve = 500;
+				pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_SERVER;
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
@@ -142,11 +148,11 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			}
 			if (!ModuleSession_Forward_BindAnony(lpszClientAddr, tszDstAddr, xhClient))
 			{
-				pSt_ProtocolHdr->wReserve = 404;
+				pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_NOTFOUND;
 				pSt_ProtocolHdr->unPacketSize = 0;
 				pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP;
 				XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
-				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr);
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 失败,错误:%lX"), lpszClientAddr, tszDstAddr, ModuleSession_GetLastError());
 				return false;
 			}
 			//返回结果
@@ -154,8 +160,21 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求匿名绑定转发地址:%s 成功"), lpszClientAddr, tszDstAddr);
 		}
+		else
+		{
+			pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_NOTSUPPORT;
+			pSt_ProtocolHdr->unPacketSize = 0;
+			XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，发送了不支持的转发协议：%d"), lpszClientAddr, pSt_ProtocolHdr->unOperatorCode);
+		}
 	}
-	
+	else
+	{
+		pSt_ProtocolHdr->wReserve = ERROR_XENGINE_PROXY_PROTOCOL_NOTSUPPORT;
+		pSt_ProtocolHdr->unPacketSize = 0;
+		XEngine_Network_Send(lpszClientAddr, (LPCXSTR)pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR), XENGINE_CLIENT_NETTYPE_FORWARD);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，发送了不支持的协议：%d-%d"), lpszClientAddr, pSt_ProtocolHdr->unOperatorType, pSt_ProtocolHdr->unOperatorCode);
+	}
 	return true;
 }
 void CALLBACK XEngine_Forward_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
