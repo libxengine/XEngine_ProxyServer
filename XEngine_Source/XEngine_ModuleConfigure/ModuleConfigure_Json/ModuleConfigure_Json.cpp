@@ -147,7 +147,6 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	Json::Value st_JsonXProxy = st_JsonRoot["XProxy"];
 
 	pSt_ServerConfig->st_XProxy.pStl_ListRuleAddr = new list<xstring>;
-	pSt_ServerConfig->st_XProxy.bEnable = st_JsonXProxy["bEnable"].asBool();
 	_tcsxcpy(pSt_ServerConfig->st_XProxy.tszDefaultAddr, st_JsonXProxy["tszDefaultAddr"].asCString());
 	if (!st_JsonXProxy["tszRuleIPAddr"].isNull())
 	{

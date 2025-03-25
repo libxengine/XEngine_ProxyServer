@@ -8,6 +8,7 @@ XEngine_ProxyServer V1.12.0.1001
 修改:统一转发和隧道代理错误
 修改:匿名转发打印问题
 修改:全代理多后端支持
+修改:信息报告现在可以直接发送获取次数了
 修正:没有输出转发绑定错误信息的问题
 修正:转发网络的问题在接受数据时不会区分命名和匿名数据
 修正:匿名保存客户端地址丢失问题
@@ -21,7 +22,7 @@ improved:forward protocol handle
 modify:unified forward and tunnel error code
 modify:print port for anny forward
 modify:multi back-end support for proxy full
-modify:
+modify:get time when send for report info 
 fixed:not print forward bind error
 fixed:issue with forwarding network not distinguishing between named and anonymized data when accepting data
 fixed:anony save client addr lost port
