@@ -21,6 +21,7 @@ improved:forward protocol handle
 modify:unified forward and tunnel error code
 modify:print port for anny forward
 modify:multi back-end support for proxy full
+modify:
 fixed:not print forward bind error
 fixed:issue with forwarding network not distinguishing between named and anonymized data when accepting data
 fixed:anony save client addr lost port
