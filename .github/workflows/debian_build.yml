@@ -42,6 +42,9 @@ jobs:
           repository: libxengine/XEngine_OPenSource
           path: XEngine_Source/XEngine_Depend
 
+      - name: Set TERM variable
+        run: echo "TERM=xterm" >> $GITHUB_ENV
+        
       - name: install system package
         run: |
             apt update -y
@@ -59,7 +62,8 @@ jobs:
             unzip ./XEngine_Debian_12_${{ matrix.artifact }}.zip -d ./XEngine_Debian_12_${{ matrix.artifact }}
             cd XEngine_Debian_12_${{ matrix.artifact }}
             
-            cp -rf ./XEngine_Include /usr/local/include
+            cp -rf ./XEngine_Include /usr/include
+            cp -rf ./XEngine_Linux/xengine /usr/local/bin
             find ./XEngine_Linux -name "*.so" -exec cp {} /usr/local/lib \;         
             ldconfig
 

@@ -47,7 +47,10 @@ jobs:
         with:
           repository: libxengine/XEngine_OPenSource
           path: XEngine_Source/XEngine_Depend
-          
+
+      - name: Set TERM variable
+        run: echo "TERM=xterm" >> $GITHUB_ENV
+                  
       - name: install system package
         run: |
             dnf update -y
@@ -64,7 +67,8 @@ jobs:
             unzip ./XEngine_RockyLinux_9_${{ matrix.artifact }}.zip -d ./XEngine_RockyLinux_9_${{ matrix.artifact }}
             cd XEngine_RockyLinux_9_${{ matrix.artifact }}
             
-            cp -rf ./XEngine_Include /usr/local/include
+            cp -rf ./XEngine_Include /usr/include
+            cp -rf ./XEngine_Linux/xengine /usr/local/bin
             find ./XEngine_Linux -name "*.so" -exec cp {} /usr/lib64 \;         
             ldconfig
 

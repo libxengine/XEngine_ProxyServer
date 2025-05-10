@@ -36,6 +36,9 @@ jobs:
             git submodule init
             git submodule update
 
+      - name: Set TERM variable
+        run: echo "TERM=xterm" >> $GITHUB_ENV
+        
       - name: brew install
         run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             
@@ -60,7 +63,8 @@ jobs:
 
             sudo mkdir -p /usr/local/include
             sudo mkdir -p /usr/local/lib
-            sudo cp -rf ./XEngine_Include /usr/local/include
+            cp -rf ./XEngine_Include /usr/include
+            cp -rf ./XEngine_Mac/xengine /usr/local/bin
             sudo find ./XEngine_Mac -name "*.dylib" -exec cp {} /usr/local/lib \;
 
       - name: make debug
