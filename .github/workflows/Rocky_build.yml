@@ -67,10 +67,10 @@ jobs:
             unzip ./XEngine_RockyLinux_9_${{ matrix.artifact }}.zip -d ./XEngine_RockyLinux_9_${{ matrix.artifact }}
             cd XEngine_RockyLinux_9_${{ matrix.artifact }}
             
-            cp -rf ./XEngine_Include /usr/include
-            cp -rf ./XEngine_Linux/xengine /usr/local/bin
-            find ./XEngine_Linux -name "*.so" -exec cp {} /usr/lib64 \;         
-            ldconfig
+            sudo cp -rf ./XEngine_Include /usr/include
+            sudo cp -rf ./XEngine_Linux/xengine /usr/local/bin
+            sudo find ./XEngine_Linux -name "*.so" -exec cp {} /usr/lib64 \;         
+            sudo ldconfig
 
       - name: make
         run: | 
