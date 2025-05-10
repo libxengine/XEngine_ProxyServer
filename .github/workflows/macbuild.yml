@@ -61,11 +61,11 @@ jobs:
             unzip ./XEngine_Mac_Arm64.zip -d ./XEngine_Mac_Arm64
             cd XEngine_Mac_Arm64
 
-            mkdir -p /usr/local/include
-            mkdir -p /usr/local/lib
-            cp -rf ./XEngine_Include /usr/local/include
-            cp -rf ./XEngine_Mac/xengine /usr/local/bin
-            find ./XEngine_Mac -name "*.dylib" -exec cp {} /usr/local/lib \;
+            sudo mkdir -p /usr/local/include
+            sudo mkdir -p /usr/local/lib
+            sudo cp -rf ./XEngine_Include /usr/local/include
+            sudo cp -rf ./XEngine_Mac/xengine /usr/local/bin
+            sudo find ./XEngine_Mac -name "*.dylib" -exec cp {} /usr/local/lib \;
 
       - name: make debug
         run: | 
