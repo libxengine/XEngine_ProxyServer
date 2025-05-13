@@ -1,9 +1,5 @@
 CC = g++ -Wall -std=c++20
-PLATFORM = linux
 PLATVER = 
-PLATDIR = 
-RELEASE = 0
-UNICODE = 0
 LOADHDR = -I ./ -I ../XEngine_Depend/XEngine_Module/jsoncpp
 LOADSO = -L ../XEngine_ModuleConfigure -L ../XEngine_ModuleSession -L ../XEngine_ModuleProtocol  \
 		 -L ../XEngine_Depend/XEngine_Module/jsoncpp -L ../XEngine_Depend/XEngine_Module/XEngine_InfoReport
@@ -14,38 +10,35 @@ LIBEX =
 OBJECTS = XEngine_Configure.o XEngine_Network.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ForwardTask.o XEngine_ProxyTask.o XEngine_ServiceApp.o
 
 ifeq ($(RELEASE),1)
-FLAGS = -c 
-DEBUG = 
+FLAGS = -c -D _RELEASE
+DEBUG = -O2
 else
 	ifeq ($(PLATFORM),mac)
 		FLAGS = -c
-		DEBUG = -g 
+		DEBUG = -g -D _DEBUG
 	else
 		FLAGS = -c -lc_p
-		DEBUG = -g -pg 
+		DEBUG = -g -pg -D _DEBUG
 	endif
 endif
 
 ifeq ($(UNICODE),1)
-UNICODE = -D _UNICODE
+override UNICODE := -D __UNICODE__
 else
-UNICODE = 
+override UNICODE := -D __ANSI__
 endif
 
 ifeq ($(PLATFORM),linux)
 	ifeq (/etc/redhat-release,$(wildcard /etc/redhat-release))
 		PLATVER = -D __CENTOS__
-		PLATDIR = XEngine_Linux/Centos
 	else
 		PLATVER = -D __UBUNTU__
-		PLATDIR = XEngine_Linux/Ubuntu
 	endif
 	LIBEX = -lpthread -lrt -ldl
 	LOADBIN = -Wl,-rpath=./,--disable-new-dtags
 else ifeq ($(PLATFORM),mac)
 	CC += -Wno-deprecated-declarations
 	PLATVER = -D __MACOS__
-	PLATDIR = XEngine_Mac
 	LIBEX = -lpthread -ldl
 	LOADBIN = -Wl,-rpath,@loader_path/./
 endif
