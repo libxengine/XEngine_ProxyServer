@@ -49,10 +49,14 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 			int nIPCount = 0;
 			SESSION_IPCONUT** ppSt_IPCount;
 			ModuleSession_Proxy_GetIPCount(&ppSt_IPCount, &nIPCount);
+			//排序
+			ModuleHelp_APIHelp_QSort(ppSt_IPCount, nIPCount, sizeof(SESSION_IPCONUT));
 
+			_tcsxcpy(tszIPAddr, ppSt_IPCount[0]->tszIPAddr);
+			_tcsxcpy(tszDstIPAddr, ppSt_IPCount[0]->tszIPAddr);
 			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转未命中,使用默认地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转发规则地址未命中,使用系统规则地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
 	}
 	if (!XClient_TCPSelect_InsertEx(xhProxyClient, &xhClient, tszDstIPAddr, nDstPort, false))
 	{

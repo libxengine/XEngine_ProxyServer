@@ -3,5 +3,4 @@ LIBRARY
 EXPORTS
 	ModuleHelp_GetLastError
 
-	ModuleHelp_APIHelp_RuleIPSelect
 	ModuleHelp_APIHelp_QSort

@@ -17,7 +17,6 @@ extern "C" XLONG ModuleHelp_GetLastError(int* pInt_SysError = NULL);
 /************************************************************************/
 /*                        帮助函数                                      */
 /************************************************************************/
-extern "C" bool ModuleHelp_APIHelp_RuleIPSelect(SESSION_IPCONUT*** pppSt_IPCount, int nIPCount);
 /********************************************************************
 函数名称：ModuleHelp_APIHelp_QSort
 函数功能：快速排序算法

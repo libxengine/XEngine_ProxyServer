@@ -29,10 +29,6 @@ extern "C" XLONG ModuleHelp_GetLastError(int* pInt_SysError)
 /************************************************************************/
 /*                        帮助函数                                      */
 /************************************************************************/
-extern "C" bool ModuleHelp_APIHelp_RuleIPSelect(SESSION_IPCONUT*** pppSt_IPCount, int nIPCount)
-{
-	return m_APIHelp.ModuleHelp_APIHelp_RuleIPSelect(pppSt_IPCount, nIPCount);
-}
 extern "C" bool ModuleHelp_APIHelp_QSort(XPVOID lPBase, int nNumber, int nSize)
 {
 	return m_APIHelp.ModuleHelp_APIHelp_QSort(lPBase, nNumber, nSize);

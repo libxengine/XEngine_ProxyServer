@@ -4,7 +4,7 @@ FILEEXT =
 LIBFLAG = 
 LOADHDR = -I ./ -I ../XEngine_ThirdPart/jsoncpp
 LOADSO = 
-LIB = -lXEngine_BaseLib -lXEngine_Algorithm
+LIB = -lXEngine_BaseLib
 LIBEX = 
 OBJECTS = ModuleHelp_APIHelp.o pch.o
 
