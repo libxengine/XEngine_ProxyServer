@@ -27,7 +27,7 @@ typedef enum en_XEngine_XUser_Protocol
 #define XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREQ 0xE1006      //匿名转发
 #define XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_ANONYREP 0xE1007
 ///////////////////////////////////////////////////////////////////////////
-//                          导出的数据结构
+//                          导出的错误信息
 ///////////////////////////////////////////////////////////////////////////
 #define ERROR_XENGINE_PROXY_PROTOCOL_FORMAT 0x01                           //协议格式内容错误
 #define ERROR_XENGINE_PROXY_PROTOCOL_SERVER 0x02                           //服务器内部处理错误
