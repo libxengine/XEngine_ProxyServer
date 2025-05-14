@@ -28,27 +28,13 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 	{
 		XCHAR tszTmpIPAddr[128] = {};
 		_stxscanf(stl_ListIterator->c_str(), _X("%[^-]-%s"), tszTmpIPAddr, tszDstIPAddr);
-		if (APIAddr_IPAddr_IsIPV4Addr(tszTmpIPAddr))
+		//ip
+		if (0 == _tcsxnicmp(tszSrcIPAddr, tszTmpIPAddr, _tcsxlen(tszSrcIPAddr)))
 		{
-			//ip
-			if (0 == _tcsxnicmp(tszSrcIPAddr, tszTmpIPAddr, _tcsxlen(tszSrcIPAddr)))
-			{
-				bFound = true;
-				_tcsxcpy(tszIPAddr, tszDstIPAddr);
-				APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
-				break;
-			}
-		}
-		else
-		{
-			//port
-			if (_ttxoi(tszTmpIPAddr) == nSrcPort)
-			{
-				bFound = true;
-				_tcsxcpy(tszIPAddr, tszDstIPAddr);
-				APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
-				break;
-			}
+			bFound = true;
+			_tcsxcpy(tszIPAddr, tszDstIPAddr);
+			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
+			break;
 		}
 	}
 
