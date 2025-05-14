@@ -245,3 +245,69 @@ bool CModuleSession_Proxy::ModuleSession_Proxy_Delete(LPCXSTR lpszIPAddr)
 	st_Locker.unlock();
 	return true;
 }
+/********************************************************************
+函数名称：ModuleSession_Proxy_GetIPCount
+函数功能：获取IP目标转发地址的统计
+ 参数.一：pppSt_IPCount
+  In/Out：Out
+  类型：三级指针
+  可空：N
+  意思：输出IP目标转发地址列表信息
+ 参数.二：pInt_Count
+  In/Out：Out
+  类型：整数型指针
+  可空：N
+  意思：输出列表个数
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+bool CModuleSession_Proxy::ModuleSession_Proxy_GetIPCount(SESSION_IPCONUT ***pppSt_IPCount, int* pInt_Count)
+{
+	Session_IsErrorOccur = false;
+
+	if (NULL == pppSt_IPCount || NULL == pInt_Count)
+	{
+		Session_IsErrorOccur = true;
+		Session_dwErrorCode = ERROR_MODULE_SESSION_PROXY_PARAMENT;
+		return false;
+	}
+	std::list<SESSION_IPCONUT> stl_ListIPCount;
+	st_Locker.lock_shared();
+	//遍历
+	for (auto stl_MapIterator = stl_MapSession.begin(); stl_MapIterator != stl_MapSession.end(); stl_MapIterator++)
+	{
+		//遍历已有的列表
+		bool bFound = false;
+		for (auto stl_ListIterator = stl_ListIPCount.begin(); stl_ListIterator != stl_ListIPCount.end(); stl_ListIterator++)
+		{
+			if (0 == _tcsxnicmp(stl_ListIterator->tszIPAddr, stl_MapIterator->second.tszDstAddr, _tcsxlen(stl_ListIterator->tszIPAddr)))
+			{
+				bFound = true;
+				stl_ListIterator->nIPCount++;
+				break;
+			}
+		}
+		//是否找到
+		if (!bFound)
+		{
+			//没有找到加入新的列表
+			SESSION_IPCONUT st_IPCount = {};
+			st_IPCount.nIPCount = 1;
+			_tcsxcpy(st_IPCount.tszIPAddr, stl_MapIterator->second.tszDstAddr);
+			stl_ListIPCount.push_back(st_IPCount);
+		}
+	}
+	st_Locker.unlock_shared();
+
+	*pInt_Count = stl_ListIPCount.size();
+	BaseLib_Memory_Malloc((XPPPMEM)pppSt_IPCount, *pInt_Count, sizeof(SESSION_IPCONUT));
+
+	auto stl_ListIterator = stl_ListIPCount.begin();
+	for (int i = 0; stl_ListIterator != stl_ListIPCount.end(); stl_ListIterator++)
+	{
+		*(*pppSt_IPCount)[i] = *stl_ListIterator;
+	}
+	return true;
+}

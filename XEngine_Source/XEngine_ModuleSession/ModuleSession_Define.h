@@ -27,6 +27,11 @@ typedef struct
 	bool bForward;
 	bool bAnony;
 }SESSION_FORWARD, * LPSESSION_FORWARD;
+typedef struct  
+{
+	XCHAR tszIPAddr[128];
+	int nIPCount;
+}SESSION_IPCONUT;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
@@ -577,3 +582,22 @@ extern "C" bool ModuleSession_Proxy_List(SESSION_FORWARD*** pppSt_ListUser, int*
 备注：
 *********************************************************************/
 extern "C" bool ModuleSession_Proxy_Delete(LPCXSTR lpszIPAddr);
+/********************************************************************
+函数名称：ModuleSession_Proxy_GetIPCount
+函数功能：获取IP目标转发地址的统计
+ 参数.一：pppSt_IPCount
+  In/Out：Out
+  类型：三级指针
+  可空：N
+  意思：输出IP目标转发地址列表信息
+ 参数.二：pInt_Count
+  In/Out：Out
+  类型：整数型指针
+  可空：N
+  意思：输出列表个数
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Proxy_GetIPCount(SESSION_IPCONUT*** pppSt_IPCount, int* pInt_Count);

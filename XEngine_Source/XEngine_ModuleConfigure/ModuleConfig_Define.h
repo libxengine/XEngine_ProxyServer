@@ -52,7 +52,8 @@ typedef struct tag_XEngine_ServiceConfig
 	}st_XReport;
 	struct
 	{
-		XCHAR tszDefaultAddr[128];
+		int nRuleMode;                       //模式
+		std::list<xstring>* pStl_ListDestAddr;
 		std::list<xstring>* pStl_ListRuleAddr;
 	}st_XProxy;
 	struct  

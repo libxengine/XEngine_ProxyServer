@@ -148,3 +148,7 @@ extern "C" bool ModuleSession_Proxy_Delete(LPCXSTR lpszIPAddr)
 {
 	return m_Proxy.ModuleSession_Proxy_Delete(lpszIPAddr);
 }
+extern "C" bool ModuleSession_Proxy_GetIPCount(SESSION_IPCONUT*** pppSt_IPCount, int* pInt_Count)
+{
+	return m_Proxy.ModuleSession_Proxy_GetIPCount(pppSt_IPCount, pInt_Count);
+}

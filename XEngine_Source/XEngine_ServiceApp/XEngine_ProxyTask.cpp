@@ -14,34 +14,44 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 {
 	int nSrcPort = 0;
 	int nDstPort = 0;
+	bool bFound = false;
 	XNETHANDLE xhClient = 0;
 	XCHAR tszIPAddr[128] = {};
 	XCHAR tszSrcIPAddr[128] = {};
 	XCHAR tszDstIPAddr[128] = {};
-
-	_tcsxcpy(tszSrcIPAddr, lpszClientAddr);
-	APIAddr_IPAddr_SegAddr(tszSrcIPAddr, &nSrcPort);
-
-	bool bFound = false;
-	auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->begin();
-	for (; stl_ListIterator != st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->end(); stl_ListIterator++)
+	//是否有单独的转发规则
+	if (!st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->empty())
 	{
-		XCHAR tszTmpIPAddr[128] = {};
-		_stxscanf(stl_ListIterator->c_str(), _X("%[^-]-%s"), tszTmpIPAddr, tszDstIPAddr);
-		//ip
-		if (0 == _tcsxnicmp(tszSrcIPAddr, tszTmpIPAddr, _tcsxlen(tszSrcIPAddr)))
+		//有规则,需要进行匹配
+		_tcsxcpy(tszSrcIPAddr, lpszClientAddr);
+		APIAddr_IPAddr_SegAddr(tszSrcIPAddr, &nSrcPort);
+		
+		for (auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->begin(); stl_ListIterator != st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->end(); stl_ListIterator++)
 		{
-			bFound = true;
-			_tcsxcpy(tszIPAddr, tszDstIPAddr);
-			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
-			break;
+			XCHAR tszTmpIPAddr[128] = {};
+			_stxscanf(stl_ListIterator->c_str(), _X("%[^-]-%s"), tszTmpIPAddr, tszDstIPAddr);
+			//ip
+			if (0 == _tcsxnicmp(tszSrcIPAddr, tszTmpIPAddr, _tcsxlen(tszSrcIPAddr)))
+			{
+				bFound = true;
+				_tcsxcpy(tszIPAddr, tszDstIPAddr);
+				APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
+				break;
+			}
 		}
 	}
-
+	//未命中
 	if (!bFound)
 	{
-		_tcsxcpy(tszDstIPAddr, st_ServiceConfig.st_XProxy.tszDefaultAddr);
-		APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
+		//没有匹配到
+		if (0 == st_ServiceConfig.st_XProxy.nRuleMode)
+		{
+			int nIPCount = 0;
+			SESSION_IPCONUT** ppSt_IPCount;
+			ModuleSession_Proxy_GetIPCount(&ppSt_IPCount, &nIPCount);
+
+			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
+		}
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转未命中,使用默认地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
 	}
 	if (!XClient_TCPSelect_InsertEx(xhProxyClient, &xhClient, tszDstIPAddr, nDstPort, false))
