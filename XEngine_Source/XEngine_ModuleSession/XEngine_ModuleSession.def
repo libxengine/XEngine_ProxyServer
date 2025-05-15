@@ -32,4 +32,8 @@ EXPORTS
 	ModuleSession_Proxy_GetForToken
 	ModuleSession_Proxy_List
 	ModuleSession_Proxy_Delete
-	ModuleSession_Proxy_GetIPCount
+	ModuleSession_ProxyRule_Insert
+	ModuleSession_ProxyRule_Delete
+	ModuleSession_ProxyRule_Set
+	ModuleSession_ProxyRule_GetCount
+	ModuleSession_ProxyRule_GetList

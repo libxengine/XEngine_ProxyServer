@@ -27,7 +27,6 @@ public:
 	bool ModuleSession_Proxy_GetForToken(XNETHANDLE xhToken, SESSION_FORWARD* pSt_ProxyInfo);
 	bool ModuleSession_Proxy_List(SESSION_FORWARD*** pppSt_ListUser, int* pInt_Count, LPCXSTR lpszAddr = NULL);
 	bool ModuleSession_Proxy_Delete(LPCXSTR lpszIPAddr);
-	bool ModuleSession_Proxy_GetIPCount(SESSION_IPCONUT ***pppSt_IPCount, int* pInt_Count);
 private:
 	shared_mutex st_Locker;
 private:

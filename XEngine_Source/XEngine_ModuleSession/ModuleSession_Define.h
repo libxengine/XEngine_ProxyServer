@@ -29,8 +29,8 @@ typedef struct
 }SESSION_FORWARD, * LPSESSION_FORWARD;
 typedef struct  
 {
-	XCHAR tszIPAddr[128];
 	int nIPCount;
+	XCHAR tszIPAddr[128];
 }SESSION_IPCONUT;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
@@ -583,13 +583,84 @@ extern "C" bool ModuleSession_Proxy_List(SESSION_FORWARD*** pppSt_ListUser, int*
 *********************************************************************/
 extern "C" bool ModuleSession_Proxy_Delete(LPCXSTR lpszIPAddr);
 /********************************************************************
-函数名称：ModuleSession_Proxy_GetIPCount
-函数功能：获取IP目标转发地址的统计
- 参数.一：pppSt_IPCount
+函数名称：ModuleSession_ProxyRule_Insert
+函数功能：插入一个后台服务
+ 参数.一：lpszIPAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要插入的后台服务
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_ProxyRule_Insert(LPCXSTR lpszIPAddr);
+/********************************************************************
+函数名称：ModuleSession_ProxyRule_Delete
+函数功能：删除一个后台服务地址
+ 参数.一：lpszIPAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要操作的后台服务地址
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_ProxyRule_Delete(LPCXSTR lpszIPAddr);
+/********************************************************************
+函数名称：ModuleSession_ProxyRule_Set
+函数功能：设置后台服务信息
+ 参数.一：lpszIPAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要操作的地址
+ 参数.二：lpszUseAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入使用的客户端地址
+ 参数.三：bAdd
+  In/Out：In
+  类型：逻辑型
+  可空：Y
+  意思：添加还是删除
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_ProxyRule_Set(LPCXSTR lpszIPAddr, LPCXSTR lpszUseAddr, bool bAdd = true);
+/********************************************************************
+函数名称：ModuleSession_ProxyRule_GetCount
+函数功能：获取统计信息
+ 参数.一：lpszIPAddr
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要操作的地址
+ 参数.二：pInt_Count
   In/Out：Out
+  类型：整数型指针
+  可空：N
+  意思：输出个数
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_ProxyRule_GetCount(LPCXSTR lpszIPAddr, int* pInt_Count);
+/********************************************************************
+函数名称：ModuleSession_ProxyRule_GetList
+函数功能：获取所有列表
+ 参数.一：pppSt_IPCount
+  In/Out：In
   类型：三级指针
   可空：N
-  意思：输出IP目标转发地址列表信息
+  意思：输出获取到的列表信息
  参数.二：pInt_Count
   In/Out：Out
   类型：整数型指针
@@ -600,4 +671,4 @@ extern "C" bool ModuleSession_Proxy_Delete(LPCXSTR lpszIPAddr);
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Proxy_GetIPCount(SESSION_IPCONUT*** pppSt_IPCount, int* pInt_Count);
+extern "C" bool ModuleSession_ProxyRule_GetList(SESSION_IPCONUT*** pppSt_IPCount, int* pInt_Count);

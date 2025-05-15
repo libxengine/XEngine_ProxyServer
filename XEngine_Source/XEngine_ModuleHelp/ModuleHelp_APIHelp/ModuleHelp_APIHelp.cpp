@@ -58,8 +58,18 @@ bool CModuleHelp_APIHelp::ModuleHelp_APIHelp_QSort(XPVOID lPBase, int nNumber, i
 //////////////////////////////////////////////////////////////////////////
 int CModuleHelp_APIHelp::ModuleHelp_APIHelp_QSortCmp(const void* lParam, const void* WParam)
 {
-	int nAValue = *(const int*)lParam;
-	int nBValue = *(const int*)WParam;
+	// 先把 a/b 当作指向 “SESSION_IPCONUT*” 的指针来处理
+	const SESSION_IPCONUT* pSt_IPAParam = *(const SESSION_IPCONUT* const*)lParam;
+	const SESSION_IPCONUT* pSt_IPWParam = *(const SESSION_IPCONUT* const*)WParam;
 
-	return nAValue - nBValue;
+	// 然后比较它们的字段
+	if (pSt_IPAParam->nIPCount < pSt_IPWParam->nIPCount)
+	{
+		return -1;
+	}
+	else if (pSt_IPAParam->nIPCount > pSt_IPWParam->nIPCount)
+	{
+		return +1;
+	}
+	return 0;
 }

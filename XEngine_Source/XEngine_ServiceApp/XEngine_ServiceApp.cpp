@@ -345,6 +345,12 @@ int main(int argc, char** argv)
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Proxy客户端服务成功"));
+
+		for (auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListDestAddr->begin(); stl_ListIterator != st_ServiceConfig.st_XProxy.pStl_ListDestAddr->end(); stl_ListIterator++)
+		{
+			ModuleSession_ProxyRule_Insert(stl_ListIterator->c_str());
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化负载均衡后台服务端成功,个数:%d"), st_ServiceConfig.st_XProxy.pStl_ListDestAddr->size());
 	}
 	else
 	{

@@ -3,6 +3,7 @@
 #include "ModuleSession_Socks/ModuleSession_Socks.h"
 #include "ModuleSession_Tunnel/ModuleSession_Tunnel.h"
 #include "ModuleSession_Proxy/ModuleSession_Proxy.h"
+#include "ModuleSession_Proxy/ModuleSession_ProxyRule.h"
 /********************************************************************
 //    Created:     2022/06/08  10:10:52
 //    File Name:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleSession\pch.cpp
@@ -21,6 +22,7 @@ CModuleSession_Forward m_Forward;
 CModuleSession_Socks m_Socks;
 CModuleSession_Tunnel m_Tunnel;
 CModuleSession_Proxy m_Proxy;
+CModuleSession_ProxyRule m_ProxyRule;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数
 //////////////////////////////////////////////////////////////////////////
@@ -148,7 +150,23 @@ extern "C" bool ModuleSession_Proxy_Delete(LPCXSTR lpszIPAddr)
 {
 	return m_Proxy.ModuleSession_Proxy_Delete(lpszIPAddr);
 }
-extern "C" bool ModuleSession_Proxy_GetIPCount(SESSION_IPCONUT*** pppSt_IPCount, int* pInt_Count)
+extern "C" bool ModuleSession_ProxyRule_Insert(LPCXSTR lpszIPAddr)
 {
-	return m_Proxy.ModuleSession_Proxy_GetIPCount(pppSt_IPCount, pInt_Count);
+	return m_ProxyRule.ModuleSession_ProxyRule_Insert(lpszIPAddr);
+}
+extern "C" bool ModuleSession_ProxyRule_Delete(LPCXSTR lpszIPAddr)
+{
+	return m_ProxyRule.ModuleSession_ProxyRule_Delete(lpszIPAddr);
+}
+extern "C" bool ModuleSession_ProxyRule_Set(LPCXSTR lpszIPAddr, LPCXSTR lpszUseAddr, bool bAdd)
+{
+	return m_ProxyRule.ModuleSession_ProxyRule_Set(lpszIPAddr, lpszUseAddr, bAdd);
+}
+extern "C" bool ModuleSession_ProxyRule_GetCount(LPCXSTR lpszIPAddr, int* pInt_Count)
+{
+	return m_ProxyRule.ModuleSession_ProxyRule_GetCount(lpszIPAddr, pInt_Count);
+}
+extern "C" bool ModuleSession_ProxyRule_GetList(SESSION_IPCONUT*** pppSt_IPCount, int* pInt_Count)
+{
+	return m_ProxyRule.ModuleSession_ProxyRule_GetList(pppSt_IPCount, pInt_Count);
 }

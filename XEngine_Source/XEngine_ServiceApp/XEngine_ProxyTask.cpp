@@ -48,10 +48,9 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 		{
 			int nIPCount = 0;
 			SESSION_IPCONUT** ppSt_IPCount;
-			ModuleSession_Proxy_GetIPCount(&ppSt_IPCount, &nIPCount);
+			ModuleSession_ProxyRule_GetList(&ppSt_IPCount, &nIPCount);
 			//排序
-			ModuleHelp_APIHelp_QSort(ppSt_IPCount, nIPCount, sizeof(SESSION_IPCONUT));
-
+			ModuleHelp_APIHelp_QSort(ppSt_IPCount, nIPCount, sizeof(SESSION_IPCONUT*));
 			_tcsxcpy(tszIPAddr, ppSt_IPCount[0]->tszIPAddr);
 			_tcsxcpy(tszDstIPAddr, ppSt_IPCount[0]->tszIPAddr);
 			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
