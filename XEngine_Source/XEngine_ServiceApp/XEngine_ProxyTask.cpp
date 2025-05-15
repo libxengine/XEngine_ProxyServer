@@ -67,6 +67,17 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转发规则地址未命中,使用HASH规则,规则地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
 		}
+		else if (2 == st_ServiceConfig.st_XProxy.nRuleMode)
+		{
+			XNETHANDLE xhIndex = 0;
+			BaseLib_Handle_Create(&xhIndex, 0, st_ServiceConfig.st_XProxy.pStl_ListDestAddr->size());
+			auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListDestAddr->begin();
+			std::advance(stl_ListIterator, xhIndex);
+			_tcsxcpy(tszIPAddr, stl_ListIterator->c_str());
+			_tcsxcpy(tszDstIPAddr, stl_ListIterator->c_str());
+			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转发规则地址未命中,使用随机规则,规则地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
+		}
 	}
 	if (!XClient_TCPSelect_InsertEx(xhProxyClient, &xhClient, tszDstIPAddr, nDstPort, false))
 	{
