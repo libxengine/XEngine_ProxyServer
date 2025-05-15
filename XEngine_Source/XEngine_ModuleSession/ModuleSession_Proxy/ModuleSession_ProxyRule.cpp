@@ -144,7 +144,7 @@ bool CModuleSession_ProxyRule::ModuleSession_ProxyRule_Set(LPCXSTR lpszIPAddr, L
 			}
 		}
 	}
-	st_Locker.unlock_shared();
+	st_Locker.unlock();
 	return true;
 }
 /********************************************************************

@@ -19,13 +19,13 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 	XCHAR tszIPAddr[128] = {};
 	XCHAR tszSrcIPAddr[128] = {};
 	XCHAR tszDstIPAddr[128] = {};
+
+	_tcsxcpy(tszSrcIPAddr, lpszClientAddr);
+	APIAddr_IPAddr_SegAddr(tszSrcIPAddr, &nSrcPort);
 	//是否有单独的转发规则
 	if (!st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->empty())
 	{
 		//有规则,需要进行匹配
-		_tcsxcpy(tszSrcIPAddr, lpszClientAddr);
-		APIAddr_IPAddr_SegAddr(tszSrcIPAddr, &nSrcPort);
-		
 		for (auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->begin(); stl_ListIterator != st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->end(); stl_ListIterator++)
 		{
 			XCHAR tszTmpIPAddr[128] = {};
@@ -58,7 +58,14 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 		}
 		else if (1 == st_ServiceConfig.st_XProxy.nRuleMode)
 		{
-
+			size_t nHashValue = std::hash<xstring>{}(tszSrcIPAddr);
+			size_t nIndex = nHashValue % st_ServiceConfig.st_XProxy.pStl_ListDestAddr->size();
+			auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListDestAddr->begin();
+			std::advance(stl_ListIterator, nIndex);
+			_tcsxcpy(tszIPAddr, stl_ListIterator->c_str());
+			_tcsxcpy(tszDstIPAddr, stl_ListIterator->c_str());
+			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转发规则地址未命中,使用HASH规则,规则地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
 		}
 	}
 	if (!XClient_TCPSelect_InsertEx(xhProxyClient, &xhClient, tszDstIPAddr, nDstPort, false))

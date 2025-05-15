@@ -9,6 +9,7 @@
 #include <thread>
 #include <list>
 #include <string>
+#include <functional>
 #ifdef _MSC_BUILD
 #include <Windows.h>
 #include <tchar.h>
