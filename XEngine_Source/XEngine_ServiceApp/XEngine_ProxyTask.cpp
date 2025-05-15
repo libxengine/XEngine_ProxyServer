@@ -54,8 +54,12 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 			_tcsxcpy(tszIPAddr, ppSt_IPCount[0]->tszIPAddr);
 			_tcsxcpy(tszDstIPAddr, ppSt_IPCount[0]->tszIPAddr);
 			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转发规则地址未命中,使用最小原则规则地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转发规则地址未命中,使用系统规则地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
+		else if (1 == st_ServiceConfig.st_XProxy.nRuleMode)
+		{
+
+		}
 	}
 	if (!XClient_TCPSelect_InsertEx(xhProxyClient, &xhClient, tszDstIPAddr, nDstPort, false))
 	{
@@ -64,6 +68,7 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 	}
 	SocketOpt_HeartBeat_InsertAddrEx(xhProxyHeart, lpszClientAddr);
 	ModuleSession_Proxy_Insert(lpszClientAddr, tszIPAddr, xhClient);
+	ModuleSession_ProxyRule_Set(tszIPAddr, lpszClientAddr);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,连接到服务器:%s:%d 成功"), lpszClientAddr, tszDstIPAddr, nDstPort);
 	return true;
 }
