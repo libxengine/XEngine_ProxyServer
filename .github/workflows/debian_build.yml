@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: Checkout main repository code
         uses: actions/checkout@v4
+        with:
+          ref: 'develop'
 
       - name: Checkout dependency repository (xengine)
         uses: actions/checkout@v4
@@ -48,13 +50,8 @@ jobs:
       - name: install system package
         run: |
             apt update -y
-            apt install gcc g++ make git jq unzip curl -y
+            apt install gcc g++ make git jq unzip curl wget -y
 
-      - name: Set up Dependency rocky linux Environment
-        run: |
-            cd libxengine
-            chmod 777 *
-            ./XEngine_LINEnv.sh -i 0
       - name: install xengine library
         run: |
             latest_tag=$(curl -s https://api.github.com/repos/libxengine/libxengine/releases/latest | jq -r .tag_name)
@@ -62,11 +59,8 @@ jobs:
             unzip ./XEngine_Debian_12_${{ matrix.artifact }}.zip -d ./XEngine_Debian_12_${{ matrix.artifact }}
             cd XEngine_Debian_12_${{ matrix.artifact }}
             
-            cp -rf ./XEngine_Include /usr/local/include
-            cp -rf ./XEngine_Linux/xengine /usr/local/bin
-            find ./XEngine_Linux -name "*.so" -exec cp {} /usr/local/lib \;         
-            ldconfig
-
+            chmod 777 *
+            ./XEngine_LINEnv.sh -i 3
       - name: make
         run: |
             cd XEngine_Source

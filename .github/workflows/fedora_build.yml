@@ -3,7 +3,7 @@ name: fedora build workflows
 on:
   push:
     branches:
-      - 'master'
+      - 'develop'
     paths:
       - 'XEngine_Source/**'
       - 'XEngine_Release/**'
