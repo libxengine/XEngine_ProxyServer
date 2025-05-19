@@ -41,7 +41,13 @@ jobs:
         
       - name: brew install
         run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            
+          
+      - name: Set up Dependency x86_64 Environment 
+        if: matrix.os == 'macos-13'
+        run: |
+            cd libxengine
+            chmod 777 *
+            ./XEngine_LINEnv.sh -i 3
       - name: Set up Dependency Arm64 Environment 
         if: matrix.os == 'macos-14'
         run: |
