@@ -2,11 +2,11 @@ CC = g++ -Wall -std=c++20 -fPIC
 PLATVER = 
 FILEEXT = 
 LIBFLAG = 
-LOADHDR = -I ./
+LOADHDR = -I ./ -I ../XEngine_ThirdPart/jsoncpp
 LOADSO = 
-LIB = 
+LIB = -lXEngine_BaseLib
 LIBEX = 
-OBJECTS = ModuleAuthorize_User.o pch.o
+OBJECTS = ModuleHelp_APIHelp.o pch.o
 
 ifeq ($(RELEASE),1)
 FLAGS = -c -D _RELEASE
@@ -48,18 +48,18 @@ endif
 
 
 all:$(OBJECTS)
-	$(CC) $(DEBUG) $(OBJECTS) -o libXEngine_ModuleAuthorize.$(FILEEXT) $(LIBFLAG) $(LIB) $(LIBEX) $(LOADSO) $(LOADBIN)
+	$(CC) $(DEBUG) $(OBJECTS) -o libXEngine_ModuleHelp.$(FILEEXT) $(LIBFLAG) $(LIB) $(LIBEX) $(LOADSO) $(LOADBIN)
 
-ModuleAuthorize_User.o:./ModuleAuthorize_User/ModuleAuthorize_User.cpp             
-	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ModuleAuthorize_User/ModuleAuthorize_User.cpp 
-						              
+ModuleHelp_APIHelp.o:./ModuleHelp_APIHelp/ModuleHelp_APIHelp.cpp             
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ModuleHelp_APIHelp/ModuleHelp_APIHelp.cpp 
+
 pch.o:./pch.cpp                 		       	    
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./pch.cpp
 
 
 InstallAll:InstallSo 
-InstallSo:./libXEngine_ModuleAuthorize.$(FILEEXT)
-	cp ./libXEngine_ModuleAuthorize.$(FILEEXT) ../../XEngine_Release/libXEngine_ModuleAuthorize.$(FILEEXT)
+InstallSo:./libXEngine_ModuleHelp.$(FILEEXT)
+	cp ./libXEngine_ModuleHelp.$(FILEEXT) ../../XEngine_Release/libXEngine_ModuleHelp.$(FILEEXT)
 
 
 CleanAll:CleanObj CleanMk

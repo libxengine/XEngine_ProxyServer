@@ -63,6 +63,9 @@
     <ClInclude Include="ModuleSession_Proxy\ModuleSession_Proxy.h">
       <Filter>头文件\ModuleSession_Proxy</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleSession_Proxy\ModuleSession_ProxyRule.h">
+      <Filter>头文件\ModuleSession_Proxy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -81,6 +84,9 @@
       <Filter>源文件\ModuleSession_Tunnel</Filter>
     </ClCompile>
     <ClCompile Include="ModuleSession_Proxy\ModuleSession_Proxy.cpp">
+      <Filter>源文件\ModuleSession_Proxy</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSession_Proxy\ModuleSession_ProxyRule.cpp">
       <Filter>源文件\ModuleSession_Proxy</Filter>
     </ClCompile>
   </ItemGroup>

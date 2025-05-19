@@ -1,0 +1,6 @@
+LIBRARY
+
+EXPORTS
+	ModuleHelp_GetLastError
+
+	ModuleHelp_APIHelp_QSort

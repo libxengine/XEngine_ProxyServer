@@ -31,10 +31,14 @@
       "tszServiceName":"XEngine_ProxyServer"
   },
   "XProxy": {
-    "tszDefaultAddr": "10.0.4.69:5403", 
+    "nRuleMode": 0,
+    "tszDestIPAddr": [
+      "127.0.0.1:5501",
+      "118.25.14.242:5501"
+    ], 
     "tszRuleIPAddr": [
       "10.0.0.1-10.0.4.69:5403",
-      "5000-10.0.4.69:5403"
+      "10.0.0.2-10.0.4.69:5403"
     ]
   }
 }

@@ -250,6 +250,7 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 			XClient_TCPSelect_DeleteEx(xhProxyClient, st_ProxyInfo.xhClient);
 		}
 		ModuleSession_Proxy_Delete(lpszClientAddr);
+		ModuleSession_ProxyRule_Set(lpszClientAddr, st_ProxyInfo.tszDstAddr, false);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
 	else

@@ -145,9 +145,17 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 		return false;
 	}
 	Json::Value st_JsonXProxy = st_JsonRoot["XProxy"];
-
 	pSt_ServerConfig->st_XProxy.pStl_ListRuleAddr = new list<xstring>;
-	_tcsxcpy(pSt_ServerConfig->st_XProxy.tszDefaultAddr, st_JsonXProxy["tszDefaultAddr"].asCString());
+	pSt_ServerConfig->st_XProxy.pStl_ListDestAddr = new list<xstring>;
+
+	pSt_ServerConfig->st_XProxy.nRuleMode = st_JsonXProxy["nRuleMode"].asInt();
+	if (!st_JsonXProxy["tszDestIPAddr"].isNull())
+	{
+		for (unsigned int i = 0; i < st_JsonXProxy["tszDestIPAddr"].size(); i++)
+		{
+			pSt_ServerConfig->st_XProxy.pStl_ListDestAddr->push_back(st_JsonXProxy["tszDestIPAddr"][i].asCString());
+		}
+	}
 	if (!st_JsonXProxy["tszRuleIPAddr"].isNull())
 	{
 		for (unsigned int i = 0; i < st_JsonXProxy["tszRuleIPAddr"].size(); i++)

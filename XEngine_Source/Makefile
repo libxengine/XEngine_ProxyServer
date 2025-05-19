@@ -9,6 +9,7 @@ THIRDPART_MODULE_REPORT = ./XEngine_Depend/XEngine_Module/XEngine_InfoReport
 MODULE_CONFIGURE_PATH = ./XEngine_ModuleConfigure
 MODULE_PROTOCOL_PATH = ./XEngine_ModuleProtocol
 MODULE_SESSION_PATH = ./XEngine_ModuleSession
+MODULE_HELP_PATH = ./XEngine_ModuleHelp
 APP_SERVICE_PATH = ./XEngine_ServiceApp
 
 ifeq ($(PLATFORM),linux)
@@ -18,7 +19,7 @@ else ifeq ($(PLATFORM),mac)
 endif
 
 XENGINE_MODULES = libjsoncpp.so libXEngine_InfoReport.so \
-				  libXEngine_ModuleConfigure.so libXEngine_ModuleProtocol.so libXEngine_ModuleSession.so \
+				  libXEngine_ModuleConfigure.so libXEngine_ModuleProtocol.so libXEngine_ModuleSession.so libXEngine_ModuleHelp.so \
 				  XEngine_ServiceApp.exe 
 
 .PHONY:MakeAll 
@@ -34,14 +35,16 @@ libXEngine_InfoReport.so:
 ifeq ($(FLAGS), InstallAll)
 	cp $(THIRDPART_MODULE_REPORT)/libXEngine_InfoReport.$(FILEEXT) ../XEngine_Release/
 else
-	make -C $(THIRDPART_MODULE_REPORT) PLATFORM=$(PLATFORM) $(FLAGS)
+	make -C $(THIRDPART_MODULE_REPORT) PLATFORM=$(PLATFORM) UNICODE=$(UNICODE) RELEASE=$(RELEASE) $(FLAGS)
 endif
 libXEngine_ModuleConfigure.so:
-	make -C $(MODULE_CONFIGURE_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
+	make -C $(MODULE_CONFIGURE_PATH) PLATFORM=$(PLATFORM) UNICODE=$(UNICODE) RELEASE=$(RELEASE) $(FLAGS)
 libXEngine_ModuleProtocol.so:
-	make -C $(MODULE_PROTOCOL_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
+	make -C $(MODULE_PROTOCOL_PATH) PLATFORM=$(PLATFORM) UNICODE=$(UNICODE) RELEASE=$(RELEASE) $(FLAGS)
 libXEngine_ModuleSession.so:
-	make -C $(MODULE_SESSION_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
-	
+	make -C $(MODULE_SESSION_PATH) PLATFORM=$(PLATFORM) UNICODE=$(UNICODE) RELEASE=$(RELEASE) $(FLAGS)
+libXEngine_ModuleHelp.so:
+	make -C $(MODULE_HELP_PATH) PLATFORM=$(PLATFORM) UNICODE=$(UNICODE) RELEASE=$(RELEASE) $(FLAGS)
+
 XEngine_ServiceApp.exe:
-	make -C $(APP_SERVICE_PATH) PLATFORM=$(PLATFORM) $(FLAGS)
+	make -C $(APP_SERVICE_PATH) PLATFORM=$(PLATFORM) UNICODE=$(UNICODE) RELEASE=$(RELEASE) $(FLAGS)

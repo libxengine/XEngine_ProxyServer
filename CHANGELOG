@@ -1,3 +1,23 @@
+XEngine_ProxyServer V1.13.0.1001
+
+增加:帮助模块
+增加:代理转发多后端支持
+增加:代理转发支持hash ip,随机,最小选择模式
+增加:更多CI发布编译支持
+更新:依赖库
+优化:makefile 编译选项
+修改:信息报告仅在release发布版本生效
+修改:代理转发删除原始端口规则匹配
+
+added:module help
+added:proxy forward dest list support
+added:hash ip,random,min forward mode support for proxy
+added:ci more release build support
+update:depend library
+improved:make file build flags
+modify:only release work for info report
+modify:delete source port rule match for proxy forward
+======================================================================================
 XEngine_ProxyServer V1.12.0.1001
 
 增加:windows arm64编译支持
