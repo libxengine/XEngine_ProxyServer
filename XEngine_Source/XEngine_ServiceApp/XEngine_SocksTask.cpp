@@ -36,8 +36,8 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 			return false;
 		}
 		bool bFoundAuth = false;
-		XCHAR tszAuthBuffer[MAX_PATH];
-		memset(tszAuthBuffer, '\0', MAX_PATH);
+		XCHAR tszAuthBuffer[XPATH_MAX];
+		memset(tszAuthBuffer, '\0', XPATH_MAX);
 		
 		//客户端支持的验证类型
 		for (int i = 0; i < nListCount; i++)
@@ -69,12 +69,12 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 	}
 	else if (ENUM_PROXY_SESSION_SOCKS_STATUS_AUTH == enSocksStatus)
 	{
-		XCHAR tszUserName[MAX_PATH];
-		XCHAR tszUserPass[MAX_PATH];
+		XCHAR tszUserName[XPATH_MAX];
+		XCHAR tszUserPass[XPATH_MAX];
 		ENUM_RFCCOMPONENTS_PROXYSOCKS_AUTH enProxyAuth;
 
-		memset(tszUserName, '\0', MAX_PATH);
-		memset(tszUserPass, '\0', MAX_PATH);
+		memset(tszUserName, '\0', XPATH_MAX);
+		memset(tszUserPass, '\0', XPATH_MAX);
 
 		if (!ProxyProtocol_SocksCore_ParseUser(lpszMsgBuffer, nMsgLen, &enProxyAuth, tszUserName, tszUserPass))
 		{
@@ -187,7 +187,7 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 	return true;
 }
 
-void CALLBACK XEngine_Socks_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
+void XCALLBACK XEngine_Socks_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
 {
 	int nListCount = 0;
 	PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;

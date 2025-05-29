@@ -23,12 +23,12 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 		int nIPPort = 0;
 		bool bProxy = true;
 		XCHAR tszIPAddr[1024];
-		XCHAR tszAuthInfo[MAX_PATH];
-		XCHAR tszMsgBuffer[MAX_PATH];
+		XCHAR tszAuthInfo[XPATH_MAX];
+		XCHAR tszMsgBuffer[XPATH_MAX];
 
 		memset(tszIPAddr, '\0', sizeof(tszIPAddr));
-		memset(tszAuthInfo, '\0', MAX_PATH);
-		memset(tszMsgBuffer, '\0', MAX_PATH);
+		memset(tszAuthInfo, '\0', XPATH_MAX);
+		memset(tszMsgBuffer, '\0', XPATH_MAX);
 		if (!ModuleSession_Tunnel_Packet(lpszClientAddr, lpszMsgBuffer, nMsgLen, tszMsgBuffer, &nLen))
 		{
 			ProxyProtocol_TunnelCore_Packet(tszMsgBuffer, &nLen, ERROR_XENGINE_PROXY_PROTOCOL_FORMAT);
@@ -114,7 +114,7 @@ bool XEngine_TunnelTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, in
 	return true;
 }
 
-void CALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
+void XCALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
 {
 	int nListCount = 0;
 	PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;

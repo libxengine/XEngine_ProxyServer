@@ -10,7 +10,7 @@
 //    Purpose:     代理转发协议
 //    History:
 *********************************************************************/
-XHTHREAD CALLBACK XEngine_Forward_Thread(XPVOID lParam)
+XHTHREAD XCALLBACK XEngine_Forward_Thread(XPVOID lParam)
 {
 	int nPoolIndex = *(int*)lParam;
 	int nThreadPos = nPoolIndex + 1;
@@ -177,7 +177,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 	}
 	return true;
 }
-void CALLBACK XEngine_Forward_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
+void XCALLBACK XEngine_Forward_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nLen, XPVOID lParam)
 {
 	int nListCount = 0;
 	SESSION_FORWARD** ppSt_ClientList;
