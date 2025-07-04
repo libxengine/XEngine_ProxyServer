@@ -2,7 +2,7 @@ CC = g++ -Wall -std=c++20 -fPIC
 PLATVER = 
 FILEEXT = 
 LIBFLAG = 
-LOADHDR = -I ./ -I ../XEngine_ThirdPart/jsoncpp
+LOADHDR = -I ./ 
 LOADSO = 
 LIB = -lXEngine_BaseLib
 LIBEX = 

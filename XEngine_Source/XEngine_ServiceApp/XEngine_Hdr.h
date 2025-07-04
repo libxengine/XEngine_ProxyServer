@@ -51,8 +51,8 @@ using namespace std;
 #include <XEngine_Include/XEngine_Client/XClient_Error.h>
 //加载项目相关头文件
 #include "../XEngine_UserProtocol.h"
-#include "../XEngine_Depend/XEngine_Module/XEngine_InfoReport/InfoReport_Define.h"
-#include "../XEngine_Depend/XEngine_Module/XEngine_InfoReport/InfoReport_Error.h"
+#include "../XEngine_DependLibrary/XEngine_Module/XEngine_InfoReport/InfoReport_Define.h"
+#include "../XEngine_DependLibrary/XEngine_Module/XEngine_InfoReport/InfoReport_Error.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Define.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Error.h"
 #include "../XEngine_ModuleSession/ModuleSession_Define.h"

@@ -1,8 +1,8 @@
 CC = g++ -Wall -std=c++20
 PLATVER = 
-LOADHDR = -I ./ -I ../XEngine_Depend/XEngine_Module/jsoncpp
+LOADHDR = -I ./ -I ../XEngine_DependLibrary/XEngine_Module/jsoncpp
 LOADSO = -L ../XEngine_ModuleConfigure -L ../XEngine_ModuleSession -L ../XEngine_ModuleProtocol -L ../XEngine_ModuleHelp \
-		 -L ../XEngine_Depend/XEngine_Module/jsoncpp -L ../XEngine_Depend/XEngine_Module/XEngine_InfoReport
+		 -L ../XEngine_DependLibrary/XEngine_Module/jsoncpp -L ../XEngine_DependLibrary/XEngine_Module/XEngine_InfoReport
 LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_Cryption -lXEngine_ManagePool -lXClient_Socket -lXClient_APIHelp -lHelpComponents_XLog -lHelpComponents_Packets -lRfcComponents_ProxyProtocol -lNetHelp_APIHelp -lNetHelp_APIAddr -lNetHelp_XSocket \
       -lXEngine_ModuleConfigure -lXEngine_ModuleSession -lXEngine_ModuleProtocol -lXEngine_ModuleHelp \
 	  -ljsoncpp -lXEngine_InfoReport
