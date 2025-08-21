@@ -113,13 +113,6 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 #define XENGINE_CLIENT_CLOSE_HEARTBEAT 2
 #define XENGINE_CLIENT_CLOSE_SERVICE 3
 
-typedef struct
-{
-	XCHAR tszIPAddr[128];
-	ENUM_PROXY_SESSION_CLIENT_STATUS enStatus;
-	XNETHANDLE xhClient;
-}PROXYPROTOCOL_CLIENTINFO;
-
 //连接库
 #ifdef _MSC_BUILD
 #pragma comment(lib,"XEngine_BaseLib/XEngine_BaseLib.lib")

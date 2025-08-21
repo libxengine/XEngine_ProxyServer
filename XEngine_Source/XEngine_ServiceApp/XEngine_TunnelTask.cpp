@@ -137,7 +137,7 @@ void XCALLBACK XEngine_Tunnel_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCK
 		{
 			//退出处理
 			SocketOpt_HeartBeat_ForceOutAddrEx(xhTunnelHeart, tszClientAddr);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Tunnel客户端:%s,离开服务器,客户端主动断开"), tszClientAddr);
+			//XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Tunnel客户端:%s,离开服务器,客户端主动断开"), tszClientAddr);
 		}
 	}
 }

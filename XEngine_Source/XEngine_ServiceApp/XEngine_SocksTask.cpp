@@ -199,7 +199,7 @@ void XCALLBACK XEngine_Socks_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKE
 		{
 			//退出处理
 			SocketOpt_HeartBeat_ForceOutAddrEx(xhSocksHeart, tszClientAddr);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Socks客户端:%s,离开服务器,客户端主动断开"), tszClientAddr);
+			//XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Socks客户端:%s,离开服务器,客户端主动断开"), tszClientAddr);
 		}
 	}
 }
