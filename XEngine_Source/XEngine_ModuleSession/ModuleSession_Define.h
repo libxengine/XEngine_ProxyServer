@@ -13,11 +13,11 @@
 ///当前客户端状态
 typedef enum 
 {
-	ENUM_PROXY_SESSION_SOCKS_STATUS_CREATE = 0,                  //创建已完毕
-	ENUM_PROXY_SESSION_SOCKS_STATUS_AUTH = 1,                    //请求验证协议协商
-	ENUM_PROXY_SESSION_SOCKS_STATUS_USER = 2,                    //用户验证请求
-	ENUM_PROXY_SESSION_SOCKS_STATUS_FORWARD = 3                  //数据转发请求
-}ENUM_PROXY_SESSION_SOCKS_STATUS;
+	ENUM_PROXY_SESSION_CLIENT_CREATE = 0,                  //创建已完毕
+	ENUM_PROXY_SESSION_CLIENT_AUTH = 1,                    //请求验证协议协商
+	ENUM_PROXY_SESSION_CLIENT_USER = 2,                    //用户验证请求
+	ENUM_PROXY_SESSION_CLIENT_FORWARD = 3                  //数据转发请求
+}ENUM_PROXY_SESSION_CLIENT_STATUS;
 typedef struct
 {
 	XENGINE_PROTOCOL_USERAUTH st_UserAuth;
@@ -293,7 +293,7 @@ extern "C" bool ModuleSession_Socks_GetAddrForHandle(XNETHANDLE xhClient, XCHAR*
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS* penSocks);
+extern "C" bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS* penSocks);
 /********************************************************************
 函数名称：ModuleSession_Socks_SetStatus
 函数功能：设置客户端状态
@@ -312,7 +312,7 @@ extern "C" bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_S
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS enStatus);
+extern "C" bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS enStatus);
 /********************************************************************
 函数名称：ModuleSession_Socks_List
 函数功能：获取客户端列表
@@ -371,22 +371,22 @@ extern "C" bool ModuleSession_Tunnel_Delete(LPCXSTR lpszClientID);
   类型：常量字符指针
   可空：N
   意思：输入要操作的客户端
- 参数.二：lParam
+ 参数.二：xhClient
   In/Out：In
-  类型：无类型指针
+  类型：句柄
   可空：N
-  意思：输入要设置的内容
- 参数.三：nLen
+  意思：输入要设置的客户端句柄
+ 参数.三：lpszClientAddr
   In/Out：In
-  类型：整数型
+  类型：常量字符指针
   可空：N
-  意思：输入自定义内容大小
+  意思：输入绑定的句柄客户端地址
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XPVOID lParam, int nLen);
+extern "C" bool ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XNETHANDLE xhClient, LPCXSTR lpszClientAddr);
 /********************************************************************
 函数名称：ModuleSession_Tunnel_GetInfo
 函数功能：获取客户端信息
@@ -395,46 +395,74 @@ extern "C" bool ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XPVOID lParam
   类型：常量字符指针
   可空：N
   意思：输入要操作的客户端
- 参数.二：lParam
+ 参数.二：pxhClient
   In/Out：Out
-  类型：无类型指针
+  类型：句柄
   可空：N
   意思：输出获取到的内容
- 参数.三：pInt_Len
-  In/Out：Out
-  类型：整数型指针
-  可空：Y
-  意思：输出自定义内容大小
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, XPVOID lParam, int* pInt_Len = NULL);
+extern "C" bool ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, XNETHANDLE* pxhClient);
 /********************************************************************
-函数名称：ModuleSession_Tunnel_GetList
-函数功能：获取所有自定义数据
- 参数.一：xpppMem
-  In/Out：Out
-  类型：三级指针
+函数名称：ModuleSession_Tunnel_SetStatus
+函数功能：设置客户端状态
+ 参数.一：lpszClientID
+  In/Out：In
+  类型：常量字符指针
   可空：N
-  意思：输出获取到的列表
- 参数.二：pInt_Count
-  In/Out：Out
-  类型：整数型指针
+  意思：输入要操作的客户端
+ 参数.二：enStatus
+  In/Out：In
+  类型：枚举型
   可空：N
-  意思：输出列表个数
- 参数.三：nSize
-  In/Out：Out
-  类型：整数型
-  可空：N
-  意思：输入每个成员的大小
+  意思：输入设置的状态
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleSession_Tunnel_GetList(XPPPMEM xpppMem, int* pInt_Count, int nSize);
+extern "C" bool ModuleSession_Tunnel_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS* penStatus);
+/********************************************************************
+函数名称：ModuleSession_Tunnel_GetStatus
+函数功能：获取客户端状态
+ 参数.一：lpszClientID
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要操作的客户端
+ 参数.二：penStatus
+  In/Out：Out
+  类型：枚举型
+  可空：N
+  意思：输出客户端的状态
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Tunnel_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS enStatus);
+/********************************************************************
+函数名称：ModuleSession_Tunnel_GetAddrForHandle
+函数功能：通过句柄获取ID
+ 参数.一：xhClient
+  In/Out：In
+  类型：句柄
+  可空：N
+  意思：输入要获取的客户端句柄
+ 参数.二：ptszClientAddr
+  In/Out：Out
+  类型：字符指针
+  可空：N
+  意思：输出获取的客户端地址
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleSession_Tunnel_GetAddrForHandle(XNETHANDLE xhClient, XCHAR* ptszClientAddr);
 /********************************************************************
 函数名称：ModuleSession_Tunnel_Packet
 函数功能：解析客户端的隧道代理协议

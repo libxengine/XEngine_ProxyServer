@@ -14,11 +14,12 @@ typedef struct
 {
     XCHAR tszMsgBuffer[4096];                        //只需要取得头
     XCHAR tszClientAddr[128];
+	XNETHANDLE xhClient;                             //客户端句柄
     int nHdrLen;                                     //HTTP头大小
     int nPosLen;                                     //HTTP当前大小
-    int nCtmLen;                                     //自定义内容大小
+
+    ENUM_PROXY_SESSION_CLIENT_STATUS enClientStatus;
     list<xstring>* pStl_ListField;                   //HTTP字段
-    XPVOID lParam;
 }PROXYTUNNEL_CLIENTINFO,*LPPROXYTUNNEL_CLIENTINFO;
 
 
@@ -30,9 +31,11 @@ public:
 public:
     bool ModuleSession_Tunnel_Create(LPCXSTR lpszClientID);
     bool ModuleSession_Tunnel_Delete(LPCXSTR lpszClientID);
-    bool ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XPVOID lParam, int nLen);
-    bool ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, XPVOID lParam, int* pInt_Len = NULL);
-    bool ModuleSession_Tunnel_GetList(XPPPMEM xpppMem, int* pInt_Count, int nSize);
+    bool ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XNETHANDLE xhClient, LPCXSTR lpszClientAddr);
+    bool ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, XNETHANDLE *pxhClient);
+    bool ModuleSession_Tunnel_GetAddrForHandle(XNETHANDLE xhClient, XCHAR* ptszClientAddr);
+	bool ModuleSession_Tunnel_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS* penStatus);
+	bool ModuleSession_Tunnel_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS enStatus);
     bool ModuleSession_Tunnel_Packet(LPCXSTR lpszClientID, LPCXSTR lpszMsgBuffer, int nMsgLen, XCHAR* ptszMSGBuffer, int* pInt_MSGLen);
     bool ModuleSession_Tunnel_List(XCHAR*** ppptszClientList, int* pInt_ListCount);
 private:

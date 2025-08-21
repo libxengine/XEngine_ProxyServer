@@ -24,7 +24,9 @@ EXPORTS
 	ModuleSession_Tunnel_Delete
 	ModuleSession_Tunnel_SetInfo
 	ModuleSession_Tunnel_GetInfo
-	ModuleSession_Tunnel_GetList
+	ModuleSession_Tunnel_GetStatus
+	ModuleSession_Tunnel_SetStatus
+	ModuleSession_Tunnel_GetAddrForHandle
 	ModuleSession_Tunnel_Packet
 	ModuleSession_Tunnel_List
 

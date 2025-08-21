@@ -88,11 +88,11 @@ extern "C" bool ModuleSession_Socks_GetAddrForHandle(XNETHANDLE xhClient, XCHAR*
 {
 	return m_Socks.ModuleSession_Socks_GetAddrForHandle(xhClient, ptszClientAddr);
 }
-extern "C" bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS* penSocks)
+extern "C" bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS* penSocks)
 {
 	return m_Socks.ModuleSession_Socks_GetStatus(lpszClientID, penSocks);
 }
-extern "C" bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS enStatus)
+extern "C" bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS enStatus)
 {
 	return m_Socks.ModuleSession_Socks_SetStatus(lpszClientID, enStatus);
 }
@@ -111,17 +111,25 @@ extern "C" bool ModuleSession_Tunnel_Delete(LPCXSTR lpszClientID)
 {
 	return m_Tunnel.ModuleSession_Tunnel_Delete(lpszClientID);
 }
-extern "C" bool ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XPVOID lParam, int nLen)
+extern "C" bool ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XNETHANDLE xhClient, LPCXSTR lpszClientAddr)
 {
-	return m_Tunnel.ModuleSession_Tunnel_SetInfo(lpszClientID, lParam, nLen);
+	return m_Tunnel.ModuleSession_Tunnel_SetInfo(lpszClientID, xhClient, lpszClientAddr);
 }
-extern "C" bool ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, XPVOID lParam, int* pInt_Len)
+extern "C" bool ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, XNETHANDLE* pxhClient)
 {
-	return m_Tunnel.ModuleSession_Tunnel_GetInfo(lpszClientID, lParam, pInt_Len);
+	return m_Tunnel.ModuleSession_Tunnel_GetInfo(lpszClientID, pxhClient);
 }
-extern "C" bool ModuleSession_Tunnel_GetList(XPPPMEM xpppMem, int* pInt_Count, int nSize)
+extern "C" bool ModuleSession_Tunnel_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS* penStatus)
 {
-	return m_Tunnel.ModuleSession_Tunnel_GetList(xpppMem, pInt_Count, nSize);
+	return m_Tunnel.ModuleSession_Tunnel_GetStatus(lpszClientID, penStatus);
+}
+extern "C" bool ModuleSession_Tunnel_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS enStatus)
+{
+	return m_Tunnel.ModuleSession_Tunnel_SetStatus(lpszClientID, enStatus);
+}
+extern "C" bool ModuleSession_Tunnel_GetAddrForHandle(XNETHANDLE xhClient, XCHAR* ptszClientAddr)
+{
+	return m_Tunnel.ModuleSession_Tunnel_GetAddrForHandle(xhClient, ptszClientAddr);
 }
 extern "C" bool ModuleSession_Tunnel_Packet(LPCXSTR lpszClientID, LPCXSTR lpszMsgBuffer, int nMsgLen, XCHAR* ptszMSGBuffer, int* pInt_MSGLen)
 {

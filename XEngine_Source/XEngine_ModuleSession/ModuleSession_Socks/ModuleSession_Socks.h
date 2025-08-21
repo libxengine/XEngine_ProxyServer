@@ -17,7 +17,7 @@ typedef struct
 {
 	XCHAR tszClientAddr[128];           //代理客户端地址
 	XNETHANDLE xhClient;                //客户端句柄
-	ENUM_PROXY_SESSION_SOCKS_STATUS enProxyStatus;             //客户端状态
+	ENUM_PROXY_SESSION_CLIENT_STATUS enProxyStatus;             //客户端状态
 }RFCPROTOCOL_SOCKS5CLIENT, * LPRFCPROTOCOL_SOCKS5CLIENT;
 
 
@@ -33,8 +33,8 @@ public:
 	bool ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XNETHANDLE *pxhClient);
 	bool ModuleSession_Socks_GetHandleForAddr(LPCXSTR lpszClientAddr, XNETHANDLE* pxhClient);
 	bool ModuleSession_Socks_GetAddrForHandle(XNETHANDLE xhClient, XCHAR *ptszClientAddr);
-	bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS* penSocks);
-	bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS enStatus);
+	bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS* penSocks);
+	bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS enStatus);
 	bool ModuleSession_Socks_List(XCHAR*** ppptszClientList, int* pInt_ListCount);
 private:
 	shared_mutex st_Locker;             

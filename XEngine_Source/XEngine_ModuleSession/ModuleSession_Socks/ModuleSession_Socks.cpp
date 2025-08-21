@@ -52,7 +52,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_Create(LPCXSTR lpszClientID)
 	}
 	memset(pSt_SocksClinet, '\0', sizeof(RFCPROTOCOL_SOCKS5CLIENT));
 
-	pSt_SocksClinet->enProxyStatus = ENUM_PROXY_SESSION_SOCKS_STATUS_CREATE;
+	pSt_SocksClinet->enProxyStatus = ENUM_PROXY_SESSION_CLIENT_CREATE;
 	
 	st_Locker.lock();
 	stl_MapClients.insert(make_pair(lpszClientID, pSt_SocksClinet));
@@ -291,7 +291,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetAddrForHandle(XNETHANDLE xhCli
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Socks::ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS* penSocks)
+bool CModuleSession_Socks::ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS* penSocks)
 {
 	Session_IsErrorOccur = false;
 
@@ -332,7 +332,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, E
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Socks::ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS enStatus)
+bool CModuleSession_Socks::ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS enStatus)
 {
 	Session_IsErrorOccur = false;
 

@@ -182,18 +182,11 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 			SocketOpt_HeartBeat_DeleteAddrEx(xhTunnelHeart, lpszClientAddr);
 		}
 		//释放客户端
-		int nListCount = 0;
-		PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;
-		ModuleSession_Tunnel_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
-		for (int i = 0; i < nListCount; i++)
+		XNETHANDLE xhClient = 0;
+		if (ModuleSession_Tunnel_GetInfo(lpszClientAddr, &xhClient))
 		{
-			if (0 == _tcsxnicmp(lpszClientAddr, ppSt_ClientList[i]->tszIPAddr, _tcsxlen(lpszClientAddr)))
-			{
-				XClient_TCPSelect_DeleteEx(xhTunnelClient, ppSt_ClientList[i]->xhClient);
-				break;
-			}
+			XClient_TCPSelect_DeleteEx(xhTunnelClient, xhClient);
 		}
-		BaseLib_Memory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 		ModuleSession_Tunnel_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Tunnel客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}
