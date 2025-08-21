@@ -160,7 +160,7 @@ bool XEngine_SocksTask_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int
 		}
 		//配置客户端信息
 		ModuleSession_Socks_SetStatus(lpszClientAddr, ENUM_PROXY_SESSION_SOCKS_STATUS_FORWARD);
-		ModuleSession_Socks_SetInfo(lpszClientAddr, xhClient, lpszClientAddr);
+		ModuleSession_Socks_SetInfo(lpszClientAddr, xhClient, tszClientAddr);
 		//回复结果
 		ProxyProtocol_SocksCore_PacketConnect(tszMsgBuffer, &nLen, tszClientAddr, nPort, enIPType, XENGINE_RFCCOMPONENT_PROXY_SOCKS_RESPONSE_SUCCESS);
 		XEngine_Network_Send(lpszClientAddr, tszMsgBuffer, nLen, XENGINE_CLIENT_NETTYPE_SOCKS);

@@ -258,7 +258,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetAddrForHandle(XNETHANDLE xhCli
 	{
 		if (xhClient == stl_MapIterator->second->xhClient)
 		{
-			_tcsxcpy(ptszClientAddr, stl_MapIterator->second->tszClientAddr);
+			_tcsxcpy(ptszClientAddr, stl_MapIterator->first.c_str());
 			bFound = true;
 			break;
 		}
