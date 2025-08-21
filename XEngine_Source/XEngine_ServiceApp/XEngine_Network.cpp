@@ -158,18 +158,11 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 			NetCore_TCPXCore_CloseForClientEx(xhSocksSocket, lpszClientAddr);
 		}
 		//释放客户端
-		int nListCount = 0;
-		PROXYPROTOCOL_CLIENTINFO** ppSt_ClientList;
-		ModuleSession_Socks_GetList((XPPPMEM)&ppSt_ClientList, &nListCount, sizeof(PROXYPROTOCOL_CLIENTINFO));
-		for (int i = 0; i < nListCount; i++)
+		XNETHANDLE xhClient = 0;
+		if (ModuleSession_Socks_GetHandleForAddr(lpszClientAddr, &xhClient))
 		{
-			if (0 == _tcsxnicmp(lpszClientAddr, ppSt_ClientList[i]->tszIPAddr, _tcsxlen(lpszClientAddr)))
-			{
-				XClient_TCPSelect_DeleteEx(xhSocksClient, ppSt_ClientList[i]->xhClient);
-				break;
-			}
+			XClient_TCPSelect_DeleteEx(xhSocksClient, xhClient);
 		}
-		BaseLib_Memory_Free((XPPPMEM)&ppSt_ClientList, nListCount);
 		ModuleSession_Socks_Delete(lpszClientAddr);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("SOCKS客户端:%s,离开服务器,离开类型;%d"), lpszClientAddr, nCloseType);
 	}

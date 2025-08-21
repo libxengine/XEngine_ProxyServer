@@ -16,11 +16,8 @@
 typedef struct 
 {
 	XCHAR tszClientAddr[128];           //代理客户端地址
-	XCHAR tszCMDBuffer[128];            //地址信息
-	int nCMDLen;                        //CMD地址信息大小
-	int nCTMLen;                        //自定义大小
+	XNETHANDLE xhClient;                //客户端句柄
 	ENUM_PROXY_SESSION_SOCKS_STATUS enProxyStatus;             //客户端状态
-	XPVOID lParam;
 }RFCPROTOCOL_SOCKS5CLIENT, * LPRFCPROTOCOL_SOCKS5CLIENT;
 
 
@@ -32,9 +29,10 @@ public:
 public:
 	bool ModuleSession_Socks_Create(LPCXSTR lpszClientID);
 	bool ModuleSession_Socks_Delete(LPCXSTR lpszClientID);
-	bool ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XPVOID lParam, int nLen);
-	bool ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XPVOID lParam, int* pInt_Len = NULL);
-	bool ModuleSession_Socks_GetList(XPPPMEM xpppMem, int* pInt_Count, int nSize);
+	bool ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XNETHANDLE xhClient, LPCXSTR lpszClientAddr);
+	bool ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XNETHANDLE *pxhClient);
+	bool ModuleSession_Socks_GetHandleForAddr(LPCXSTR lpszClientAddr, XNETHANDLE* pxhClient);
+	bool ModuleSession_Socks_GetAddrForHandle(XNETHANDLE xhClient, XCHAR *ptszClientAddr);
 	bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS* penSocks);
 	bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS enStatus);
 	bool ModuleSession_Socks_List(XCHAR*** ppptszClientList, int* pInt_ListCount);

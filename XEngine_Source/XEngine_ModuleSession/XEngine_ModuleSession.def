@@ -7,7 +7,8 @@ EXPORTS
 	ModuleSession_Socks_Delete
 	ModuleSession_Socks_SetInfo
 	ModuleSession_Socks_GetInfo
-	ModuleSession_Socks_GetList
+	ModuleSession_Socks_GetHandleForAddr
+	ModuleSession_Socks_GetAddrForHandle
 	ModuleSession_Socks_GetStatus
 	ModuleSession_Socks_SetStatus
 	ModuleSession_Socks_List

@@ -72,17 +72,21 @@ extern "C" bool ModuleSession_Socks_Delete(LPCXSTR lpszClientID)
 {
 	return m_Socks.ModuleSession_Socks_Delete(lpszClientID);
 }
-extern "C" bool ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XPVOID lParam, int nLen)
+extern "C" bool ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XNETHANDLE xhClient, LPCXSTR lpszClientAddr)
 {
-	return m_Socks.ModuleSession_Socks_SetInfo(lpszClientID, lParam, nLen);
+	return m_Socks.ModuleSession_Socks_SetInfo(lpszClientID, xhClient, lpszClientAddr);
 }
-extern "C" bool ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XPVOID lParam, int* pInt_Len)
+extern "C" bool ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XNETHANDLE* pxhClient)
 {
-	return m_Socks.ModuleSession_Socks_GetInfo(lpszClientID, lParam, pInt_Len);
+	return m_Socks.ModuleSession_Socks_GetInfo(lpszClientID, pxhClient);
 }
-extern "C" bool ModuleSession_Socks_GetList(XPPPMEM xpppMem, int* pInt_Count, int nSize)
+extern "C" bool ModuleSession_Socks_GetHandleForAddr(LPCXSTR lpszClientAddr, XNETHANDLE* pxhClient)
 {
-	return m_Socks.ModuleSession_Socks_GetList(xpppMem, pInt_Count, nSize);
+	return m_Socks.ModuleSession_Socks_GetHandleForAddr(lpszClientAddr, pxhClient);
+}
+extern "C" bool ModuleSession_Socks_GetAddrForHandle(XNETHANDLE xhClient, XCHAR* ptszClientAddr)
+{
+	return m_Socks.ModuleSession_Socks_GetAddrForHandle(xhClient, ptszClientAddr);
 }
 extern "C" bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS* penSocks)
 {
