@@ -80,10 +80,6 @@ extern "C" bool ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XNETHANDLE* px
 {
 	return m_Socks.ModuleSession_Socks_GetInfo(lpszClientID, pxhClient);
 }
-extern "C" bool ModuleSession_Socks_GetHandleForAddr(LPCXSTR lpszClientAddr, XNETHANDLE* pxhClient)
-{
-	return m_Socks.ModuleSession_Socks_GetHandleForAddr(lpszClientAddr, pxhClient);
-}
 extern "C" bool ModuleSession_Socks_GetAddrForHandle(XNETHANDLE xhClient, XCHAR* ptszClientAddr)
 {
 	return m_Socks.ModuleSession_Socks_GetAddrForHandle(xhClient, ptszClientAddr);

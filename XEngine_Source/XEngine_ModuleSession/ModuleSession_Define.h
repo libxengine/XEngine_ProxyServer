@@ -238,25 +238,6 @@ extern "C" bool ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XNETHANDLE xhC
 *********************************************************************/
 extern "C" bool ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XNETHANDLE* pxhClient);
 /********************************************************************
-函数名称：ModuleSession_Socks_GetHandleForAddr
-函数功能：通过客户端地址获取句柄
- 参数.一：lpszClientAddr
-  In/Out：In
-  类型：常量字符指针
-  可空：N
-  意思：输入要获取的客户端地址
- 参数.二：pxhClient
-  In/Out：Out
-  类型：句柄
-  可空：N
-  意思：输出句柄
-返回值
-  类型：逻辑型
-  意思：是否成功
-备注：
-*********************************************************************/
-extern "C" bool ModuleSession_Socks_GetHandleForAddr(LPCXSTR lpszClientAddr, XNETHANDLE* pxhClient);
-/********************************************************************
 函数名称：ModuleSession_Socks_GetAddrForHandle
 函数功能：通过客户端句柄来获得对应的IP地址
  参数.一：pxhClient

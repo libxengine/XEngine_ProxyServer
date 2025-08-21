@@ -174,56 +174,6 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XNE
 	return true;
 }
 /********************************************************************
-函数名称：ModuleSession_Socks_GetHandleForAddr
-函数功能：通过客户端地址获取句柄
- 参数.一：lpszClientAddr
-  In/Out：In
-  类型：常量字符指针
-  可空：N
-  意思：输入要获取的客户端地址
- 参数.二：pxhClient
-  In/Out：Out
-  类型：句柄
-  可空：N
-  意思：输出句柄
-返回值
-  类型：逻辑型
-  意思：是否成功
-备注：
-*********************************************************************/
-bool CModuleSession_Socks::ModuleSession_Socks_GetHandleForAddr(LPCXSTR lpszClientAddr, XNETHANDLE* pxhClient)
-{
-	Session_IsErrorOccur = false;
-
-	if ((NULL == lpszClientAddr))
-	{
-		Session_IsErrorOccur = true;
-		Session_dwErrorCode = ERROR_MODULE_SESSION_SOCKS_PARAMENT;
-		return false;
-	}
-	bool bFound = false;
-
-	st_Locker.lock_shared();
-	for (auto stl_MapIterator = stl_MapClients.begin(); stl_MapIterator != stl_MapClients.end(); stl_MapIterator++)
-	{
-		if (0 == _tcsxnicmp(lpszClientAddr, stl_MapIterator->second->tszClientAddr, _tcsxlen(lpszClientAddr)))
-		{
-			bFound = true;
-			*pxhClient = stl_MapIterator->second->xhClient;
-			break;
-		}
-	}
-	st_Locker.unlock_shared();
-
-	if (!bFound)
-	{
-		Session_IsErrorOccur = true;
-		Session_dwErrorCode = ERROR_MODULE_SESSION_SOCKS_NOTFOUND;
-		return false;
-	}
-	return true;
-}
-/********************************************************************
 函数名称：ModuleSession_Socks_GetAddrForHandle
 函数功能：通过客户端句柄来获得对应的IP地址
  参数.一：pxhClient

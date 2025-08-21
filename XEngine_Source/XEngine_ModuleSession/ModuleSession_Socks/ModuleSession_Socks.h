@@ -31,7 +31,6 @@ public:
 	bool ModuleSession_Socks_Delete(LPCXSTR lpszClientID);
 	bool ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XNETHANDLE xhClient, LPCXSTR lpszClientAddr);
 	bool ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XNETHANDLE *pxhClient);
-	bool ModuleSession_Socks_GetHandleForAddr(LPCXSTR lpszClientAddr, XNETHANDLE* pxhClient);
 	bool ModuleSession_Socks_GetAddrForHandle(XNETHANDLE xhClient, XCHAR *ptszClientAddr);
 	bool ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS* penSocks);
 	bool ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS enStatus);

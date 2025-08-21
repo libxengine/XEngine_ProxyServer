@@ -159,7 +159,7 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 		}
 		//释放客户端
 		XNETHANDLE xhClient = 0;
-		if (ModuleSession_Socks_GetHandleForAddr(lpszClientAddr, &xhClient))
+		if (ModuleSession_Socks_GetInfo(lpszClientAddr, &xhClient))
 		{
 			XClient_TCPSelect_DeleteEx(xhSocksClient, xhClient);
 		}
