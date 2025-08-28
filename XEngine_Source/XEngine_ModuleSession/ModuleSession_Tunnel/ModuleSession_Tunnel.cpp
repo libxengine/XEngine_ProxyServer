@@ -88,11 +88,6 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_Delete(LPCXSTR lpszClientID)
     unordered_map<xstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.find(lpszClientID);
     if (stl_MapIterator != stl_MapClient.end())
     {
-		if (NULL != stl_MapIterator->second->lParam)
-		{
-			free(stl_MapIterator->second->lParam);
-			stl_MapIterator->second->lParam = NULL;
-		}
         if (NULL != stl_MapIterator->second->pStl_ListField)
         {
             delete stl_MapIterator->second->pStl_ListField;
@@ -111,26 +106,26 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_Delete(LPCXSTR lpszClientID)
   类型：常量字符指针
   可空：N
   意思：输入要操作的客户端
- 参数.二：lParam
+ 参数.二：xhClient
   In/Out：In
-  类型：无类型指针
+  类型：句柄
   可空：N
-  意思：输入要设置的内容
- 参数.三：nLen
+  意思：输入要设置的客户端句柄
+ 参数.三：lpszClientAddr
   In/Out：In
-  类型：整数型
+  类型：常量字符指针
   可空：N
-  意思：输入自定义内容大小
+  意思：输入绑定的句柄客户端地址
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Tunnel::ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XPVOID lParam, int nLen)
+bool CModuleSession_Tunnel::ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, XNETHANDLE xhClient, LPCXSTR lpszClientAddr)
 {
     Session_IsErrorOccur = false;
 
-    if ((NULL == lpszClientID) || (NULL == lParam))
+    if ((NULL == lpszClientID) || (NULL == lpszClientAddr))
     {
         Session_IsErrorOccur = true;
         Session_dwErrorCode = ERROR_MODULE_SESSION_TUNNEL_PARAMENT;
@@ -145,30 +140,8 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, X
         st_Locker.unlock_shared();
         return false;
 	}
-    if (NULL == stl_MapIterator->second->lParam)
-    {
-        stl_MapIterator->second->lParam = malloc(nLen);
-        if (NULL == stl_MapIterator->second->lParam)
-        {
-			Session_IsErrorOccur = true;
-			Session_dwErrorCode = ERROR_MODULE_SESSION_TUNNEL_MALLOC;
-			st_Locker.unlock_shared();
-			return false;
-        }
-    }
-    else
-    {
-        stl_MapIterator->second->lParam = realloc(stl_MapIterator->second->lParam, nLen);
-		if (NULL == stl_MapIterator->second->lParam)
-		{
-			Session_IsErrorOccur = true;
-			Session_dwErrorCode = ERROR_MODULE_SESSION_TUNNEL_MALLOC;
-			st_Locker.unlock_shared();
-			return false;
-		}
-    }
-    stl_MapIterator->second->nCtmLen = nLen;
-    memcpy(stl_MapIterator->second->lParam, lParam, nLen);
+	stl_MapIterator->second->xhClient = xhClient;
+	_tcsxcpy(stl_MapIterator->second->tszClientAddr, lpszClientAddr);
 	st_Locker.unlock_shared();
     return true;
 }
@@ -180,26 +153,21 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_SetInfo(LPCXSTR lpszClientID, X
   类型：常量字符指针
   可空：N
   意思：输入要操作的客户端
- 参数.二：lParam
+ 参数.二：pxhClient
   In/Out：Out
-  类型：无类型指针
+  类型：句柄
   可空：N
   意思：输出获取到的内容
- 参数.三：pInt_Len
-  In/Out：Out
-  类型：整数型指针
-  可空：Y
-  意思：输出自定义内容大小
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Tunnel::ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, XPVOID lParam, int* pInt_Len /* = NULL */)
+bool CModuleSession_Tunnel::ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, XNETHANDLE *pxhClient)
 {
 	Session_IsErrorOccur = false;
 
-	if ((NULL == lpszClientID) || (NULL == lParam))
+	if ((NULL == lpszClientID) || (NULL == pxhClient))
 	{
 		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_TUNNEL_PARAMENT;
@@ -214,67 +182,125 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_GetInfo(LPCXSTR lpszClientID, X
 		st_Locker.unlock_shared();
 		return false;
 	}
-    //是否设置有值
-    if (NULL == stl_MapIterator->second->lParam)
-    {
-		Session_IsErrorOccur = true;
-		Session_dwErrorCode = ERROR_MODULE_SESSION_TUNNEL_NOTSET;
-		st_Locker.unlock_shared();
-		return false;
-    }
-	if (NULL != pInt_Len)
-	{
-		*pInt_Len = stl_MapIterator->second->nCtmLen;
-	}
-    memcpy(lParam, stl_MapIterator->second->lParam, stl_MapIterator->second->nCtmLen);
+	*pxhClient = stl_MapIterator->second->xhClient;
 	st_Locker.unlock_shared();
 
 	return true;
 }
 /********************************************************************
-函数名称：ModuleSession_Tunnel_GetList
-函数功能：获取所有自定义数据
- 参数.一：xpppMem
-  In/Out：Out
-  类型：三级指针
+函数名称：ModuleSession_Tunnel_GetAddrForHandle
+函数功能：通过句柄获取ID
+ 参数.一：xhClient
+  In/Out：In
+  类型：句柄
   可空：N
-  意思：输出获取到的列表
- 参数.二：pInt_Count
+  意思：输入要获取的客户端句柄
+ 参数.二：ptszClientAddr
   In/Out：Out
-  类型：整数型指针
+  类型：字符指针
   可空：N
-  意思：输出列表个数
- 参数.三：nSize
-  In/Out：Out
-  类型：整数型
-  可空：N
-  意思：输入每个成员的大小
+  意思：输出获取的客户端地址
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Tunnel::ModuleSession_Tunnel_GetList(XPPPMEM xpppMem, int* pInt_Count, int nSize)
+bool CModuleSession_Tunnel::ModuleSession_Tunnel_GetAddrForHandle(XNETHANDLE xhClient, XCHAR* ptszClientAddr)
+{
+	Session_IsErrorOccur = false;
+
+	bool bFound = false;
+
+	st_Locker.lock_shared();
+	unordered_map<xstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.begin();
+	for (; stl_MapIterator != stl_MapClient.end(); stl_MapIterator++)
+	{
+		if (xhClient == stl_MapIterator->second->xhClient)
+		{
+			bFound = true;
+			_tcsxcpy(ptszClientAddr, stl_MapIterator->first.c_str());
+			break;
+		}
+	}
+	st_Locker.unlock_shared();
+
+	if (!bFound)
+	{
+		Session_IsErrorOccur = true;
+		Session_dwErrorCode = ERROR_MODULE_SESSION_TUNNEL_NOTFOUND;
+		return false;
+	}
+
+	return true;
+}
+/********************************************************************
+函数名称：ModuleSession_Tunnel_SetStatus
+函数功能：设置客户端状态
+ 参数.一：lpszClientID
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要操作的客户端
+ 参数.二：enStatus
+  In/Out：In
+  类型：枚举型
+  可空：N
+  意思：输入设置的状态
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+bool CModuleSession_Tunnel::ModuleSession_Tunnel_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS enStatus)
 {
 	Session_IsErrorOccur = false;
 
 	st_Locker.lock_shared();
-
-	*pInt_Count = stl_MapClient.size();
-	BaseLib_Memory_Malloc(xpppMem, *pInt_Count, nSize);
-	unordered_map<xstring, PROXYTUNNEL_CLIENTINFO*>::const_iterator stl_MapIterator = stl_MapClient.begin();
-    for (int i = 0; stl_MapIterator != stl_MapClient.end(); stl_MapIterator++, i++)
+	auto stl_MapIterator = stl_MapClient.find(lpszClientID);
+	if (stl_MapIterator == stl_MapClient.end())
 	{
-		//是否设置有值
-		if ((NULL != stl_MapIterator->second->lParam) && (stl_MapIterator->second->nCtmLen > 0))
-		{
-			memcpy((*xpppMem)[i], stl_MapIterator->second->lParam, stl_MapIterator->second->nCtmLen);
-		}
-        else
-        {
-            memset((*xpppMem)[i], '\0', nSize);
-        }
+		Session_IsErrorOccur = true;
+		Session_dwErrorCode = ERROR_MODULE_SESSION_TUNNEL_NOTFOUND;
+		st_Locker.unlock_shared();
+		return false;
 	}
+	stl_MapIterator->second->enClientStatus = enStatus;
+	st_Locker.unlock_shared();
+
+	return true;
+}
+/********************************************************************
+函数名称：ModuleSession_Tunnel_GetStatus
+函数功能：获取客户端状态
+ 参数.一：lpszClientID
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要操作的客户端
+ 参数.二：penStatus
+  In/Out：Out
+  类型：枚举型
+  可空：N
+  意思：输出客户端的状态
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+bool CModuleSession_Tunnel::ModuleSession_Tunnel_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS* penStatus)
+{
+	Session_IsErrorOccur = false;
+
+	st_Locker.lock_shared();
+	auto stl_MapIterator = stl_MapClient.find(lpszClientID);
+	if (stl_MapIterator == stl_MapClient.end())
+	{
+		Session_IsErrorOccur = true;
+		Session_dwErrorCode = ERROR_MODULE_SESSION_TUNNEL_NOTFOUND;
+		st_Locker.unlock_shared();
+		return false;
+	}
+	*penStatus = stl_MapIterator->second->enClientStatus;
 	st_Locker.unlock_shared();
 
 	return true;

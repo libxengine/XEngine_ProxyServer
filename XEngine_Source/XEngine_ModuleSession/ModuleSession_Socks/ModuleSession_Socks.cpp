@@ -52,8 +52,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_Create(LPCXSTR lpszClientID)
 	}
 	memset(pSt_SocksClinet, '\0', sizeof(RFCPROTOCOL_SOCKS5CLIENT));
 
-	_tcsxcpy(pSt_SocksClinet->tszClientAddr, lpszClientID);
-	pSt_SocksClinet->enProxyStatus = ENUM_PROXY_SESSION_SOCKS_STATUS_CREATE;
+	pSt_SocksClinet->enProxyStatus = ENUM_PROXY_SESSION_CLIENT_CREATE;
 	
 	st_Locker.lock();
 	stl_MapClients.insert(make_pair(lpszClientID, pSt_SocksClinet));
@@ -81,11 +80,6 @@ bool CModuleSession_Socks::ModuleSession_Socks_Delete(LPCXSTR lpszClientID)
 	unordered_map<xstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.find(lpszClientID);
 	if (stl_MapIterator != stl_MapClients.end())
 	{
-		if (NULL != stl_MapIterator->second->lParam)
-		{
-			free(stl_MapIterator->second->lParam);
-			stl_MapIterator->second->lParam = NULL;
-		}
 		stl_MapClients.erase(stl_MapIterator);
 	}
 	st_Locker.unlock();
@@ -99,26 +93,26 @@ bool CModuleSession_Socks::ModuleSession_Socks_Delete(LPCXSTR lpszClientID)
   类型：常量字符指针
   可空：N
   意思：输入要操作的客户端
- 参数.二：lParam
+ 参数.二：xhClient
   In/Out：In
-  类型：无类型指针
+  类型：句柄
   可空：N
-  意思：输入设置的内容
- 参数.三：nLen
+  意思：输入客户端网络句柄
+ 参数.三：lpszClientAddr
   In/Out：In
-  类型：整数型
+  类型：常量字符指针
   可空：N
-  意思：输入要设置内容大小
+  意思：绑定的客户端地址
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Socks::ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XPVOID lParam, int nLen)
+bool CModuleSession_Socks::ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XNETHANDLE xhClient, LPCXSTR lpszClientAddr)
 {
 	Session_IsErrorOccur = false;
 
-	if ((NULL == lpszClientID) || (NULL == lParam))
+	if ((NULL == lpszClientID))
 	{
 		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_SOCKS_PARAMENT;
@@ -133,31 +127,8 @@ bool CModuleSession_Socks::ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XPV
 		st_Locker.unlock();
 		return false;
 	}
-	//内存是否已经申请
-	if (NULL == stl_MapIterator->second->lParam)
-	{
-		stl_MapIterator->second->lParam = malloc(nLen);
-		if (NULL == stl_MapIterator->second->lParam)
-		{
-			Session_IsErrorOccur = true;
-			Session_dwErrorCode = ERROR_MODULE_SESSION_SOCKS_MALLOC;
-			st_Locker.unlock();
-			return false;
-		}
-	}
-	else
-	{
-		stl_MapIterator->second->lParam = realloc(stl_MapIterator->second->lParam, nLen);
-		if (NULL == stl_MapIterator->second->lParam)
-		{
-			Session_IsErrorOccur = true;
-			Session_dwErrorCode = ERROR_MODULE_SESSION_SOCKS_MALLOC;
-			st_Locker.unlock();
-			return false;
-		}
-	}
-	stl_MapIterator->second->nCTMLen = nLen;
-	memcpy(stl_MapIterator->second->lParam, lParam, nLen);
+	stl_MapIterator->second->xhClient = xhClient;
+	_tcsxcpy(stl_MapIterator->second->tszClientAddr, lpszClientAddr);
 	st_Locker.unlock();
 	return true;
 }
@@ -169,26 +140,21 @@ bool CModuleSession_Socks::ModuleSession_Socks_SetInfo(LPCXSTR lpszClientID, XPV
   类型：常量字符指针
   可空：N
   意思：输入要操作的客户端
- 参数.二：lParam
+ 参数.二：pxhClient
   In/Out：Out
-  类型：无类型指针
+  类型：句柄
   可空：N
-  意思：输出获取到的内容
- 参数.三：pInt_Len
-  In/Out：Out
-  类型：整数型指针
-  可空：Y
-  意思：输出内容大小
+  意思：输出客户端网络句柄
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Socks::ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XPVOID lParam, int* pInt_Len /* = NULL */)
+bool CModuleSession_Socks::ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XNETHANDLE *pxhClient)
 {
 	Session_IsErrorOccur = false;
 
-	if ((NULL == lpszClientID) || (NULL == lParam))
+	if ((NULL == lpszClientID))
 	{
 		Session_IsErrorOccur = true;
 		Session_dwErrorCode = ERROR_MODULE_SESSION_SOCKS_PARAMENT;
@@ -203,65 +169,58 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetInfo(LPCXSTR lpszClientID, XPV
 		st_Locker.unlock_shared();
 		return false;
 	}
-	if (NULL == stl_MapIterator->second->lParam)
-	{
-		Session_IsErrorOccur = true;
-		Session_dwErrorCode = ERROR_MODULE_SESSION_SOCKS_NOTSET;
-		st_Locker.unlock_shared();
-		return false;
-	}
-	memcpy(lParam, stl_MapIterator->second->lParam, stl_MapIterator->second->nCTMLen);
-	if (NULL != pInt_Len)
-	{
-		*pInt_Len = stl_MapIterator->second->nCTMLen;
-	}
-	
+	*pxhClient = stl_MapIterator->second->xhClient;
 	st_Locker.unlock_shared();
 	return true;
 }
 /********************************************************************
-函数名称：ModuleSession_Socks_GetList
-函数功能：获取所有自定义数据
- 参数.一：xpppMem
-  In/Out：Out
-  类型：三级指针
+函数名称：ModuleSession_Socks_GetAddrForHandle
+函数功能：通过客户端句柄来获得对应的IP地址
+ 参数.一：pxhClient
+  In/Out：In
+  类型：句柄
   可空：N
-  意思：输出获取到的列表
- 参数.二：pInt_Count
+  意思：输入句柄
+ 参数.二：lpszClientAddr
   In/Out：Out
-  类型：整数型指针
+  类型：字符指针
   可空：N
-  意思：输出列表个数
- 参数.三：nSize
-  In/Out：Out
-  类型：整数型
-  可空：N
-  意思：输入每个成员的大小
+  意思：输出获取的客户端地址
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Socks::ModuleSession_Socks_GetList(XPPPMEM xpppMem, int* pInt_Count, int nSize)
+bool CModuleSession_Socks::ModuleSession_Socks_GetAddrForHandle(XNETHANDLE xhClient, XCHAR* ptszClientAddr)
 {
 	Session_IsErrorOccur = false;
 
-	st_Locker.lock_shared();
-
-	*pInt_Count = stl_MapClients.size();
-	BaseLib_Memory_Malloc(xpppMem, *pInt_Count, nSize);
-
-	unordered_map<xstring, RFCPROTOCOL_SOCKS5CLIENT*>::const_iterator stl_MapIterator = stl_MapClients.begin();
-	for (int i = 0; stl_MapIterator != stl_MapClients.end(); stl_MapIterator++, i++)
+	if ((NULL == ptszClientAddr))
 	{
-		//是否设置有值
-		if ((NULL != stl_MapIterator->second->lParam) && (stl_MapIterator->second->nCTMLen > 0))
+		Session_IsErrorOccur = true;
+		Session_dwErrorCode = ERROR_MODULE_SESSION_SOCKS_PARAMENT;
+		return false;
+	}
+	bool bFound = false;
+
+	st_Locker.lock_shared();
+	for (auto stl_MapIterator = stl_MapClients.begin(); stl_MapIterator != stl_MapClients.end(); stl_MapIterator++)
+	{
+		if (xhClient == stl_MapIterator->second->xhClient)
 		{
-			memcpy((*xpppMem)[i], stl_MapIterator->second->lParam, stl_MapIterator->second->nCTMLen);
+			_tcsxcpy(ptszClientAddr, stl_MapIterator->first.c_str());
+			bFound = true;
+			break;
 		}
 	}
 	st_Locker.unlock_shared();
 
+	if (!bFound)
+	{
+		Session_IsErrorOccur = true;
+		Session_dwErrorCode = ERROR_MODULE_SESSION_SOCKS_NOTFOUND;
+		return false;
+	}
 	return true;
 }
 /********************************************************************
@@ -282,7 +241,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetList(XPPPMEM xpppMem, int* pIn
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Socks::ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS* penSocks)
+bool CModuleSession_Socks::ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS* penSocks)
 {
 	Session_IsErrorOccur = false;
 
@@ -323,7 +282,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_GetStatus(LPCXSTR lpszClientID, E
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleSession_Socks::ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_SOCKS_STATUS enStatus)
+bool CModuleSession_Socks::ModuleSession_Socks_SetStatus(LPCXSTR lpszClientID, ENUM_PROXY_SESSION_CLIENT_STATUS enStatus)
 {
 	Session_IsErrorOccur = false;
 

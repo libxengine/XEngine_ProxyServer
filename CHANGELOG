@@ -1,3 +1,29 @@
+XEngine_ProxyServer V1.14.0.1001
+
+增加:rocky linux 10 支持
+更新:匹配最新xengine 版本
+更新:依赖库并且修改依赖库目录
+修改:启动参数不区分大小写了并且增加了日志参数
+修改:始终为socks代理保存变量信息
+修改:删除客户端当转发没有找到
+修改:socks代理设置和获取信息支持
+修改:删除请求客户端当接受数据没有找到转发的对端用户
+优化:代码结构
+修正:客户端插入问题
+删除:重复代码
+
+add:ci rocky linux 10 support
+update:match xengine
+update:depend library and modify depend library direction name
+modify:start parameter are not case sensitive and add log parameter
+modify:save and value away for socks
+modify:delete proxy client when not found
+modify:set and get info for socks proxy
+modify:delete request client when not found send to recv proxy client for socks and tunnel
+improved:code and not use code
+fixed:client insert incorrect
+delete:repeat code
+======================================================================================
 XEngine_ProxyServer V1.13.0.1001
 
 增加:帮助模块

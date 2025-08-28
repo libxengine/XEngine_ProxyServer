@@ -7,8 +7,8 @@
 编译发布版本将只在github上面发布.
 
 ## 介绍
-c c++ SOCKS5代理服务,HTTP Tunnel隧道代理服务,tcp转发服务,负载代理转发  
-c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service,proxy forward service  
+c c++ SOCKS5代理服务,HTTP Tunnel隧道代理服务,tcp转发控制服务,负载均衡服务  
+c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward control service,load balance forward service  
 
 ## 软件架构
 此软件基于XEngine开发.采用C/C++作为开发语言  
@@ -17,13 +17,12 @@ c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service,proxy f
 此软件支持以下特性  
 1. SOCKS5代理
 2. Tunnel代理
-3. TCP数据转发服务(forward)
+3. TCP数据转发控制
 4. 操作日志
 5. 加密通信(planning)
-6. 负载均衡(planning)
+6. 负载均衡
 7. 自定义证书代理协议(planning)
 8. 多级代理(planning)
-9. 全负载代理(proxy)
 
 ## 安装教程
 
@@ -42,7 +41,7 @@ macos执行:./XEngine_LINEnv.sh -i 3
 由于依赖的子模块,在你checkout仓库后,在仓库目录下执行下面的命令拉取子模块  
 git submodule init  
 git submodule update  
-如果github访问失败,你也可以clone该项目,在主目录下使用命令:git clone https://gitee.com/xengine/XEngine_OPenSource.git XEngine_Source/XEngine_Depend
+如果github访问失败,你也可以clone该项目,在主目录下使用命令:git clone https://gitee.com/xengine/XEngine_OPenSource.git XEngine_Source/XEngine_DependLibrary
 
 #### Windows
 使用VS打开并且编译,支持WINDOWS 7SP1以上系统  

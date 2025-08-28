@@ -51,8 +51,8 @@ using namespace std;
 #include <XEngine_Include/XEngine_Client/XClient_Error.h>
 //加载项目相关头文件
 #include "../XEngine_UserProtocol.h"
-#include "../XEngine_Depend/XEngine_Module/XEngine_InfoReport/InfoReport_Define.h"
-#include "../XEngine_Depend/XEngine_Module/XEngine_InfoReport/InfoReport_Error.h"
+#include "../XEngine_DependLibrary/XEngine_Module/XEngine_InfoReport/InfoReport_Define.h"
+#include "../XEngine_DependLibrary/XEngine_Module/XEngine_InfoReport/InfoReport_Error.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Define.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Error.h"
 #include "../XEngine_ModuleSession/ModuleSession_Define.h"
@@ -112,13 +112,6 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 #define XENGINE_CLIENT_CLOSE_NETWORK 1
 #define XENGINE_CLIENT_CLOSE_HEARTBEAT 2
 #define XENGINE_CLIENT_CLOSE_SERVICE 3
-
-typedef struct
-{
-	XCHAR tszIPAddr[128];
-	ENUM_PROXY_SESSION_SOCKS_STATUS enStatus;
-	XNETHANDLE xhClient;
-}PROXYPROTOCOL_CLIENTINFO;
 
 //连接库
 #ifdef _MSC_BUILD

@@ -7,7 +7,7 @@ EXPORTS
 	ModuleSession_Socks_Delete
 	ModuleSession_Socks_SetInfo
 	ModuleSession_Socks_GetInfo
-	ModuleSession_Socks_GetList
+	ModuleSession_Socks_GetAddrForHandle
 	ModuleSession_Socks_GetStatus
 	ModuleSession_Socks_SetStatus
 	ModuleSession_Socks_List
@@ -23,7 +23,9 @@ EXPORTS
 	ModuleSession_Tunnel_Delete
 	ModuleSession_Tunnel_SetInfo
 	ModuleSession_Tunnel_GetInfo
-	ModuleSession_Tunnel_GetList
+	ModuleSession_Tunnel_GetStatus
+	ModuleSession_Tunnel_SetStatus
+	ModuleSession_Tunnel_GetAddrForHandle
 	ModuleSession_Tunnel_Packet
 	ModuleSession_Tunnel_List
 

@@ -4,8 +4,8 @@ we have a development and a master branch. If you want to use it, please use the
 As long as the repository is not in suspended state, we will maintain and develop it all the time, please use it with confidence  
 
 #### Description
-c c++ SOCKS5代理服务,HTTP Tunnel隧道代理服务,tcp转发服务,负载代理转发  
-c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward service,proxy forward service  
+c c++ SOCKS5代理服务,HTTP Tunnel隧道代理服务,tcp转发控制服务,负载均衡服务  
+c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward control service,load balance forward service  
 
 ## Notice
 the compiled release version will only be released on github.
@@ -18,13 +18,12 @@ This software is a standard proxy server that supports Socks5 and HTTP tunnel pr
 this software support following features  
 1. SOCKS5 proxy  
 2. Tunnel proxy  
-3. TCP forward proxy(forward)
+3. TCP forward control
 4. operator log  
 5. encrypt Communication(planning)  
-6. load balanc(planning)  
+6. load balance
 7. custom cert proxy protocol(planning)  
 8. multilevel proxy(planning)
-9. lb proxy(proxy)
 
 ## install
 
@@ -40,7 +39,7 @@ Linux Exection:sudo ./XEngine_LINEnv.sh -i 3
 Macos Exection:./XEngine_LINEnv.sh -i 3
 
 #### sub module
-Due to the dependent sub-modules, after you checkout the warehouse, execute the following command in the warehouse directory to pull the sub-modules  
+Due to the dependent sub-modules, after you checkout the resprepository, execute the following command in the resprepository directory to pull the sub-modules  
 git submodule init  
 git submodule update  
 

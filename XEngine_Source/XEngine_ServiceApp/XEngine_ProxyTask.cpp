@@ -90,7 +90,7 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,连接到服务器:%s:%d 成功"), lpszClientAddr, tszDstIPAddr, nDstPort);
 	return true;
 }
-void CALLBACK XEngine_Proxy_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nMsgLen, XPVOID lParam)
+void XCALLBACK XEngine_Proxy_CBRecv(XHANDLE xhToken, XNETHANDLE xhClient, XSOCKET hSocket, ENUM_XCLIENT_SOCKET_EVENTS enTCPClientEvents, LPCXSTR lpszMsgBuffer, int nMsgLen, XPVOID lParam)
 {
 	SESSION_FORWARD st_ProxyInfo = {};
 	if (!ModuleSession_Proxy_GetForToken(xhClient, &st_ProxyInfo))

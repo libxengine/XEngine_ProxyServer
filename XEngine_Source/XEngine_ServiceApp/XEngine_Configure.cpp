@@ -28,48 +28,60 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 
 	for (int i = 0; i < argc; i++)
 	{
-		if ((0 == _tcsxcmp("-h", argv[i])) || (0 == _tcsxcmp("-H", argv[i])))
+		if (0 == _tcsxicmp("-h", argv[i]))
 		{
 			XEngine_Configure_Help();
 			return false;
 		}
-		else if (0 == _tcsxcmp("-d", argv[i]))
+		else if (0 == _tcsxicmp("-d", argv[i]))
 		{
 			pSt_Configure->bDeamon = _ttxoi(argv[++i]);
 		}
-		else if (0 == _tcsxcmp("-ps", argv[i]))
+		else if (0 == _tcsxicmp("-ps", argv[i]))
 		{
 			st_ServiceConfig.nSocksPort = _ttxoi(argv[++i]);
 		}
-		else if (0 == _tcsxcmp("-pt", argv[i]))
+		else if (0 == _tcsxicmp("-pt", argv[i]))
 		{
 			st_ServiceConfig.nTunnelPort = _ttxoi(argv[++i]);
 		}
-		else if (0 == _tcsxcmp("-pf", argv[i]))
+		else if (0 == _tcsxicmp("-pf", argv[i]))
 		{
 			st_ServiceConfig.nForwardPort = _ttxoi(argv[++i]);
 		}
-		else if (0 == _tcsxcmp("-pp", argv[i]))
+		else if (0 == _tcsxicmp("-pp", argv[i]))
 		{
 			st_ServiceConfig.nProxyPort = _ttxoi(argv[++i]);
 		}
-		else if (0 == _tcsxcmp("-ll", argv[i]))
-		{
-			pSt_Configure->st_XLog.nLogLeave = _ttxoi(argv[++i]);
-		}
-		else if (0 == _tcsxcmp("-lt", argv[i]))
-		{
-			pSt_Configure->st_XLog.nLogType = _ttxoi(argv[++i]);
-		}
-		else if (0 == _tcsxcmp("-v", argv[i]))
+		else if (0 == _tcsxicmp("-v", argv[i]))
 		{
 			string m_StrVersion = st_ServiceConfig.st_XVer.pStl_ListVer->front();
 			printf("Version：%s\n", m_StrVersion.c_str());
 			return false;
 		}
-		else if (0 == _tcsxcmp("-t", argv[i]))
+		else if (0 == _tcsxicmp("-t", argv[i]))
 		{
 			bIsTest = true;
+		}
+		else if (0 == _tcsxicmp("-lt", argv[i]))
+		{
+			pSt_Configure->st_XLog.nLogType = _ttxoi(argv[++i]);
+		}
+		else if (0 == _tcsxicmp("-l", argv[i]))
+		{
+			LPCXSTR lpszLogLevel = argv[++i];
+			if (0 == _tcsxicmp("debug", lpszLogLevel))
+			{
+				pSt_Configure->st_XLog.nLogLeave = XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG;
+			}
+			else if (0 == _tcsxicmp("detail", lpszLogLevel))
+			{
+				pSt_Configure->st_XLog.nLogLeave = XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DETAIL;
+			}
+			else if (0 == _tcsxicmp("info", lpszLogLevel))
+			{
+				pSt_Configure->st_XLog.nLogLeave = XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO;
+			}
 		}
 	}
 
