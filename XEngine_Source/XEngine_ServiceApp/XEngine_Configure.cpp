@@ -55,8 +55,7 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 		}
 		else if (0 == _tcsxicmp("-v", argv[i]))
 		{
-			string m_StrVersion = st_ServiceConfig.st_XVer.pStl_ListVer->front();
-			printf("Version：%s\n", m_StrVersion.c_str());
+			printf("Version：%s\n", st_ServiceConfig.st_XVer.pStl_ListVer->front().c_str());
 			return false;
 		}
 		else if (0 == _tcsxicmp("-t", argv[i]))

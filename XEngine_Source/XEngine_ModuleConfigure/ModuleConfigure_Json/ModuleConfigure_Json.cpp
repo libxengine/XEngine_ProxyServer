@@ -61,21 +61,12 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_OPENFILE;
 		return false;
 	}
-	int nCount = 0;
-	XCHAR tszMsgBuffer[4096];
-	while (1)
-	{
-		int nRet = fread(tszMsgBuffer + nCount, 1, 2048, pSt_File);
-		if (nRet <= 0)
-		{
-			break;
-		}
-		nCount += nRet;
-	}
+	XCHAR tszMsgBuffer[8192];
+	int nRet = fread(tszMsgBuffer, 1, sizeof(tszMsgBuffer), pSt_File);
 	fclose(pSt_File);
 	//开始解析配置文件
 	std::unique_ptr<Json::CharReader> const pSt_JsonReader(st_JsonBuilder.newCharReader());
-	if (!pSt_JsonReader->parse(tszMsgBuffer, tszMsgBuffer + nCount, &st_JsonRoot, &st_JsonError))
+	if (!pSt_JsonReader->parse(tszMsgBuffer, tszMsgBuffer + nRet, &st_JsonRoot, &st_JsonError))
 	{
 		Config_IsErrorOccur = true;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_PARSE;
@@ -204,21 +195,12 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_Version(LPCXSTR lpszConfigFile,
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_OPENFILE;
 		return false;
 	}
-	int nCount = 0;
-	XCHAR tszMsgBuffer[4096];
-	while (1)
-	{
-		int nRet = fread(tszMsgBuffer + nCount, 1, 2048, pSt_File);
-		if (nRet <= 0)
-		{
-			break;
-		}
-		nCount += nRet;
-	}
+	XCHAR tszMsgBuffer[8192];
+	int nRet = fread(tszMsgBuffer, 1, sizeof(tszMsgBuffer), pSt_File);
 	fclose(pSt_File);
 	//开始解析配置文件
 	std::unique_ptr<Json::CharReader> const pSt_JsonReader(st_JsonBuilder.newCharReader());
-	if (!pSt_JsonReader->parse(tszMsgBuffer, tszMsgBuffer + nCount, &st_JsonRoot, &st_JsonError))
+	if (!pSt_JsonReader->parse(tszMsgBuffer, tszMsgBuffer + nRet, &st_JsonRoot, &st_JsonError))
 	{
 		Config_IsErrorOccur = true;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_PARSE;
