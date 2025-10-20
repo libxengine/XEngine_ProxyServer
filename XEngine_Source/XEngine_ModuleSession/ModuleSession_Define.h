@@ -20,7 +20,7 @@ typedef enum
 }ENUM_PROXY_SESSION_CLIENT_STATUS;
 typedef struct
 {
-	XENGINE_PROTOCOL_USERAUTH st_UserAuth;
+	XENGINE_PROTOCOL_USERAUTHEX st_UserAuth;
 	XCHAR tszSrcAddr[128];
 	XCHAR tszDstAddr[128];
 	XNETHANDLE xhClient;
