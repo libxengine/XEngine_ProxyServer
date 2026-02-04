@@ -22,7 +22,8 @@ XHANDLE xhProxySocket = NULL;
 XHANDLE xhProxyHeart = NULL;
 XHANDLE xhProxyClient = NULL;
 //配置文件
-XENGINE_SERVICECONFIG st_ServiceConfig;
+XENGINE_SERVICECONFIG st_ServiceConfig = {};
+XENGINE_PROXYCONFIG st_ProxyConfig = {};
 
 void ServiceApp_Stop(int signo)
 {
@@ -129,8 +130,6 @@ int main(int argc, char** argv)
 	int nRet = 0;
 	XENGINE_LIBVERSION st_VERXEngine = {};
 	HELPCOMPONENTS_XLOG_CONFIGURE st_XLogConfig = {};
-
-	memset(&st_ServiceConfig, '\0', sizeof(XENGINE_SERVICECONFIG));
 	//初始化参数
 	if (!XEngine_Configure_Parament(argc, argv, &st_ServiceConfig))
 	{
@@ -334,7 +333,7 @@ int main(int argc, char** argv)
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启动Proxy网络服务器失败,错误：%lX"), NetCore_GetLastError());
 			goto XENGINE_SERVICEAPP_EXIT;
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Proxy网络服务器成功,Proxy端口:%d,转发目标个数:%d 规则个数:%d,IO:%d"), st_ServiceConfig.nProxyPort, st_ServiceConfig.st_XProxy.pStl_ListDestAddr->size(), st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->size(), st_ServiceConfig.st_XMax.nIOThread);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Proxy网络服务器成功,Proxy端口:%d,转发目标个数:%d 规则个数:%d,IO:%d"), st_ServiceConfig.nProxyPort, st_ProxyConfig.pStl_ListDestAddr->size(), st_ProxyConfig.pStl_ListRuleAddr->size(), st_ServiceConfig.st_XMax.nIOThread);
 		NetCore_TCPXCore_RegisterCallBackEx(xhProxySocket, Network_Callback_ProxyLogin, Network_Callback_ProxyRecv, Network_Callback_ProxyLeave);
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,注册Proxy网络事件成功"));
 		//客户端
@@ -346,11 +345,11 @@ int main(int argc, char** argv)
 		}
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动Proxy客户端服务成功"));
 
-		for (auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListDestAddr->begin(); stl_ListIterator != st_ServiceConfig.st_XProxy.pStl_ListDestAddr->end(); stl_ListIterator++)
+		for (auto stl_ListIterator = st_ProxyConfig.pStl_ListDestAddr->begin(); stl_ListIterator != st_ProxyConfig.pStl_ListDestAddr->end(); stl_ListIterator++)
 		{
 			ModuleSession_ProxyRule_Insert(stl_ListIterator->c_str());
 		}
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化负载均衡后台服务端成功,个数:%d"), st_ServiceConfig.st_XProxy.pStl_ListDestAddr->size());
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化负载均衡后台服务端成功,个数:%d"), st_ProxyConfig.pStl_ListDestAddr->size());
 	}
 	else
 	{

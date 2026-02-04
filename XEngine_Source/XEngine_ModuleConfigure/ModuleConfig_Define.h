@@ -50,17 +50,17 @@ typedef struct tag_XEngine_ServiceConfig
 		XCHAR tszAPIUrl[XPATH_MAX];
 		XCHAR tszServiceName[128];
 	}st_XReport;
-	struct
-	{
-		int nRuleMode;                       //模式
-		std::list<xstring>* pStl_ListDestAddr;
-		std::list<xstring>* pStl_ListRuleAddr;
-	}st_XProxy;
 	struct  
 	{
 		list<string>* pStl_ListVer;
 	}st_XVer;
 }XENGINE_SERVICECONFIG;
+typedef struct
+{
+	int nRuleMode;                       //模式
+	std::list<xstring>* pStl_ListDestAddr;
+	std::list<xstring>* pStl_ListRuleAddr;
+}XENGINE_PROXYCONFIG;
 //////////////////////////////////////////////////////////////////////////
 //                        导出函数定义
 //////////////////////////////////////////////////////////////////////////
@@ -106,3 +106,22 @@ extern "C" bool ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XENGINE_SERVIC
 备注：
 *********************************************************************/
 extern "C" bool ModuleConfigure_Json_Version(LPCXSTR lpszConfigFile, XENGINE_SERVICECONFIG* pSt_ServerConfig);
+/********************************************************************
+函数名称：ModuleConfigure_Json_ProxyFile
+函数功能：读取JSON配置文件
+ 参数.一：lpszConfigFile
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要读取的配置文件
+ 参数.二：pSt_ServerConfig
+  In/Out：Out
+  类型：数据结构指针
+  可空：N
+  意思：输出服务配置信息
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleConfigure_Json_ProxyFile(LPCXSTR lpszConfigFile, XENGINE_PROXYCONFIG* pSt_ServerConfig);

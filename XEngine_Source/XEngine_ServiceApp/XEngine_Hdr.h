@@ -102,6 +102,7 @@ extern XHANDLE xhProxyHeart;
 extern XHANDLE xhProxyClient;
 //配置文件
 extern XENGINE_SERVICECONFIG st_ServiceConfig;
+extern XENGINE_PROXYCONFIG st_ProxyConfig;
 
 //网络类型定义
 #define XENGINE_CLIENT_NETTYPE_SOCKS 1

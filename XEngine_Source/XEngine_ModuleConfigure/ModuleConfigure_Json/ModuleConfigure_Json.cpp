@@ -129,31 +129,6 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	_tcsxcpy(pSt_ServerConfig->st_XReport.tszAPIUrl, st_JsonXReport["tszAPIUrl"].asCString());
 	_tcsxcpy(pSt_ServerConfig->st_XReport.tszServiceName, st_JsonXReport["tszServiceName"].asCString());
 
-	if (st_JsonRoot["XProxy"].empty())
-	{
-		Config_IsErrorOccur = true;
-		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XPROXY;
-		return false;
-	}
-	Json::Value st_JsonXProxy = st_JsonRoot["XProxy"];
-	pSt_ServerConfig->st_XProxy.pStl_ListRuleAddr = new list<xstring>;
-	pSt_ServerConfig->st_XProxy.pStl_ListDestAddr = new list<xstring>;
-
-	pSt_ServerConfig->st_XProxy.nRuleMode = st_JsonXProxy["nRuleMode"].asInt();
-	if (!st_JsonXProxy["tszDestIPAddr"].isNull())
-	{
-		for (unsigned int i = 0; i < st_JsonXProxy["tszDestIPAddr"].size(); i++)
-		{
-			pSt_ServerConfig->st_XProxy.pStl_ListDestAddr->push_back(st_JsonXProxy["tszDestIPAddr"][i].asCString());
-		}
-	}
-	if (!st_JsonXProxy["tszRuleIPAddr"].isNull())
-	{
-		for (unsigned int i = 0; i < st_JsonXProxy["tszRuleIPAddr"].size(); i++)
-		{
-			pSt_ServerConfig->st_XProxy.pStl_ListRuleAddr->push_back(st_JsonXProxy["tszRuleIPAddr"][i].asCString());
-		}
-	}
 	return true;
 }
 /********************************************************************
@@ -218,6 +193,76 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_Version(LPCXSTR lpszConfigFile,
 	for (unsigned int i = 0; i < st_JsonXVer.size(); i++)
 	{
 		pSt_ServerConfig->st_XVer.pStl_ListVer->push_back(st_JsonXVer[i].asCString());
+	}
+	return true;
+}
+/********************************************************************
+函数名称：ModuleConfigure_Json_ProxyFile
+函数功能：读取JSON配置文件
+ 参数.一：lpszConfigFile
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要读取的配置文件
+ 参数.二：pSt_ServerConfig
+  In/Out：Out
+  类型：数据结构指针
+  可空：N
+  意思：输出服务配置信息
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+bool CModuleConfigure_Json::ModuleConfigure_Json_ProxyFile(LPCXSTR lpszConfigFile, XENGINE_PROXYCONFIG* pSt_ServerConfig)
+{
+	Config_IsErrorOccur = false;
+
+	if ((NULL == lpszConfigFile) || (NULL == pSt_ServerConfig))
+	{
+		Config_IsErrorOccur = true;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_PARAMENT;
+		return false;
+	}
+	Json::Value st_JsonRoot;
+	JSONCPP_STRING st_JsonError;
+	Json::CharReaderBuilder st_JsonBuilder;
+	//读取配置文件所有内容到缓冲区
+	FILE* pSt_File = _xtfopen(lpszConfigFile, _X("rb"));
+	if (NULL == pSt_File)
+	{
+		Config_IsErrorOccur = true;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_OPENFILE;
+		return false;
+	}
+	XCHAR tszMsgBuffer[8192];
+	int nRet = fread(tszMsgBuffer, 1, sizeof(tszMsgBuffer), pSt_File);
+	fclose(pSt_File);
+	//开始解析配置文件
+	std::unique_ptr<Json::CharReader> const pSt_JsonReader(st_JsonBuilder.newCharReader());
+	if (!pSt_JsonReader->parse(tszMsgBuffer, tszMsgBuffer + nRet, &st_JsonRoot, &st_JsonError))
+	{
+		Config_IsErrorOccur = true;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_PARSE;
+		return false;
+	}
+	pSt_ServerConfig->pStl_ListRuleAddr = new list<xstring>;
+	pSt_ServerConfig->pStl_ListDestAddr = new list<xstring>;
+
+	pSt_ServerConfig->nRuleMode = st_JsonRoot["nRuleMode"].asInt();
+	if (!st_JsonRoot["tszDestIPAddr"].isNull())
+	{
+		for (unsigned int i = 0; i < st_JsonRoot["tszDestIPAddr"].size(); i++)
+		{
+			pSt_ServerConfig->pStl_ListDestAddr->push_back(st_JsonRoot["tszDestIPAddr"][i].asCString());
+		}
+	}
+	if (!st_JsonRoot["tszRuleIPAddr"].isNull())
+	{
+		for (unsigned int i = 0; i < st_JsonRoot["tszRuleIPAddr"].size(); i++)
+		{
+			pSt_ServerConfig->pStl_ListRuleAddr->push_back(st_JsonRoot["tszRuleIPAddr"][i].asCString());
+		}
 	}
 	return true;
 }

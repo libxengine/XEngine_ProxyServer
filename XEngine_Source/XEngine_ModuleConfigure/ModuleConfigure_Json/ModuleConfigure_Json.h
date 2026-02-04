@@ -19,6 +19,7 @@ public:
 public:
 	bool ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XENGINE_SERVICECONFIG* pSt_ServerConfig);
 	bool ModuleConfigure_Json_Version(LPCXSTR lpszConfigFile, XENGINE_SERVICECONFIG* pSt_ServerConfig);
+	bool ModuleConfigure_Json_ProxyFile(LPCXSTR lpszConfigFile, XENGINE_PROXYCONFIG* pSt_ServerConfig);
 protected:
 private:
 };

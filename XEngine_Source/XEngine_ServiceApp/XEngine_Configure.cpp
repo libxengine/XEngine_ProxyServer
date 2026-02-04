@@ -14,6 +14,7 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 {
 	LPCXSTR lpszConfigFile = _X("./XEngine_Config/XEngine_Config.json");
 	LPCXSTR lpszConfigVersion = _X("./XEngine_Config/XEngine_Version.json");
+	LPCXSTR lpszConfigProxy = _X("./XEngine_Config/XEngine_ProxyConfig.json");
 
 	if (!ModuleConfigure_Json_File(lpszConfigFile, pSt_Configure))
 	{
@@ -21,6 +22,11 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 		return false;
 	}
 	if (!ModuleConfigure_Json_Version(lpszConfigVersion, pSt_Configure))
+	{
+		printf("解析配置文件失败,ModuleConfigure_Json_Version:%lX\n", ModuleConfigure_GetLastError());
+		return false;
+	}
+	if (!ModuleConfigure_Json_ProxyFile(lpszConfigProxy, &st_ProxyConfig))
 	{
 		printf("解析配置文件失败,ModuleConfigure_Json_Version:%lX\n", ModuleConfigure_GetLastError());
 		return false;

@@ -37,3 +37,7 @@ extern "C" bool ModuleConfigure_Json_Version(LPCXSTR lpszConfigFile, XENGINE_SER
 {
 	return m_ConfigJson.ModuleConfigure_Json_Version(lpszConfigFile, pSt_ServerConfig);
 }
+extern "C" bool ModuleConfigure_Json_ProxyFile(LPCXSTR lpszConfigFile, XENGINE_PROXYCONFIG* pSt_ServerConfig)
+{
+	return m_ConfigJson.ModuleConfigure_Json_ProxyFile(lpszConfigFile, pSt_ServerConfig);
+}

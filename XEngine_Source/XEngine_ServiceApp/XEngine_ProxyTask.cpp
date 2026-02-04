@@ -23,10 +23,10 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 	_tcsxcpy(tszSrcIPAddr, lpszClientAddr);
 	APIAddr_IPAddr_SegAddr(tszSrcIPAddr, &nSrcPort);
 	//是否有单独的转发规则
-	if (!st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->empty())
+	if (!st_ProxyConfig.pStl_ListRuleAddr->empty())
 	{
 		//有规则,需要进行匹配
-		for (auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->begin(); stl_ListIterator != st_ServiceConfig.st_XProxy.pStl_ListRuleAddr->end(); stl_ListIterator++)
+		for (auto stl_ListIterator = st_ProxyConfig.pStl_ListRuleAddr->begin(); stl_ListIterator != st_ProxyConfig.pStl_ListRuleAddr->end(); stl_ListIterator++)
 		{
 			XCHAR tszTmpIPAddr[128] = {};
 			_stxscanf(stl_ListIterator->c_str(), _X("%[^-]-%s"), tszTmpIPAddr, tszDstIPAddr);
@@ -44,7 +44,7 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 	if (!bFound)
 	{
 		//没有匹配到
-		if (0 == st_ServiceConfig.st_XProxy.nRuleMode)
+		if (0 == st_ProxyConfig.nRuleMode)
 		{
 			int nIPCount = 0;
 			SESSION_IPCONUT** ppSt_IPCount;
@@ -56,22 +56,22 @@ bool XEngine_Proxy_Connect(LPCXSTR lpszClientAddr)
 			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转发规则地址未命中,使用最小原则规则地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
 		}
-		else if (1 == st_ServiceConfig.st_XProxy.nRuleMode)
+		else if (1 == st_ProxyConfig.nRuleMode)
 		{
 			size_t nHashValue = std::hash<xstring>{}(tszSrcIPAddr);
-			size_t nIndex = nHashValue % st_ServiceConfig.st_XProxy.pStl_ListDestAddr->size();
-			auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListDestAddr->begin();
+			size_t nIndex = nHashValue % st_ProxyConfig.pStl_ListDestAddr->size();
+			auto stl_ListIterator = st_ProxyConfig.pStl_ListDestAddr->begin();
 			std::advance(stl_ListIterator, nIndex);
 			_tcsxcpy(tszIPAddr, stl_ListIterator->c_str());
 			_tcsxcpy(tszDstIPAddr, stl_ListIterator->c_str());
 			APIAddr_IPAddr_SegAddr(tszDstIPAddr, &nDstPort);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Proxy客户端:%s,代理转发规则地址未命中,使用HASH规则,规则地址:%s:%d"), lpszClientAddr, tszDstIPAddr, nDstPort);
 		}
-		else if (2 == st_ServiceConfig.st_XProxy.nRuleMode)
+		else if (2 == st_ProxyConfig.nRuleMode)
 		{
 			XNETHANDLE xhIndex = 0;
-			BaseLib_Handle_Create(&xhIndex, 0, st_ServiceConfig.st_XProxy.pStl_ListDestAddr->size());
-			auto stl_ListIterator = st_ServiceConfig.st_XProxy.pStl_ListDestAddr->begin();
+			BaseLib_Handle_Create(&xhIndex, 0, st_ProxyConfig.pStl_ListDestAddr->size());
+			auto stl_ListIterator = st_ProxyConfig.pStl_ListDestAddr->begin();
 			std::advance(stl_ListIterator, xhIndex);
 			_tcsxcpy(tszIPAddr, stl_ListIterator->c_str());
 			_tcsxcpy(tszDstIPAddr, stl_ListIterator->c_str());
