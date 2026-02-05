@@ -17,6 +17,7 @@ typedef struct tag_XEngine_ServiceConfig
 {
 	XCHAR tszIPAddr[128];                     //本机IP地址,根据需要配置
 	bool bDeamon;                             //是否以守护进程启动,LINUX有效
+	int nHttpPort;                            //HTTP服务端口,<=0不启用
 	int nSocksPort;                           //Socks端口,<=0不启用
 	int nTunnelPort;                          //Tunnel服务端口
 	int nForwardPort;                         //数据转发端口
@@ -26,11 +27,13 @@ typedef struct tag_XEngine_ServiceConfig
 		int nMaxClient;                       //最大客户端个数
 		int nMaxQueue;                        //最大队列个数
 		int nIOThread;                        //网络IO线程数
+		int nHTTPThread;					  //HTTP处理线程数
 		int nForwardThread;                   //转发服务
 	}st_XMax;
 	struct
 	{
 		int nTimeCheck;                       //检测次数
+		int nHttpTimeout;                    //HTTP超时时间
 		int nSocksTimeout;                    //TCP超时时间
 		int nTunnelTimeout;                   //HTTP超时时间
 		int nForwardTimeout;                  //转发超时时间

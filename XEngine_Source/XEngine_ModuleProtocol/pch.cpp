@@ -31,6 +31,10 @@ extern "C" XLONG ModuleProtocol_GetLastError(int* pInt_SysError)
 /************************************************************************/
 /*                        封包导出函数                                  */
 /************************************************************************/
+extern "C" bool ModuleProtocol_Packet_Comm(XCHAR* ptszMSGBuffer, int* pInt_MSGLen, int nCode, LPCXSTR lpszMSGBuffer)
+{
+	return m_ProtocolPacket.ModuleProtocol_Packet_Comm(ptszMSGBuffer, pInt_MSGLen, nCode, lpszMSGBuffer);
+}
 extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR * ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR * pSt_ProtocolHdr, SESSION_FORWARD * **pppSt_ListUser, int nCount)
 {
 	return m_ProtocolPacket.ModuleProtocol_Packet_ForwardList(ptszMsgBuffer, pInt_Len, pSt_ProtocolHdr, pppSt_ListUser, nCount);

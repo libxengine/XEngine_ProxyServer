@@ -17,6 +17,7 @@ public:
 	CModuleProtocol_Packet();
 	~CModuleProtocol_Packet();
 public:
+	bool ModuleProtocol_Packet_Comm(XCHAR* ptszMSGBuffer, int* pInt_MSGLen, int nCode = 0, LPCXSTR lpszMSGBuffer = _X("success"));
 	bool ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, SESSION_FORWARD*** pppSt_ListUser, int nCount);
 private:
 };

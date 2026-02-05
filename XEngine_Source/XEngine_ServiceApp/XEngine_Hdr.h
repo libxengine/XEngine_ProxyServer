@@ -47,6 +47,8 @@ using namespace std;
 #include <XEngine_Include/XEngine_HelpComponents/Packets_Error.h>
 #include <XEngine_Include/XEngine_RfcComponents/ProxyProtocol_Define.h>
 #include <XEngine_Include/XEngine_RfcComponents/ProxyProtocol_Error.h>
+#include <XEngine_Include/XEngine_RfcComponents/HttpProtocol_Define.h>
+#include <XEngine_Include/XEngine_RfcComponents/HttpProtocol_Error.h>
 #include <XEngine_Include/XEngine_Client/XClient_Define.h>
 #include <XEngine_Include/XEngine_Client/XClient_Error.h>
 //加载项目相关头文件
@@ -64,6 +66,7 @@ using namespace std;
 //加载自己的头文件
 #include "XEngine_Configure.h"
 #include "XEngine_Network.h"
+#include "XEngine_HTTPTask.h"
 #include "XEngine_SocksTask.h"
 #include "XEngine_TunnelTask.h"
 #include "XEngine_ForwardTask.h"
@@ -100,11 +103,17 @@ extern XHANDLE xhForwardClient;
 extern XHANDLE xhProxySocket;
 extern XHANDLE xhProxyHeart;
 extern XHANDLE xhProxyClient;
+//HTTP服务器
+extern XHANDLE xhHTTPSocket;
+extern XHANDLE xhHTTPHeart;
+extern XHANDLE xhHTTPPacket;
+extern XHANDLE xhHTTPPool;
 //配置文件
 extern XENGINE_SERVICECONFIG st_ServiceConfig;
 extern XENGINE_PROXYCONFIG st_ProxyConfig;
 
 //网络类型定义
+#define XENGINE_CLIENT_NETTYPE_HTTP 0
 #define XENGINE_CLIENT_NETTYPE_SOCKS 1
 #define XENGINE_CLIENT_NETTYPE_TUNNEL 2
 #define XENGINE_CLIENT_NETTYPE_FORWARD 3
@@ -127,6 +136,7 @@ extern XENGINE_PROXYCONFIG st_ProxyConfig;
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_XLog.lib")
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_Packets.lib")
 #pragma comment(lib,"XEngine_RfcComponents/RfcComponents_ProxyProtocol.lib")
+#pragma comment(lib,"XEngine_RfcComponents/RfcComponents_HttpProtocol.lib")
 #pragma comment(lib,"Ws2_32.lib")
 #pragma comment(lib,"Dbghelp.lib")
 #ifdef _DEBUG

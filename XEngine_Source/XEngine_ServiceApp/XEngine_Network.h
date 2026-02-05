@@ -10,6 +10,11 @@
 //    Purpose:     网络IO相关代码
 //    History:
 *********************************************************************/
+//HTTP相关
+bool XCALLBACK Network_Callback_HTTPLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);
+void XCALLBACK Network_Callback_HTTPRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam);
+void XCALLBACK Network_Callback_HTTPLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);
+void XCALLBACK Network_Callback_HTTPHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam);
 //SOCKS相关
 bool XCALLBACK Network_Callback_SocksLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam);                                  //用户连接
 void XCALLBACK Network_Callback_SocksRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam); //接受到数据

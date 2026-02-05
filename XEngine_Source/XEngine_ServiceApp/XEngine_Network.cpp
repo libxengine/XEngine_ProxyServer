@@ -10,6 +10,32 @@
 //    Purpose:     网络IO相关代码
 //    History:
 *********************************************************************/
+//////////////////////////////////////////////////////////////////////////下面是HTTP网络IO相关代码处理函数
+bool XCALLBACK Network_Callback_HTTPLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
+{
+	SocketOpt_HeartBeat_InsertAddrEx(xhHTTPHeart, lpszClientAddr);
+	HttpProtocol_Server_CreateClientEx(xhHTTPPacket, lpszClientAddr, 0);
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DETAIL, _X("HTTP客户端:%s,连接到服务器"), lpszClientAddr);
+	return true;
+}
+void XCALLBACK Network_Callback_HTTPRecv(LPCXSTR lpszClientAddr, XSOCKET hSocket, LPCXSTR lpszRecvMsg, int nMsgLen, XPVOID lParam)
+{
+	if (!HttpProtocol_Server_InserQueueEx(xhHTTPPacket, lpszClientAddr, lpszRecvMsg, nMsgLen))
+	{
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("HTTP客户端:%s,投递HTTP数据包到消息队列失败，错误:%lX"), lpszClientAddr, HttpProtocol_GetLastError());
+		return;
+	}
+	SocketOpt_HeartBeat_ActiveAddrEx(xhHTTPHeart, lpszClientAddr);
+	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _X("HTTP客户端:%s,投递数据包到组包队列成功,大小:%d"), lpszClientAddr, nMsgLen);
+}
+void XCALLBACK Network_Callback_HTTPLeave(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
+{
+	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_HTTP, XENGINE_CLIENT_CLOSE_NETWORK);
+}
+void XCALLBACK Network_Callback_HTTPHeart(LPCXSTR lpszClientAddr, XSOCKET hSocket, int nStatus, XPVOID lParam)
+{
+	XEngine_Network_Close(lpszClientAddr, XENGINE_CLIENT_NETTYPE_HTTP, XENGINE_CLIENT_CLOSE_HEARTBEAT);
+}
 //////////////////////////////////////////////////////////////////////////下面是SOCKS网络IO相关代码处理函数
 bool XCALLBACK Network_Callback_SocksLogin(LPCXSTR lpszClientAddr, XSOCKET hSocket, XPVOID lParam)
 {
@@ -248,7 +274,25 @@ void XEngine_Network_Close(LPCXSTR lpszClientAddr, int nIPProto, int nCloseType)
 bool XEngine_Network_Send(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int nMsgLen, int nIPProto)
 {
 	//根据客户端类型来处理发送业务逻辑
-	if (XENGINE_CLIENT_NETTYPE_SOCKS == nIPProto)
+	if (XENGINE_CLIENT_NETTYPE_HTTP == nIPProto)
+	{
+		int nMSGSize = 0; //发送数据的大小
+		XCHAR tszMSGBuffer[4096] = {}; //发送数据的缓冲区
+		RFCCOMPONENTS_HTTP_HDRPARAM st_HDRParam = {};
+		st_HDRParam.nHttpCode = 200;
+		st_HDRParam.bIsClose = true;
+
+		HttpProtocol_Server_SendMsgEx(xhHTTPPacket, tszMSGBuffer, &nMSGSize, &st_HDRParam, lpszMsgBuffer, nMsgLen);
+		//发送数据给指定客户端
+		if (!NetCore_TCPXCore_SendEx(xhHTTPSocket, lpszClientAddr, tszMSGBuffer, nMSGSize, 1, 1))
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("HTTP客户端:%s,发送数据失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
+			return false;
+		}
+		//发送成功激活一次心跳
+		SocketOpt_HeartBeat_ActiveAddrEx(xhHTTPHeart, lpszClientAddr);
+	}
+	else if (XENGINE_CLIENT_NETTYPE_SOCKS == nIPProto)
 	{
 		//发送数据给指定客户端
 		if (!NetCore_TCPXCore_SendEx(xhSocksSocket, lpszClientAddr, lpszMsgBuffer, nMsgLen, 1, 1))

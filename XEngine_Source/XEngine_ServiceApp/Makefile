@@ -7,7 +7,7 @@ LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_Cryption -l
       -lXEngine_ModuleConfigure -lXEngine_ModuleSession -lXEngine_ModuleProtocol -lXEngine_ModuleHelp \
 	  -ljsoncpp -lXEngine_InfoReport
 LIBEX = 
-OBJECTS = XEngine_Configure.o XEngine_Network.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ForwardTask.o XEngine_ProxyTask.o XEngine_ServiceApp.o
+OBJECTS = XEngine_Configure.o XEngine_Network.o XEngine_HTTPTask.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ForwardTask.o XEngine_ProxyTask.o XEngine_ServiceApp.o
 
 ifeq ($(RELEASE),1)
 FLAGS = -c -D _RELEASE
@@ -50,6 +50,8 @@ XEngine_Configure.o:./XEngine_Configure.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_Configure.cpp
 XEngine_Network.o:./XEngine_Network.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_Network.cpp 
+XEngine_HTTPTask.o:./XEngine_HTTPTask.cpp
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_HTTPTask.cpp
 XEngine_SocksTask.o:./XEngine_SocksTask.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_SocksTask.cpp
 XEngine_TunnelTask.o:./XEngine_TunnelTask.cpp

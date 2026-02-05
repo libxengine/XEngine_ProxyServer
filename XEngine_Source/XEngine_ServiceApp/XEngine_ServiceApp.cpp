@@ -21,6 +21,11 @@ XHANDLE xhForwardClient = NULL;
 XHANDLE xhProxySocket = NULL;
 XHANDLE xhProxyHeart = NULL;
 XHANDLE xhProxyClient = NULL;
+
+XHANDLE xhHTTPSocket = NULL;
+XHANDLE xhHTTPHeart = NULL;
+XHANDLE xhHTTPPacket = NULL;
+XHANDLE xhHTTPPool = NULL;
 //配置文件
 XENGINE_SERVICECONFIG st_ServiceConfig = {};
 XENGINE_PROXYCONFIG st_ProxyConfig = {};
@@ -128,8 +133,11 @@ int main(int argc, char** argv)
 #endif
 	bIsRun = true;
 	int nRet = 0;
+	LPCXSTR lpszHTTPMime = _X("./XEngine_Config/HttpMime.types");
+	LPCXSTR lpszHTTPCode = _X("./XEngine_Config/HttpCode.types");
 	XENGINE_LIBVERSION st_VERXEngine = {};
 	HELPCOMPONENTS_XLOG_CONFIGURE st_XLogConfig = {};
+	THREADPOOL_PARAMENT** ppSt_ListHTTPParam;
 	//初始化参数
 	if (!XEngine_Configure_Parament(argc, argv, &st_ServiceConfig))
 	{
@@ -158,6 +166,65 @@ int main(int argc, char** argv)
 	signal(SIGTERM, ServiceApp_Stop);
 	signal(SIGABRT, ServiceApp_Stop);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化信号量处理程序成功"));
+
+	if (st_ServiceConfig.nHttpPort > 0)
+	{
+		//HTTP包处理器
+		xhHTTPPacket = HttpProtocol_Server_InitEx(lpszHTTPCode, lpszHTTPMime, st_ServiceConfig.st_XMax.nHTTPThread);
+		if (NULL == xhHTTPPacket)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化HTTP组包失败,错误：%lX"), HttpProtocol_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化HTTP组包成功,IO线程个数:%d"), st_ServiceConfig.st_XMax.nIOThread);
+		//启动心跳
+		if (st_ServiceConfig.st_XTime.nTimeCheck > 0)
+		{
+			xhHTTPHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nHttpTimeout, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_HTTPHeart);
+			if (NULL == xhHTTPHeart)
+			{
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化HTTP心跳服务失败,错误：%lX"), NetCore_GetLastError());
+				goto XENGINE_SERVICEAPP_EXIT;
+			}
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化HTTP心跳服务成功,时间:%d,次数:%d"), st_ServiceConfig.st_XTime.nHttpTimeout, st_ServiceConfig.st_XTime.nTimeCheck);
+		}
+		else
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,HTTP心跳服务被设置为不启用"));
+		}
+		//网络
+		xhHTTPSocket = NetCore_TCPXCore_StartEx(st_ServiceConfig.nHttpPort, st_ServiceConfig.st_XMax.nMaxClient, st_ServiceConfig.st_XMax.nIOThread);
+		if (NULL == xhHTTPSocket)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启动HTTP网络端口:%d 服务器失败,错误：%lX"), st_ServiceConfig.nHttpPort, NetCore_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动HTTP网络服务器成功,HTTP端口:%d,IO:%d"), st_ServiceConfig.nHttpPort, st_ServiceConfig.st_XMax.nIOThread);
+		NetCore_TCPXCore_RegisterCallBackEx(xhHTTPSocket, Network_Callback_HTTPLogin, Network_Callback_HTTPRecv, Network_Callback_HTTPLeave);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,注册HTTP网络事件成功"));
+		//HTTP任务池
+		BaseLib_Memory_Malloc((XPPPMEM)&ppSt_ListHTTPParam, st_ServiceConfig.st_XMax.nHTTPThread, sizeof(THREADPOOL_PARAMENT));
+		for (int i = 0; i < st_ServiceConfig.st_XMax.nHTTPThread; i++)
+		{
+			int* pInt_Pos = new int;
+
+			*pInt_Pos = i;
+			ppSt_ListHTTPParam[i]->lParam = pInt_Pos;
+			ppSt_ListHTTPParam[i]->fpCall_ThreadsTask = XEngine_HTTPTask_Thread;
+		}
+		xhHTTPPool = ManagePool_Thread_NQCreate(&ppSt_ListHTTPParam, st_ServiceConfig.st_XMax.nHTTPThread);
+		if (NULL == xhHTTPPool)
+		{
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,启动HTTP线程池服务失败,错误：%lX"), ManagePool_GetLastError());
+			goto XENGINE_SERVICEAPP_EXIT;
+		}
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启动HTTP线程池服务成功,启动个数:%d"), st_ServiceConfig.st_XMax.nHTTPThread);
+	}
+	else
+	{
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,HTTP消息服务没有被启用"));
+	}
+
 	//启动Socks服务相关代码
 	if (st_ServiceConfig.nSocksPort > 0)
 	{

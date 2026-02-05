@@ -1,18 +1,21 @@
 {
   "tszIPAddr": "192.168.1.12",
   "bDeamon": false,
-  "nSocksPort": 5400,
-  "nTunnelPort": 5401,
-  "nForwardPort": 5402,
-  "nProxyPort": 5403,
+  "nHttpPort":5400,
+  "nSocksPort": 5401,
+  "nTunnelPort": 5402,
+  "nForwardPort": 5403,
+  "nProxyPort": 5404,
   "XMax": {
     "nMaxClient": 10000,
     "nMaxQueue": 10000,
     "nIOThread": 4,
+    "nHTTPThread": 2,
     "nForwardThread": 4
   },
   "XTime": {
     "nTimeCheck": 3,
+    "nHttpTimeout": 5,
     "nSocksTimeout": 5,
     "nTunnelTimeout": 5,
     "nForwardTimeout": 5,

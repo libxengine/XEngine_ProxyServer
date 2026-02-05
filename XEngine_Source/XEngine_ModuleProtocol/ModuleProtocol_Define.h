@@ -18,6 +18,35 @@ extern "C" XLONG ModuleProtocol_GetLastError(int* pInt_SysError = NULL);
 /*                        封包导出函数                                  */
 /************************************************************************/
 /********************************************************************
+函数名称：ModuleProtocol_Packet_Comm
+函数功能：打包一个通用回复消息
+ 参数.一：ptszMSGBuffer
+  In/Out：Out
+  类型：字符指针
+  可空：N
+  意思：输出打好包的JSON数据信息
+ 参数.二：pInt_MSGLen
+  In/Out：Out
+  类型：整数型指针
+  可空：N
+  意思：输出打包大小
+ 参数.三：nCode
+  In/Out：In
+  类型：整数型
+  可空：Y
+  意思：输入返回的错误码
+ 参数.四：lpszMSGBuffer
+  In/Out：In
+  类型：常量字符指针
+  可空：Y
+  意思：输入错误信息
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+extern "C" bool ModuleProtocol_Packet_Comm(XCHAR* ptszMSGBuffer, int* pInt_MSGLen, int nCode = 0, LPCXSTR lpszMSGBuffer = _X("success"));
+/********************************************************************
 函数名称：ModuleProtocol_Packet_ForwardList
 函数功能：转发协议封装请求
  参数.一：ptszMsgBuffer

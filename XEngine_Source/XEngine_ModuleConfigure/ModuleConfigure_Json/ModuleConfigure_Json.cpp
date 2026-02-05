@@ -74,12 +74,13 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	}
 	_tcsxcpy(pSt_ServerConfig->tszIPAddr, st_JsonRoot["tszIPAddr"].asCString());
 	pSt_ServerConfig->bDeamon = st_JsonRoot["bDeamon"].asBool();
+	pSt_ServerConfig->nHttpPort = st_JsonRoot["nHttpPort"].asInt();
 	pSt_ServerConfig->nSocksPort = st_JsonRoot["nSocksPort"].asInt();
 	pSt_ServerConfig->nTunnelPort = st_JsonRoot["nTunnelPort"].asInt();
 	pSt_ServerConfig->nForwardPort = st_JsonRoot["nForwardPort"].asInt();
 	pSt_ServerConfig->nProxyPort = st_JsonRoot["nProxyPort"].asInt();
 
-	if (st_JsonRoot["XMax"].empty() || (4 != st_JsonRoot["XMax"].size()))
+	if (st_JsonRoot["XMax"].empty() || (5 != st_JsonRoot["XMax"].size()))
 	{
 		Config_IsErrorOccur = true;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XMAX;
@@ -89,9 +90,10 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XMax.nMaxClient = st_JsonXMax["nMaxClient"].asInt();
 	pSt_ServerConfig->st_XMax.nMaxQueue = st_JsonXMax["nMaxQueue"].asInt();
 	pSt_ServerConfig->st_XMax.nIOThread = st_JsonXMax["nIOThread"].asInt();
+	pSt_ServerConfig->st_XMax.nHTTPThread = st_JsonXMax["nHTTPThread"].asInt();
 	pSt_ServerConfig->st_XMax.nForwardThread = st_JsonXMax["nForwardThread"].asInt();
 
-	if (st_JsonRoot["XTime"].empty() || (5 != st_JsonRoot["XTime"].size()))
+	if (st_JsonRoot["XTime"].empty() || (6 != st_JsonRoot["XTime"].size()))
 	{
 		Config_IsErrorOccur = true;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XTIME;
@@ -99,6 +101,7 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	}
 	Json::Value st_JsonXTime = st_JsonRoot["XTime"];
 	pSt_ServerConfig->st_XTime.nTimeCheck = st_JsonXTime["nTimeCheck"].asInt();
+	pSt_ServerConfig->st_XTime.nHttpTimeout = st_JsonXTime["nHttpTimeout"].asInt();
 	pSt_ServerConfig->st_XTime.nSocksTimeout = st_JsonXTime["nSocksTimeout"].asInt();
 	pSt_ServerConfig->st_XTime.nTunnelTimeout = st_JsonXTime["nTunnelTimeout"].asInt();
 	pSt_ServerConfig->st_XTime.nForwardTimeout = st_JsonXTime["nForwardTimeout"].asInt();
