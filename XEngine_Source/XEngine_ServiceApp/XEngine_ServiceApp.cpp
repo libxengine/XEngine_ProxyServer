@@ -167,6 +167,14 @@ int main(int argc, char** argv)
 	signal(SIGABRT, ServiceApp_Stop);
 	XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,初始化信号量处理程序成功"));
 
+	if (st_ServiceConfig.st_XVerifcation.bEnable)
+	{
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("启动服务中,启用HTTP验证,验证模式为:%d"), st_ServiceConfig.st_XVerifcation.nVType);
+	}
+	else
+	{
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("启动服务中,HTTP验证服务没有启用"));
+	}
 	if (st_ServiceConfig.nHttpPort > 0)
 	{
 		//HTTP包处理器

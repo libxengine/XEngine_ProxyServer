@@ -19,3 +19,4 @@
 #define ERROR_MODULE_CONFIGURE_JSON_XVER 0xA0008                     //没有版本配置
 #define ERROR_MODULE_CONFIGURE_JSON_XREPORT 0xA0009                  //没有报告配置
 #define ERROR_MODULE_CONFIGURE_JSON_XPROXY 0xA0010                   //没有代理配置
+#define ERROR_MODULE_CONFIGURE_JSON_XVERICATION 0xA0011              //没有验证配置

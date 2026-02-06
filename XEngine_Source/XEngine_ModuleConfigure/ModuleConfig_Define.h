@@ -49,6 +49,13 @@ typedef struct tag_XEngine_ServiceConfig
 	}st_XLog;
 	struct
 	{
+		XCHAR tszUserName[XPATH_MAX];
+		XCHAR tszUserPass[XPATH_MAX];
+		int nVType;
+		bool bEnable;
+	}st_XVerifcation;
+	struct
+	{
 		bool bEnable;
 		XCHAR tszAPIUrl[XPATH_MAX];
 		XCHAR tszServiceName[128];
