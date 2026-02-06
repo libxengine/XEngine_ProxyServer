@@ -145,3 +145,63 @@ bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuf
 	memcpy(ptszMsgBuffer + sizeof(XENGINE_PROTOCOLHDR), st_JsonRoot.toStyledString().c_str(), pSt_ProtocolHdr->unPacketSize);
 	return true;
 }
+/********************************************************************
+函数名称：ModuleProtocol_Packet_GetProxyRuleList
+函数功能：代理转发规则列表信息
+ 参数.一：ptszMSGBuffer
+  In/Out：Out
+  类型：字符指针
+  可空：N
+  意思：输出封装好的包
+ 参数.二：pInt_MSGLen
+  In/Out：Out
+  类型：整数型指针
+  可空：N
+  意思：输出封装大小
+ 参数.三：pppSt_IPCount
+  In/Out：In
+  类型：三级指针
+  可空：N
+  意思：输入要处理的列表
+ 参数.四：nListCount
+  In/Out：In
+  类型：整数型
+  可空：N
+  意思：输入列表个数
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+bool CModuleProtocol_Packet::ModuleProtocol_Packet_GetProxyRuleList(XCHAR* ptszMSGBuffer, int* pInt_MSGLen, SESSION_IPCONUT*** pppSt_IPCount, int nListCount)
+{
+	Protocol_IsErrorOccur = false;
+
+	if ((NULL == ptszMSGBuffer) || (NULL == pInt_MSGLen))
+	{
+		Protocol_IsErrorOccur = true;
+		Protocol_dwErrorCode = ERROR_MODULE_PROTOCOL_PACKET_PARAMENT;
+		return false;
+	}
+	Json::Value st_JsonRoot;
+	Json::Value st_JsonArray;
+	Json::StreamWriterBuilder st_JsonWBuilder;
+
+	for (int i = 0; i < nListCount; i++)
+	{
+		Json::Value st_JsonObject;
+		Json::Value st_JsonSub;
+		st_JsonObject["nIPCount"] = (*pppSt_IPCount)[i]->nIPCount;
+		st_JsonObject["tszIPAddr"] = (*pppSt_IPCount)[i]->tszIPAddr;
+		st_JsonArray.append(st_JsonObject);
+	}
+	st_JsonRoot["code"] = 0;
+	st_JsonRoot["msg"] = "success";
+	st_JsonRoot["Count"] = nListCount;
+	st_JsonRoot["Array"] = st_JsonArray;
+
+	st_JsonWBuilder["emitUTF8"] = true;
+	*pInt_MSGLen = (int)Json::writeString(st_JsonWBuilder, st_JsonRoot).length();
+	memcpy(ptszMSGBuffer, Json::writeString(st_JsonWBuilder, st_JsonRoot).c_str(), *pInt_MSGLen);
+	return true;
+}
