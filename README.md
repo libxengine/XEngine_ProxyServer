@@ -23,6 +23,7 @@ c c++ Socks5 Proxy Service,HTTP Tunnel Proxy Service,tcp forward control service
 6. 负载均衡
 7. 自定义证书代理协议(planning)
 8. 多级代理(planning)
+9. HTTP 接口管理
 
 ## 安装教程
 

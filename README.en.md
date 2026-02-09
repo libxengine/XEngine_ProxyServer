@@ -24,6 +24,7 @@ this software support following features
 6. load balance
 7. custom cert proxy protocol(planning)  
 8. multilevel proxy(planning)
+9. HTTP api management
 
 ## install
 
