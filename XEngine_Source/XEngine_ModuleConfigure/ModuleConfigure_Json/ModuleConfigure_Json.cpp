@@ -74,12 +74,13 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	}
 	_tcsxcpy(pSt_ServerConfig->tszIPAddr, st_JsonRoot["tszIPAddr"].asCString());
 	pSt_ServerConfig->bDeamon = st_JsonRoot["bDeamon"].asBool();
+	pSt_ServerConfig->nHttpPort = st_JsonRoot["nHttpPort"].asInt();
 	pSt_ServerConfig->nSocksPort = st_JsonRoot["nSocksPort"].asInt();
 	pSt_ServerConfig->nTunnelPort = st_JsonRoot["nTunnelPort"].asInt();
 	pSt_ServerConfig->nForwardPort = st_JsonRoot["nForwardPort"].asInt();
 	pSt_ServerConfig->nProxyPort = st_JsonRoot["nProxyPort"].asInt();
 
-	if (st_JsonRoot["XMax"].empty() || (4 != st_JsonRoot["XMax"].size()))
+	if (st_JsonRoot["XMax"].empty() || (5 != st_JsonRoot["XMax"].size()))
 	{
 		Config_IsErrorOccur = true;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XMAX;
@@ -89,9 +90,10 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XMax.nMaxClient = st_JsonXMax["nMaxClient"].asInt();
 	pSt_ServerConfig->st_XMax.nMaxQueue = st_JsonXMax["nMaxQueue"].asInt();
 	pSt_ServerConfig->st_XMax.nIOThread = st_JsonXMax["nIOThread"].asInt();
+	pSt_ServerConfig->st_XMax.nHTTPThread = st_JsonXMax["nHTTPThread"].asInt();
 	pSt_ServerConfig->st_XMax.nForwardThread = st_JsonXMax["nForwardThread"].asInt();
 
-	if (st_JsonRoot["XTime"].empty() || (5 != st_JsonRoot["XTime"].size()))
+	if (st_JsonRoot["XTime"].empty() || (6 != st_JsonRoot["XTime"].size()))
 	{
 		Config_IsErrorOccur = true;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XTIME;
@@ -99,6 +101,7 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	}
 	Json::Value st_JsonXTime = st_JsonRoot["XTime"];
 	pSt_ServerConfig->st_XTime.nTimeCheck = st_JsonXTime["nTimeCheck"].asInt();
+	pSt_ServerConfig->st_XTime.nHttpTimeout = st_JsonXTime["nHttpTimeout"].asInt();
 	pSt_ServerConfig->st_XTime.nSocksTimeout = st_JsonXTime["nSocksTimeout"].asInt();
 	pSt_ServerConfig->st_XTime.nTunnelTimeout = st_JsonXTime["nTunnelTimeout"].asInt();
 	pSt_ServerConfig->st_XTime.nForwardTimeout = st_JsonXTime["nForwardTimeout"].asInt();
@@ -117,6 +120,19 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XLog.nLogType = st_JsonXLog["LogType"].asInt();
 	_tcsxcpy(pSt_ServerConfig->st_XLog.tszLogFile, st_JsonXLog["tszLogFile"].asCString());
 
+	if (st_JsonRoot["XVerification"].empty() || (4 != st_JsonRoot["XVerification"].size()))
+	{
+		Config_IsErrorOccur = true;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XVERICATION;
+		return false;
+	}
+	Json::Value st_JsonXVerifcation = st_JsonRoot["XVerification"];
+
+	pSt_ServerConfig->st_XVerifcation.bEnable = st_JsonXVerifcation["bEnable"].asBool();
+	pSt_ServerConfig->st_XVerifcation.nVType = st_JsonXVerifcation["nVType"].asInt();
+	_tcsxcpy(pSt_ServerConfig->st_XVerifcation.tszUserName, st_JsonXVerifcation["tszUserName"].asCString());
+	_tcsxcpy(pSt_ServerConfig->st_XVerifcation.tszUserPass, st_JsonXVerifcation["tszUserPass"].asCString());
+
 	if (st_JsonRoot["XReport"].empty() || (3 != st_JsonRoot["XReport"].size()))
 	{
 		Config_IsErrorOccur = true;
@@ -129,31 +145,6 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	_tcsxcpy(pSt_ServerConfig->st_XReport.tszAPIUrl, st_JsonXReport["tszAPIUrl"].asCString());
 	_tcsxcpy(pSt_ServerConfig->st_XReport.tszServiceName, st_JsonXReport["tszServiceName"].asCString());
 
-	if (st_JsonRoot["XProxy"].empty())
-	{
-		Config_IsErrorOccur = true;
-		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XPROXY;
-		return false;
-	}
-	Json::Value st_JsonXProxy = st_JsonRoot["XProxy"];
-	pSt_ServerConfig->st_XProxy.pStl_ListRuleAddr = new list<xstring>;
-	pSt_ServerConfig->st_XProxy.pStl_ListDestAddr = new list<xstring>;
-
-	pSt_ServerConfig->st_XProxy.nRuleMode = st_JsonXProxy["nRuleMode"].asInt();
-	if (!st_JsonXProxy["tszDestIPAddr"].isNull())
-	{
-		for (unsigned int i = 0; i < st_JsonXProxy["tszDestIPAddr"].size(); i++)
-		{
-			pSt_ServerConfig->st_XProxy.pStl_ListDestAddr->push_back(st_JsonXProxy["tszDestIPAddr"][i].asCString());
-		}
-	}
-	if (!st_JsonXProxy["tszRuleIPAddr"].isNull())
-	{
-		for (unsigned int i = 0; i < st_JsonXProxy["tszRuleIPAddr"].size(); i++)
-		{
-			pSt_ServerConfig->st_XProxy.pStl_ListRuleAddr->push_back(st_JsonXProxy["tszRuleIPAddr"][i].asCString());
-		}
-	}
 	return true;
 }
 /********************************************************************
@@ -218,6 +209,76 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_Version(LPCXSTR lpszConfigFile,
 	for (unsigned int i = 0; i < st_JsonXVer.size(); i++)
 	{
 		pSt_ServerConfig->st_XVer.pStl_ListVer->push_back(st_JsonXVer[i].asCString());
+	}
+	return true;
+}
+/********************************************************************
+函数名称：ModuleConfigure_Json_ProxyFile
+函数功能：读取JSON配置文件
+ 参数.一：lpszConfigFile
+  In/Out：In
+  类型：常量字符指针
+  可空：N
+  意思：输入要读取的配置文件
+ 参数.二：pSt_ServerConfig
+  In/Out：Out
+  类型：数据结构指针
+  可空：N
+  意思：输出服务配置信息
+返回值
+  类型：逻辑型
+  意思：是否成功
+备注：
+*********************************************************************/
+bool CModuleConfigure_Json::ModuleConfigure_Json_ProxyFile(LPCXSTR lpszConfigFile, XENGINE_PROXYCONFIG* pSt_ServerConfig)
+{
+	Config_IsErrorOccur = false;
+
+	if ((NULL == lpszConfigFile) || (NULL == pSt_ServerConfig))
+	{
+		Config_IsErrorOccur = true;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_PARAMENT;
+		return false;
+	}
+	Json::Value st_JsonRoot;
+	JSONCPP_STRING st_JsonError;
+	Json::CharReaderBuilder st_JsonBuilder;
+	//读取配置文件所有内容到缓冲区
+	FILE* pSt_File = _xtfopen(lpszConfigFile, _X("rb"));
+	if (NULL == pSt_File)
+	{
+		Config_IsErrorOccur = true;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_OPENFILE;
+		return false;
+	}
+	XCHAR tszMsgBuffer[8192];
+	int nRet = fread(tszMsgBuffer, 1, sizeof(tszMsgBuffer), pSt_File);
+	fclose(pSt_File);
+	//开始解析配置文件
+	std::unique_ptr<Json::CharReader> const pSt_JsonReader(st_JsonBuilder.newCharReader());
+	if (!pSt_JsonReader->parse(tszMsgBuffer, tszMsgBuffer + nRet, &st_JsonRoot, &st_JsonError))
+	{
+		Config_IsErrorOccur = true;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_PARSE;
+		return false;
+	}
+	pSt_ServerConfig->pStl_ListRuleAddr = new list<xstring>;
+	pSt_ServerConfig->pStl_ListDestAddr = new list<xstring>;
+
+	pSt_ServerConfig->nRuleMode = st_JsonRoot["nRuleMode"].asInt();
+	if (!st_JsonRoot["tszDestIPAddr"].isNull())
+	{
+		for (unsigned int i = 0; i < st_JsonRoot["tszDestIPAddr"].size(); i++)
+		{
+			pSt_ServerConfig->pStl_ListDestAddr->push_back(st_JsonRoot["tszDestIPAddr"][i].asCString());
+		}
+	}
+	if (!st_JsonRoot["tszRuleIPAddr"].isNull())
+	{
+		for (unsigned int i = 0; i < st_JsonRoot["tszRuleIPAddr"].size(); i++)
+		{
+			pSt_ServerConfig->pStl_ListRuleAddr->push_back(st_JsonRoot["tszRuleIPAddr"][i].asCString());
+		}
 	}
 	return true;
 }

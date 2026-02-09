@@ -5,3 +5,4 @@ EXPORTS
 
 	ModuleConfigure_Json_File
 	ModuleConfigure_Json_Version
+	ModuleConfigure_Json_ProxyFile

@@ -47,12 +47,16 @@ using namespace std;
 #include <XEngine_Include/XEngine_HelpComponents/Packets_Error.h>
 #include <XEngine_Include/XEngine_RfcComponents/ProxyProtocol_Define.h>
 #include <XEngine_Include/XEngine_RfcComponents/ProxyProtocol_Error.h>
+#include <XEngine_Include/XEngine_RfcComponents/HttpProtocol_Define.h>
+#include <XEngine_Include/XEngine_RfcComponents/HttpProtocol_Error.h>
 #include <XEngine_Include/XEngine_Client/XClient_Define.h>
 #include <XEngine_Include/XEngine_Client/XClient_Error.h>
 //加载项目相关头文件
 #include "../XEngine_UserProtocol.h"
 #include "../XEngine_DependLibrary/XEngine_Module/XEngine_InfoReport/InfoReport_Define.h"
 #include "../XEngine_DependLibrary/XEngine_Module/XEngine_InfoReport/InfoReport_Error.h"
+#include "../XEngine_DependLibrary/XEngine_Module/XEngine_Verification/Verification_Define.h"
+#include "../XEngine_DependLibrary/XEngine_Module/XEngine_Verification/Verification_Error.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Define.h"
 #include "../XEngine_ModuleConfigure/ModuleConfig_Error.h"
 #include "../XEngine_ModuleSession/ModuleSession_Define.h"
@@ -64,6 +68,7 @@ using namespace std;
 //加载自己的头文件
 #include "XEngine_Configure.h"
 #include "XEngine_Network.h"
+#include "XEngine_HTTPTask.h"
 #include "XEngine_SocksTask.h"
 #include "XEngine_TunnelTask.h"
 #include "XEngine_ForwardTask.h"
@@ -100,10 +105,17 @@ extern XHANDLE xhForwardClient;
 extern XHANDLE xhProxySocket;
 extern XHANDLE xhProxyHeart;
 extern XHANDLE xhProxyClient;
+//HTTP服务器
+extern XHANDLE xhHTTPSocket;
+extern XHANDLE xhHTTPHeart;
+extern XHANDLE xhHTTPPacket;
+extern XHANDLE xhHTTPPool;
 //配置文件
 extern XENGINE_SERVICECONFIG st_ServiceConfig;
+extern XENGINE_PROXYCONFIG st_ProxyConfig;
 
 //网络类型定义
+#define XENGINE_CLIENT_NETTYPE_HTTP 0
 #define XENGINE_CLIENT_NETTYPE_SOCKS 1
 #define XENGINE_CLIENT_NETTYPE_TUNNEL 2
 #define XENGINE_CLIENT_NETTYPE_FORWARD 3
@@ -126,23 +138,27 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_XLog.lib")
 #pragma comment(lib,"XEngine_HelpComponents/HelpComponents_Packets.lib")
 #pragma comment(lib,"XEngine_RfcComponents/RfcComponents_ProxyProtocol.lib")
+#pragma comment(lib,"XEngine_RfcComponents/RfcComponents_HttpProtocol.lib")
 #pragma comment(lib,"Ws2_32.lib")
 #pragma comment(lib,"Dbghelp.lib")
 #ifdef _DEBUG
 #ifdef _M_X64
 #pragma comment(lib,"../x64/Debug/XEngine_InfoReport.lib")
+#pragma comment(lib,"../x64/Debug/XEngine_Verification.lib")
 #pragma comment(lib,"../x64/Debug/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../x64/Debug/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../x64/Debug/XEngine_ModuleProtocol.lib")
 #pragma comment(lib,"../x64/Debug/XEngine_ModuleHelp.lib")
 #elif _M_ARM64
 #pragma comment(lib,"../ARM64/Debug/XEngine_InfoReport.lib")
+#pragma comment(lib,"../ARM64/Debug/XEngine_Verification.lib")
 #pragma comment(lib,"../ARM64/Debug/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../ARM64/Debug/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../ARM64/Debug/XEngine_ModuleProtocol.lib")
 #pragma comment(lib,"../ARM64/Debug/XEngine_ModuleHelp.lib")
 #elif _M_IX86
 #pragma comment(lib,"../Debug/XEngine_InfoReport.lib")
+#pragma comment(lib,"../Debug/XEngine_Verification.lib")
 #pragma comment(lib,"../Debug/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../Debug/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../Debug/XEngine_ModuleProtocol.lib")
@@ -151,18 +167,21 @@ extern XENGINE_SERVICECONFIG st_ServiceConfig;
 #else
 #ifdef _M_X64
 #pragma comment(lib,"../x64/Release/XEngine_InfoReport.lib")
+#pragma comment(lib,"../x64/Release/XEngine_Verification.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleProtocol.lib")
 #pragma comment(lib,"../x64/Release/XEngine_ModuleHelp.lib")
 #elif _M_ARM64
 #pragma comment(lib,"../ARM64/Release/XEngine_InfoReport.lib")
+#pragma comment(lib,"../ARM64/Release/XEngine_Verification.lib")
 #pragma comment(lib,"../ARM64/Release/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../ARM64/Release/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../ARM64/Release/XEngine_ModuleProtocol.lib")
 #pragma comment(lib,"../ARM64/Release/XEngine_ModuleHelp.lib")
 #elif _M_IX86
 #pragma comment(lib,"../Release/XEngine_InfoReport.lib")
+#pragma comment(lib,"../Release/XEngine_Verification.lib")
 #pragma comment(lib,"../Release/XEngine_ModuleConfigure.lib")
 #pragma comment(lib,"../Release/XEngine_ModuleSession.lib")
 #pragma comment(lib,"../Release/XEngine_ModuleProtocol.lib")

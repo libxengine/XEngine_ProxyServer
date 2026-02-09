@@ -2,12 +2,12 @@ CC = g++ -Wall -std=c++20
 PLATVER = 
 LOADHDR = -I ./ -I ../XEngine_DependLibrary/XEngine_Module/jsoncpp
 LOADSO = -L ../XEngine_ModuleConfigure -L ../XEngine_ModuleSession -L ../XEngine_ModuleProtocol -L ../XEngine_ModuleHelp \
-		 -L ../XEngine_DependLibrary/XEngine_Module/jsoncpp -L ../XEngine_DependLibrary/XEngine_Module/XEngine_InfoReport
-LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_Cryption -lXEngine_ManagePool -lXClient_Socket -lXClient_APIHelp -lHelpComponents_XLog -lHelpComponents_Packets -lRfcComponents_ProxyProtocol -lNetHelp_APIHelp -lNetHelp_APIAddr -lNetHelp_XSocket \
+		 -L ../XEngine_DependLibrary/XEngine_Module/jsoncpp -L ../XEngine_DependLibrary/XEngine_Module/XEngine_InfoReport -L ../XEngine_DependLibrary/XEngine_Module/XEngine_Verification
+LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_Cryption -lXEngine_ManagePool -lXClient_Socket -lXClient_APIHelp -lHelpComponents_XLog -lHelpComponents_Packets -lRfcComponents_ProxyProtocol -lRfcComponents_HttpProtocol -lNetHelp_APIHelp -lNetHelp_APIAddr -lNetHelp_XSocket \
       -lXEngine_ModuleConfigure -lXEngine_ModuleSession -lXEngine_ModuleProtocol -lXEngine_ModuleHelp \
-	  -ljsoncpp -lXEngine_InfoReport
+	  -ljsoncpp -lXEngine_InfoReport -lXEngine_Verification
 LIBEX = 
-OBJECTS = XEngine_Configure.o XEngine_Network.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ForwardTask.o XEngine_ProxyTask.o XEngine_ServiceApp.o
+OBJECTS = XEngine_Configure.o XEngine_Network.o XEngine_HTTPTask.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ForwardTask.o XEngine_ProxyTask.o XEngine_ServiceApp.o
 
 ifeq ($(RELEASE),1)
 FLAGS = -c -D _RELEASE
@@ -50,6 +50,8 @@ XEngine_Configure.o:./XEngine_Configure.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_Configure.cpp
 XEngine_Network.o:./XEngine_Network.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_Network.cpp 
+XEngine_HTTPTask.o:./XEngine_HTTPTask.cpp
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_HTTPTask.cpp
 XEngine_SocksTask.o:./XEngine_SocksTask.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_SocksTask.cpp
 XEngine_TunnelTask.o:./XEngine_TunnelTask.cpp
