@@ -152,9 +152,9 @@ bool XEngine_HTTPTask_Handle(RFCCOMPONENTS_HTTP_REQPARAM* pSt_HTTPParam, LPCXSTR
 	//获得函数名
 	BaseLib_String_GetKeyValue(pptszList[0], "=", tszKey, tszValue);
 	//得到客户端请求的方法
-	if (0 == _tcsxnicmp(lpszMethodPost, pSt_HTTPParam->tszHttpMethod, _tcsxlen(lpszMethodPost)))
+	if (0 == _tcsxncmp(lpszMethodPost, pSt_HTTPParam->tszHttpMethod, _tcsxlen(lpszMethodPost)))
 	{
-		if (0 == _tcsxnicmp(lpszAPIProxyRule, tszValue, _tcsxlen(lpszAPIProxyRule)))
+		if (0 == _tcsxncmp(lpszAPIProxyRule, tszValue, _tcsxlen(lpszAPIProxyRule)))
 		{
 			//http://127.0.0.1:5400/api?function=get&value=proxyrule
 		}
@@ -165,9 +165,9 @@ bool XEngine_HTTPTask_Handle(RFCCOMPONENTS_HTTP_REQPARAM* pSt_HTTPParam, LPCXSTR
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("HTTP客户端:%s,发送POST请求:%s,处理失败,不支持"), lpszClientAddr, pSt_HTTPParam->tszHttpUri);
 		}
 	}
-	else if (0 == _tcsxnicmp(lpszMethodGet, pSt_HTTPParam->tszHttpMethod, _tcsxlen(lpszMethodGet)))
+	else if (0 == _tcsxncmp(lpszMethodGet, pSt_HTTPParam->tszHttpMethod, _tcsxlen(lpszMethodGet)))
 	{
-		if (0 == _tcsxnicmp(lpszAPIReload, tszValue, _tcsxlen(lpszAPIReload)))
+		if (0 == _tcsxncmp(lpszAPIReload, tszValue, _tcsxlen(lpszAPIReload)))
 		{
 			delete st_ProxyConfig.pStl_ListDestAddr;
 			delete st_ProxyConfig.pStl_ListRuleAddr;
@@ -178,7 +178,7 @@ bool XEngine_HTTPTask_Handle(RFCCOMPONENTS_HTTP_REQPARAM* pSt_HTTPParam, LPCXSTR
 			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_HTTP);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("HTTP客户端:%s,发送重载配置请求成功"), lpszClientAddr);
 		}
-		else if (0 == _tcsxnicmp(lpszAPIProxyRule, tszValue, _tcsxlen(lpszAPIProxyRule)))
+		else if (0 == _tcsxncmp(lpszAPIProxyRule, tszValue, _tcsxlen(lpszAPIProxyRule)))
 		{
 			//http://127.0.0.1:5400/api?function=proxyrule
 			int nListCount = 0;
