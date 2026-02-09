@@ -136,6 +136,15 @@ bool XEngine_HTTPTask_Handle(RFCCOMPONENTS_HTTP_REQPARAM* pSt_HTTPParam, LPCXSTR
 		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("HTTP客户端:%s,发送的URL请求参数不正确:%s"), lpszClientAddr, pSt_HTTPParam->tszHttpUri);
 		return false;
 	}
+	//http验证
+	if (st_ServiceConfig.st_XVerifcation.bEnable)
+	{
+		//全面验证
+		if (!HTTPTask_TastPost_Verification(pSt_HTTPParam, lpszClientAddr, pptszListHdr, nHdrCount))
+		{
+			return false;
+		}
+	}
 	XCHAR tszKey[128] = {};
 	XCHAR tszValue[128] = {};
 	LPCXSTR lpszAPIProxyRule = _X("proxyrule");
