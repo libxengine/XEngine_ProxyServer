@@ -1,3 +1,23 @@
+XEngine_ProxyServer V1.16.0.1001
+
+增加:验证模块
+增加:http重载proxy代理配置支持
+增加:http服务api操作支持
+增加:http获取proxy 规则支持
+增加:http验证支持
+更新:依赖库
+修改:分离代理配置
+修正:版本错误
+
+added:verification module
+added:reload proxy configure for http
+added:http service support
+added:get proxy rule for http get
+added:http verification support
+update:depend library
+modify:Separation of Proxy Configuration
+fixed:version error
+======================================================================================
 XEngine_ProxyServer V1.15.0.1001
 
 ci:增加了centos和almalinux和debian 13 系统支持
