@@ -28,14 +28,36 @@ jobs:
       uses: actions/checkout@v6
       with:
           ref: 'develop'
+          
+    - name: Checkout dependency repository (xengine)
+      uses: actions/checkout@v6
+      with:
+        repository: libxengine/libxengine
+        path: libxengine
+
+    - name: sub module checkout (opensource)
+      run: |
+          git submodule init
+          git submodule update
 
     - name: Set TERM variable
       run: echo "TERM=xterm" >> $GITHUB_ENV
+
+    - name: Set up Dependency Environment
+      run: |
+          cd libxengine
+          chmod +x ./XEngine_LINEnv.sh
+          sudo ./XEngine_LINEnv.sh -i 3
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
+        
+    - name: make
+      run: | 
+          cd XEngine_Source
+          make
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
