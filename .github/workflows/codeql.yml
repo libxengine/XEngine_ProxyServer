@@ -53,6 +53,8 @@ jobs:
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
+        build-mode: manual 
+        queries: security-and-quality
         
     - name: make
       run: | 
