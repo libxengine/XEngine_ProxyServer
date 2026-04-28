@@ -22,13 +22,13 @@ jobs:
     steps:
        # 检出您的主仓库代码
       - name: Checkout main repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: 'develop'
         
        # 检出依赖的xengine仓库到指定的xengine目录
       - name: Checkout dependency repository (xengine)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: libxengine/libxengine
           path: libxengine
@@ -75,7 +75,7 @@ jobs:
         shell: pwsh
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
 
       - name: Build Solution
         run: msbuild XEngine_Source/XEngine.sln /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }}
@@ -112,21 +112,21 @@ jobs:
         
       - name: Upload folder as artifact with x86
         if: matrix.configuration == 'Release' && matrix.platform == 'x64'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: XEngine_ProxyServiceApp-Windows_x86_32
           path: XEngine_Release/
           retention-days: 1
       - name: Upload folder as artifact with x64
         if: matrix.configuration == 'Release' && matrix.platform == 'x64'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: XEngine_ProxyServiceApp-Windows_x86_64
           path: XEngine_Release/
           retention-days: 1
       - name: Upload folder as artifact with ARM64
         if: matrix.configuration == 'Release' && matrix.platform == 'ARM64'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: XEngine_ProxyServiceApp-Windows_ARM64
           path: XEngine_Release/
