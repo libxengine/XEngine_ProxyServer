@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "ModuleSession_Socks.h"
+#include <new>
 /********************************************************************
 //    Created:     2024/09/06  13:48:58
 //    File Name:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleSession\ModuleSession_Socks\ModuleSession_Socks.cpp
@@ -43,7 +44,7 @@ bool CModuleSession_Socks::ModuleSession_Socks_Create(LPCXSTR lpszClientID)
 		Session_dwErrorCode = ERROR_MODULE_SESSION_SOCKS_PARAMENT;
 		return false;
 	}
-	RFCPROTOCOL_SOCKS5CLIENT* pSt_SocksClinet = new RFCPROTOCOL_SOCKS5CLIENT;
+	RFCPROTOCOL_SOCKS5CLIENT* pSt_SocksClinet = new (std::nothrow) RFCPROTOCOL_SOCKS5CLIENT;
 	if (NULL == pSt_SocksClinet)
 	{
 		Session_IsErrorOccur = true;
