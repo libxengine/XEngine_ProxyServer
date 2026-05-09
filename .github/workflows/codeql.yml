@@ -62,7 +62,6 @@ jobs:
         languages: ${{ matrix.language }}
         build-mode: manual 
         queries: security-and-quality
-        config-file: .github/workflows/codeql/codeql-config.yml
         
     - name: make check
       run: | 
