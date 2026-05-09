@@ -23,6 +23,8 @@ jobs:
       matrix:
         include:
         - language: c-cpp
+          build-mode: manual
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6
@@ -49,17 +51,23 @@ jobs:
           chmod +x ./XEngine_LINEnv.sh
           sudo ./XEngine_LINEnv.sh -i 3
 
+    - name: make pre
+      run: | 
+          cd XEngine_Source
+          make BUILDTYPE=1
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
         build-mode: manual 
         queries: security-and-quality
+        config-file: .github/workflows/codeql/codeql-config.yml
         
-    - name: make
+    - name: make check
       run: | 
           cd XEngine_Source
-          make
+          make BUILDTYPE=2
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
