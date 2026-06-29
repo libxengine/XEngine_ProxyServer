@@ -20,3 +20,4 @@
 #define ERROR_MODULE_CONFIGURE_JSON_XREPORT 0xA0009                  //没有报告配置
 #define ERROR_MODULE_CONFIGURE_JSON_XPROXY 0xA0010                   //没有代理配置
 #define ERROR_MODULE_CONFIGURE_JSON_XVERICATION 0xA0011              //没有验证配置
+#define ERROR_MODULE_CONFIGURE_JSON_XCRYPTION 0xA0012                //没有加解密配置

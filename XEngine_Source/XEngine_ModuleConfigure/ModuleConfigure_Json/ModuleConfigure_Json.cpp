@@ -120,6 +120,19 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XLog.nLogType = st_JsonXLog["LogType"].asInt();
 	_tcsxcpy(pSt_ServerConfig->st_XLog.tszLogFile, st_JsonXLog["tszLogFile"].asCString());
 
+	if (st_JsonRoot["XCrpytion"].empty() || (5 != st_JsonRoot["XCrpytion"].size()))
+	{
+		Config_IsErrorOccur = true;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XCRYPTION;
+		return false;
+	}
+	Json::Value st_JsonXCryption = st_JsonRoot["XCrpytion"];
+	pSt_ServerConfig->st_XCryption.bEnable = st_JsonXCryption["bEnable"].asBool();
+	pSt_ServerConfig->st_XCryption.nCType = st_JsonXCryption["nCType"].asInt();
+	_tcsxcpy(pSt_ServerConfig->st_XCryption.tszIVInit, st_JsonXCryption["tszIVInit"].asCString());
+	_tcsxcpy(pSt_ServerConfig->st_XCryption.tszSalt, st_JsonXCryption["tszSalt"].asCString());
+	_tcsxcpy(pSt_ServerConfig->st_XCryption.tszPassword, st_JsonXCryption["tszPassword"].asCString());
+
 	if (st_JsonRoot["XVerification"].empty() || (4 != st_JsonRoot["XVerification"].size()))
 	{
 		Config_IsErrorOccur = true;
@@ -127,7 +140,6 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 		return false;
 	}
 	Json::Value st_JsonXVerifcation = st_JsonRoot["XVerification"];
-
 	pSt_ServerConfig->st_XVerifcation.bEnable = st_JsonXVerifcation["bEnable"].asBool();
 	pSt_ServerConfig->st_XVerifcation.nVType = st_JsonXVerifcation["nVType"].asInt();
 	_tcsxcpy(pSt_ServerConfig->st_XVerifcation.tszUserName, st_JsonXVerifcation["tszUserName"].asCString());

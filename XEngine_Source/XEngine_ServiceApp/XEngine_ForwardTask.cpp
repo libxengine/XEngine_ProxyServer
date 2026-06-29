@@ -33,6 +33,10 @@ XHTHREAD XCALLBACK XEngine_Forward_Thread(XPVOID lParam)
 
 			if (HelpComponents_Datas_GetMemoryEx(xhForwardPacket, ppSt_ListClient[i]->tszClientAddr, &ptszMsgBuffer, &nMsgLen, &st_ProtocolHdr))
 			{
+				if (st_ServiceConfig.st_XCryption.bEnable)
+				{
+					Cryption_Api_CryptDecodec(NULL, (XBYTE*)ptszMsgBuffer, &nMsgLen, st_ServiceConfig.st_XCryption.tszPassword, (ENUM_XENGINE_CRYPTION_SYMMETRIC)st_ServiceConfig.st_XCryption.nCType, (XBYTE*)st_ServiceConfig.st_XCryption.tszIVInit, (XBYTE*)st_ServiceConfig.st_XCryption.tszSalt);
+				}
 				XEngine_Forward_Handle(ppSt_ListClient[i]->tszClientAddr, ptszMsgBuffer, nMsgLen, &st_ProtocolHdr);
 				BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
 			}

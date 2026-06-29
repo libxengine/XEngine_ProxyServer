@@ -102,13 +102,31 @@ void XCALLBACK Network_Callback_ForwardRecv(LPCXSTR lpszClientAddr, XSOCKET hSoc
 			if (st_ForwardClinet.bAnony)
 			{
 				//匿名转发
-				if (XClient_TCPSelect_SendEx(xhForwardClient, st_ForwardClinet.xhClient, lpszRecvMsg, nMsgLen))
+				if (st_ServiceConfig.st_XCryption.bEnable)
 				{
-					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG, _X("Forward客户端:%s,匿名转发数据成功,大小:%d"), lpszClientAddr, nMsgLen);
+					XCHAR* ptszMSGBuffer = (XCHAR*)malloc(XENGINE_MEMORY_SIZE_MAX);
+					if (NULL == ptszMSGBuffer)
+					{
+						XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_FATAL, _X("Forward客户端:%s,发送数据失败，申请内存失败,严重错误"), lpszClientAddr);
+						return;
+					}
+					memset(ptszMSGBuffer, 0, XENGINE_MEMORY_SIZE_MAX);
+					memcpy(ptszMSGBuffer, lpszRecvMsg, nMsgLen);
+					Cryption_Api_CryptEncodec(NULL, (XBYTE*)ptszMSGBuffer, &nMsgLen, st_ServiceConfig.st_XCryption.tszPassword, (ENUM_XENGINE_CRYPTION_SYMMETRIC)st_ServiceConfig.st_XCryption.nCType, (XBYTE*)st_ServiceConfig.st_XCryption.tszIVInit, (XBYTE*)st_ServiceConfig.st_XCryption.tszSalt);
+
+					if (!XClient_TCPSelect_SendEx(xhForwardClient, st_ForwardClinet.xhClient, ptszMSGBuffer, nMsgLen))
+					{
+						XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端:%s,匿名转发数据失败,大小:%d,错误:%lX"), lpszClientAddr, nMsgLen, XClient_GetLastError());
+					}
+					free(ptszMSGBuffer);
+					ptszMSGBuffer = NULL;
 				}
 				else
 				{
-					XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端:%s,匿名转发数据失败,大小:%d,错误:%lX"), lpszClientAddr, nMsgLen, XClient_GetLastError());
+					if (!XClient_TCPSelect_SendEx(xhForwardClient, st_ForwardClinet.xhClient, lpszRecvMsg, nMsgLen))
+					{
+						XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端:%s,匿名转发数据失败,大小:%d,错误:%lX"), lpszClientAddr, nMsgLen, XClient_GetLastError());
+					}
 				}
 			}
 			else
@@ -314,10 +332,31 @@ bool XEngine_Network_Send(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int nMs
 	}
 	else if (XENGINE_CLIENT_NETTYPE_FORWARD == nIPProto)
 	{
-		if (!NetCore_TCPXCore_SendEx(xhForwardSocket, lpszClientAddr, lpszMsgBuffer, nMsgLen, 1, 1))
+		if (st_ServiceConfig.st_XCryption.bEnable)
 		{
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端:%s,发送数据失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
-			return false;
+			XCHAR* ptszMSGBuffer = (XCHAR*)malloc(XENGINE_MEMORY_SIZE_MAX);
+			if (NULL == ptszMSGBuffer)
+			{
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_FATAL, _X("Forward客户端:%s,发送数据失败，申请内存失败,严重错误"), lpszClientAddr);
+				return false;
+			}
+			memset(ptszMSGBuffer, 0, XENGINE_MEMORY_SIZE_MAX);
+			memcpy(ptszMSGBuffer, lpszMsgBuffer, nMsgLen);
+			Cryption_Api_CryptEncodec(NULL, (XBYTE*)ptszMSGBuffer, &nMsgLen, st_ServiceConfig.st_XCryption.tszPassword, (ENUM_XENGINE_CRYPTION_SYMMETRIC)st_ServiceConfig.st_XCryption.nCType, (XBYTE*)st_ServiceConfig.st_XCryption.tszIVInit, (XBYTE*)st_ServiceConfig.st_XCryption.tszSalt);
+			if (!NetCore_TCPXCore_SendEx(xhForwardSocket, lpszClientAddr, ptszMSGBuffer, nMsgLen, 1, 1))
+			{
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端:%s,发送数据失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
+			}
+			free(ptszMSGBuffer);
+			ptszMSGBuffer = NULL;
+		}
+		else
+		{
+			if (!NetCore_TCPXCore_SendEx(xhForwardSocket, lpszClientAddr, lpszMsgBuffer, nMsgLen, 1, 1))
+			{
+				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("Forward客户端:%s,发送数据失败，错误:%lX"), lpszClientAddr, NetCore_GetLastError());
+				return false;
+			}
 		}
 		SocketOpt_HeartBeat_ActiveAddrEx(xhForwardHeart, lpszClientAddr);
 	}

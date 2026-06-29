@@ -49,6 +49,14 @@ typedef struct tag_XEngine_ServiceConfig
 	}st_XLog;
 	struct
 	{
+		XCHAR tszIVInit[XPATH_MIN];
+		XCHAR tszSalt[XPATH_MIN];
+		XCHAR tszPassword[XPATH_MIN];
+		int nCType;
+		bool bEnable;
+	}st_XCryption;
+	struct
+	{
 		XCHAR tszUserName[XPATH_MAX];
 		XCHAR tszUserPass[XPATH_MAX];
 		int nVType;
