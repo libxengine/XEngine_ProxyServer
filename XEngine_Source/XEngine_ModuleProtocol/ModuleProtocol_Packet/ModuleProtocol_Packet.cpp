@@ -83,27 +83,27 @@ bool CModuleProtocol_Packet::ModuleProtocol_Packet_Comm(XCHAR* ptszMSGBuffer, in
   类型：整数型指针
   可空：N
   意思：输出封装大小
- 参数.三：pSt_ProtocolHdr
-  In/Out：In
-  类型：协议头
-  可空：N
-  意思：输入请求的头
- 参数.四：pppSt_ListUser
+ 参数.三：pppSt_ListUser
   In/Out：In
   类型：三级指针
   可空：N
   意思：输入要处理的列表
- 参数.五：nCount
+ 参数.四：nCount
   In/Out：In
   类型：整数型
   可空：N
   意思：输入列表个数
+ 参数.五：pSt_ProtocolHdr
+  In/Out：In
+  类型：协议头
+  可空：N
+  意思：输入请求的头
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, SESSION_FORWARD*** pppSt_ListUser, int nCount)
+bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, SESSION_FORWARD*** pppSt_ListUser, int nCount, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr)
 {
 	Protocol_IsErrorOccur = false;
 
@@ -138,11 +138,20 @@ bool CModuleProtocol_Packet::ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuf
 	st_JsonRoot["Count"] = nCount;
 	st_JsonRoot["Array"] = st_JsonArray;
 
-	pSt_ProtocolHdr->unPacketSize = st_JsonRoot.toStyledString().length();
+	if (NULL == pSt_ProtocolHdr)
+	{
+		*pInt_Len = st_JsonRoot.toStyledString().length();
+		memcpy(ptszMsgBuffer, st_JsonRoot.toStyledString().c_str(), *pInt_Len);
+	}
+	else
+	{
+		pSt_ProtocolHdr->unPacketSize = st_JsonRoot.toStyledString().length();
 
-	*pInt_Len = sizeof(XENGINE_PROTOCOLHDR) + pSt_ProtocolHdr->unPacketSize;
-	memcpy(ptszMsgBuffer, pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR));
-	memcpy(ptszMsgBuffer + sizeof(XENGINE_PROTOCOLHDR), st_JsonRoot.toStyledString().c_str(), pSt_ProtocolHdr->unPacketSize);
+		memcpy(ptszMsgBuffer, pSt_ProtocolHdr, sizeof(XENGINE_PROTOCOLHDR));
+		memcpy(ptszMsgBuffer + sizeof(XENGINE_PROTOCOLHDR), st_JsonRoot.toStyledString().c_str(), pSt_ProtocolHdr->unPacketSize);
+		*pInt_Len = sizeof(XENGINE_PROTOCOLHDR) + pSt_ProtocolHdr->unPacketSize;
+	}
+	
 	return true;
 }
 /********************************************************************

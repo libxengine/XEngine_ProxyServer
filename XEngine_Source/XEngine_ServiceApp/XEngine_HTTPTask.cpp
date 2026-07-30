@@ -145,62 +145,26 @@ bool XEngine_HTTPTask_Handle(RFCCOMPONENTS_HTTP_REQPARAM* pSt_HTTPParam, LPCXSTR
 			return false;
 		}
 	}
-	XCHAR tszKey[128] = {};
-	XCHAR tszValue[128] = {};
-	LPCXSTR lpszAPIProxyRule = _X("proxyrule");
-	LPCXSTR lpszAPIReload = _X("reload");
+	XCHAR tszKeyStr[XPATH_MIN] = {};
+	XCHAR tszAPIName[XPATH_MIN] = {};
+	XCHAR tszAPIType[XPATH_MIN] = {};
 	//获得函数名
-	BaseLib_String_GetKeyValue(pptszList[0], "=", tszKey, tszValue);
+	BaseLib_String_GetKeyValue(pptszList[0], "=", tszKeyStr, tszAPIName);
+	BaseLib_String_GetKeyValue(pptszList[1], "=", tszKeyStr, tszAPIType);
 	//得到客户端请求的方法
 	if (0 == _tcsxncmp(lpszMethodPost, pSt_HTTPParam->tszHttpMethod, _tcsxlen(lpszMethodPost)))
 	{
-		if (0 == _tcsxncmp(lpszAPIProxyRule, tszValue, _tcsxlen(lpszAPIProxyRule)))
-		{
-			//http://127.0.0.1:5400/api?function=get&value=proxyrule
-		}
-		else
-		{
-			ModuleProtocol_Packet_Comm(tszSDBuffer, &nSDLen, ERROR_XENGINE_PROXY_PROTOCOL_NOTSUPPORT, _X("unknow protocol"));
-			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_HTTP);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("HTTP客户端:%s,发送POST请求:%s,处理失败,不支持"), lpszClientAddr, pSt_HTTPParam->tszHttpUri);
-		}
+		XEngine_ProxyHTTP_Post(lpszClientAddr, tszAPIName, tszAPIType, lpszMsgBuffer, nMsgLen);
 	}
 	else if (0 == _tcsxncmp(lpszMethodGet, pSt_HTTPParam->tszHttpMethod, _tcsxlen(lpszMethodGet)))
 	{
-		if (0 == _tcsxncmp(lpszAPIReload, tszValue, _tcsxlen(lpszAPIReload)))
-		{
-			delete st_ProxyConfig.pStl_ListDestAddr;
-			delete st_ProxyConfig.pStl_ListRuleAddr;
-			//http://127.0.0.1:5400/api?function=reload&type=0
-			LPCXSTR lpszConfigProxy = _X("./XEngine_Config/XEngine_ProxyConfig.json");
-			ModuleConfigure_Json_ProxyFile(lpszConfigProxy, &st_ProxyConfig);
-			ModuleProtocol_Packet_Comm(tszSDBuffer, &nSDLen);
-			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_HTTP);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("HTTP客户端:%s,发送重载配置请求成功"), lpszClientAddr);
-		}
-		else if (0 == _tcsxncmp(lpszAPIProxyRule, tszValue, _tcsxlen(lpszAPIProxyRule)))
-		{
-			//http://127.0.0.1:5400/api?function=proxyrule
-			int nListCount = 0;
-			SESSION_IPCONUT** ppSt_IPCountList;
-			ModuleSession_ProxyRule_GetList(&ppSt_IPCountList, &nListCount);
-			ModuleProtocol_Packet_GetProxyRuleList(tszSDBuffer, &nSDLen, &ppSt_IPCountList, nListCount);
-			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_HTTP);
-			BaseLib_Memory_Free((XPPPMEM)&ppSt_IPCountList, nListCount);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("HTTP客户端:%s,发送获取转发规则列表请求处理成功"), lpszClientAddr, pSt_HTTPParam->tszHttpUri);
-		}
-		else
-		{
-			ModuleProtocol_Packet_Comm(tszSDBuffer, &nSDLen, ERROR_XENGINE_PROXY_PROTOCOL_NOTSUPPORT, _X("unknow protocol"));
-			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_HTTP);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("HTTP客户端:%s,发送GET请求:%s,处理失败,不支持"), lpszClientAddr, pSt_HTTPParam->tszHttpUri);
-		}
+		XEngine_ProxyHTTP_Get(lpszClientAddr, tszAPIName, tszAPIType, lpszMsgBuffer, nMsgLen);
 	}
 	else
 	{
 		ModuleProtocol_Packet_Comm(tszSDBuffer, &nSDLen, ERROR_XENGINE_PROXY_PROTOCOL_NOTSUPPORT, _X("unknow protocol"));
 		XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_HTTP);
-		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("HTTP客户端:%s,协议错误"), lpszClientAddr);
+		XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_WARN, _X("HTTP客户端:%s,请求方法名称:%s 不支持"), lpszClientAddr, pSt_HTTPParam->tszHttpMethod);
 	}
 	return true;
 }

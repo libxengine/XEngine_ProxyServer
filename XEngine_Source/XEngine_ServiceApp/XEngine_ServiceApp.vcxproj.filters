@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\ProxyHttp">
+      <UniqueIdentifier>{0e05662c-fc2b-4adc-9018-0db1c970acbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ProxyHttp">
+      <UniqueIdentifier>{343dc5d1-a59f-4758-887a-f9c5e898745e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XEngine_ServiceApp.cpp">
@@ -39,6 +45,12 @@
     <ClCompile Include="XEngine_HTTPTask.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ProxyHttp\ProxyHttp_Post.cpp">
+      <Filter>源文件\ProxyHttp</Filter>
+    </ClCompile>
+    <ClCompile Include="ProxyHttp\ProxyHttp_Get.cpp">
+      <Filter>源文件\ProxyHttp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XEngine_Hdr.h">
@@ -64,6 +76,12 @@
     </ClInclude>
     <ClInclude Include="XEngine_HTTPTask.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ProxyHttp\ProxyHttp_Post.h">
+      <Filter>头文件\ProxyHttp</Filter>
+    </ClInclude>
+    <ClInclude Include="ProxyHttp\ProxyHttp_Get.h">
+      <Filter>头文件\ProxyHttp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

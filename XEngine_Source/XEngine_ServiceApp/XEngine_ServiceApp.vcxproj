@@ -234,6 +234,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ProxyHttp\ProxyHttp_Get.cpp" />
+    <ClCompile Include="ProxyHttp\ProxyHttp_Post.cpp" />
     <ClCompile Include="XEngine_Configure.cpp" />
     <ClCompile Include="XEngine_ForwardTask.cpp" />
     <ClCompile Include="XEngine_HTTPTask.cpp" />
@@ -244,6 +246,8 @@
     <ClCompile Include="XEngine_SocksTask.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ProxyHttp\ProxyHttp_Get.h" />
+    <ClInclude Include="ProxyHttp\ProxyHttp_Post.h" />
     <ClInclude Include="XEngine_Configure.h" />
     <ClInclude Include="XEngine_ForwardTask.h" />
     <ClInclude Include="XEngine_Hdr.h" />
