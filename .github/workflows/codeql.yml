@@ -11,7 +11,7 @@ on:
 
 jobs:
   analyze:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     permissions:
       security-events: write
       packages: read
@@ -24,7 +24,6 @@ jobs:
         include:
         - language: c-cpp
           build-mode: manual
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6
@@ -44,7 +43,7 @@ jobs:
 
     - name: Set TERM variable
       run: echo "TERM=xterm" >> $GITHUB_ENV
-
+      
     - name: Set up Dependency Environment
       run: |
           cd libxengine
