@@ -10,7 +10,8 @@ bool XEngine_ProxyHTTP_Get(LPCXSTR lpszClientAddr, LPCXSTR lpszAPIName, LPCXSTR 
 
 	if (0 == _tcsxncmp(lpszAPIList, lpszAPIName, _tcsxlen(lpszAPIList)))
 	{
-		LPCXSTR lpszAPIProxyRule = _X("proxyrule");
+		LPCXSTR lpszAPIProxyRule = _X("rule");
+		LPCXSTR lpszAPIProxy = _X("proxy");
 		LPCXSTR lpszAPIForward = _X("forward");
 
 		if (0 == _tcsxncmp(lpszAPIProxyRule, lpszAPIName, _tcsxlen(lpszAPIProxyRule)))
@@ -34,7 +35,18 @@ bool XEngine_ProxyHTTP_Get(LPCXSTR lpszClientAddr, LPCXSTR lpszAPIName, LPCXSTR 
 			ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, &ppSt_ListUser, nListCount);
 			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_HTTP);
 			BaseLib_Memory_Free((XPPPMEM)&ppSt_ListUser, nListCount);
-			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("HTTP客户端:%s,转发列表请求成功"), lpszClientAddr);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("HTTP客户端:%s,转发forward 列表请求成功"), lpszClientAddr);
+		}
+		else if (0 == _tcsxncmp(lpszAPIProxy, lpszAPIName, _tcsxlen(lpszAPIProxy)))
+		{
+			//http://127.0.0.1:5400/api?function=list&value=proxy
+			int nListCount = 0;
+			SESSION_FORWARD** ppSt_ListUser;
+			ModuleSession_Proxy_List(&ppSt_ListUser, &nListCount);
+			ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, &ppSt_ListUser, nListCount);
+			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_HTTP);
+			BaseLib_Memory_Free((XPPPMEM)&ppSt_ListUser, nListCount);
+			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("HTTP客户端:%s,转发proxy 列表请求成功"), lpszClientAddr);
 		}
 	}
 	else if (0 == _tcsxncmp(lpszAPIReload, lpszAPIName, _tcsxlen(lpszAPIReload)))
