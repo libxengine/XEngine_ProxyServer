@@ -294,8 +294,8 @@ bool XEngine_Network_Send(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int nMs
 	//根据客户端类型来处理发送业务逻辑
 	if (XENGINE_CLIENT_NETTYPE_HTTP == nIPProto)
 	{
-		int nMSGSize = 0; //发送数据的大小
-		XCHAR tszMSGBuffer[4096] = {}; //发送数据的缓冲区
+		int nMSGSize = XPATH_8MAX; //发送数据的大小
+		XCHAR tszMSGBuffer[XPATH_8MAX] = {}; //发送数据的缓冲区
 		RFCCOMPONENTS_HTTP_HDRPARAM st_HDRParam = {};
 		st_HDRParam.nHttpCode = 200;
 		st_HDRParam.bIsClose = true;
