@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 #endif
 	XSOCKET m_Socket;
 	LPCXSTR lpszServiceAddr = _X("127.0.0.1");
-	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5400))
+	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5401))
 	{
 		printf("连接失败！错误:%lX\n", XClient_GetLastError());
 		return 0;
