@@ -42,18 +42,23 @@ CModuleConfigure_Json::~CModuleConfigure_Json()
 *********************************************************************/
 bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XENGINE_SERVICECONFIG* pSt_ServerConfig)
 {
+	// 约定：每次进入函数先清除错误状态，后续任一步失败都设置错误码并返回 false。
 	Config_IsErrorOccur = false;
 
+	// 第一步：校验输入参数，配置文件路径和输出结构体都不能为空。
 	if ((NULL == lpszConfigFile) || (NULL == pSt_ServerConfig))
 	{
 		Config_IsErrorOccur = true;
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_PARAMENT;
 		return false;
 	}
+
+	// 第二步：准备 JSON 解析器对象与错误信息缓冲。
 	Json::Value st_JsonRoot;
 	JSONCPP_STRING st_JsonError;
 	Json::CharReaderBuilder st_JsonBuilder;
-	//读取配置文件所有内容到缓冲区
+
+	// 第三步：读取配置文件内容到固定缓冲区（当前实现最多读取 8192 字节）。
 	FILE* pSt_File = _xtfopen(lpszConfigFile, _X("rb"));
 	if (NULL == pSt_File)
 	{
@@ -64,7 +69,8 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	XCHAR tszMsgBuffer[8192];
 	int nRet = fread(tszMsgBuffer, 1, sizeof(tszMsgBuffer), pSt_File);
 	fclose(pSt_File);
-	//开始解析配置文件
+
+	// 第四步：解析 JSON 文本。解析失败时返回统一的解析错误码。
 	std::unique_ptr<Json::CharReader> const pSt_JsonReader(st_JsonBuilder.newCharReader());
 	if (!pSt_JsonReader->parse(tszMsgBuffer, tszMsgBuffer + nRet, &st_JsonRoot, &st_JsonError))
 	{
@@ -72,6 +78,8 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_PARSE;
 		return false;
 	}
+
+	// 第五步：将 JSON 字段映射到服务配置结构体，供调用方后续使用。
 	_tcsxcpy(pSt_ServerConfig->tszIPAddr, st_JsonRoot["tszIPAddr"].asCString());
 	pSt_ServerConfig->bDeamon = st_JsonRoot["bDeamon"].asBool();
 	pSt_ServerConfig->nHttpPort = st_JsonRoot["nHttpPort"].asInt();
@@ -120,6 +128,19 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 	pSt_ServerConfig->st_XLog.nLogType = st_JsonXLog["LogType"].asInt();
 	_tcsxcpy(pSt_ServerConfig->st_XLog.tszLogFile, st_JsonXLog["tszLogFile"].asCString());
 
+	if (st_JsonRoot["XCrpytion"].empty() || (5 != st_JsonRoot["XCrpytion"].size()))
+	{
+		Config_IsErrorOccur = true;
+		Config_dwErrorCode = ERROR_MODULE_CONFIGURE_JSON_XCRYPTION;
+		return false;
+	}
+	Json::Value st_JsonXCryption = st_JsonRoot["XCrpytion"];
+	pSt_ServerConfig->st_XCryption.bEnable = st_JsonXCryption["bEnable"].asBool();
+	pSt_ServerConfig->st_XCryption.nCType = st_JsonXCryption["nCType"].asInt();
+	_tcsxcpy(pSt_ServerConfig->st_XCryption.tszIVInit, st_JsonXCryption["tszIVInit"].asCString());
+	_tcsxcpy(pSt_ServerConfig->st_XCryption.tszSalt, st_JsonXCryption["tszSalt"].asCString());
+	_tcsxcpy(pSt_ServerConfig->st_XCryption.tszPassword, st_JsonXCryption["tszPassword"].asCString());
+
 	if (st_JsonRoot["XVerification"].empty() || (4 != st_JsonRoot["XVerification"].size()))
 	{
 		Config_IsErrorOccur = true;
@@ -127,7 +148,6 @@ bool CModuleConfigure_Json::ModuleConfigure_Json_File(LPCXSTR lpszConfigFile, XE
 		return false;
 	}
 	Json::Value st_JsonXVerifcation = st_JsonRoot["XVerification"];
-
 	pSt_ServerConfig->st_XVerifcation.bEnable = st_JsonXVerifcation["bEnable"].asBool();
 	pSt_ServerConfig->st_XVerifcation.nVType = st_JsonXVerifcation["nVType"].asInt();
 	_tcsxcpy(pSt_ServerConfig->st_XVerifcation.tszUserName, st_JsonXVerifcation["tszUserName"].asCString());

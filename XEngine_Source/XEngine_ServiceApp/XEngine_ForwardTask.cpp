@@ -33,6 +33,10 @@ XHTHREAD XCALLBACK XEngine_Forward_Thread(XPVOID lParam)
 
 			if (HelpComponents_Datas_GetMemoryEx(xhForwardPacket, ppSt_ListClient[i]->tszClientAddr, &ptszMsgBuffer, &nMsgLen, &st_ProtocolHdr))
 			{
+				if (st_ServiceConfig.st_XCryption.bEnable)
+				{
+					Cryption_Api_CryptDecodec(NULL, (XBYTE*)ptszMsgBuffer, &nMsgLen, st_ServiceConfig.st_XCryption.tszPassword, (ENUM_XENGINE_CRYPTION_SYMMETRIC)st_ServiceConfig.st_XCryption.nCType, (XBYTE*)st_ServiceConfig.st_XCryption.tszIVInit, (XBYTE*)st_ServiceConfig.st_XCryption.tszSalt);
+				}
 				XEngine_Forward_Handle(ppSt_ListClient[i]->tszClientAddr, ptszMsgBuffer, nMsgLen, &st_ProtocolHdr);
 				BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
 			}
@@ -93,7 +97,7 @@ bool XEngine_Forward_Handle(LPCXSTR lpszClientAddr, LPCXSTR lpszMsgBuffer, int n
 			pSt_ProtocolHdr->unPacketSize = 0;
 			pSt_ProtocolHdr->unOperatorCode = XENGINE_COMMUNICATION_PROTOCOL_OPERATOR_CODE_FORWARD_LISTREP;
 			ModuleSession_Forward_List(&ppSt_ListUser, &nListCount, lpszClientAddr);
-			ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, pSt_ProtocolHdr, &ppSt_ListUser, nListCount);
+			ModuleProtocol_Packet_ForwardList(tszSDBuffer, &nSDLen, &ppSt_ListUser, nListCount, pSt_ProtocolHdr);
 			BaseLib_Memory_Free((XPPPMEM)&ppSt_ListUser, nListCount);
 			XEngine_Network_Send(lpszClientAddr, tszSDBuffer, nSDLen, XENGINE_CLIENT_NETTYPE_FORWARD);
 			XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO, _X("Forward客户端：%s，请求可用转发列表成功"), lpszClientAddr);

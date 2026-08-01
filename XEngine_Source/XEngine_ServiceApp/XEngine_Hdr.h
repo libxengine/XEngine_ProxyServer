@@ -73,6 +73,8 @@ using namespace std;
 #include "XEngine_TunnelTask.h"
 #include "XEngine_ForwardTask.h"
 #include "XEngine_ProxyTask.h"
+#include "ProxyHttp/ProxyHttp_Post.h"
+#include "ProxyHttp/ProxyHttp_Get.h"
 /********************************************************************
 //    Created:     2021/12/02  16:34:41
 //    File Name:   D:\XEngine_ServiceApp\XEngine_Source\XEngine_ServiceApp\XEngine_Hdr.h

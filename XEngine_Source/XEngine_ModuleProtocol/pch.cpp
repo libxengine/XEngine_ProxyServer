@@ -35,9 +35,9 @@ extern "C" bool ModuleProtocol_Packet_Comm(XCHAR* ptszMSGBuffer, int* pInt_MSGLe
 {
 	return m_ProtocolPacket.ModuleProtocol_Packet_Comm(ptszMSGBuffer, pInt_MSGLen, nCode, lpszMSGBuffer);
 }
-extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR * ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR * pSt_ProtocolHdr, SESSION_FORWARD * **pppSt_ListUser, int nCount)
+extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR * ptszMsgBuffer, int* pInt_Len, SESSION_FORWARD * **pppSt_ListUser, int nCount, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr)
 {
-	return m_ProtocolPacket.ModuleProtocol_Packet_ForwardList(ptszMsgBuffer, pInt_Len, pSt_ProtocolHdr, pppSt_ListUser, nCount);
+	return m_ProtocolPacket.ModuleProtocol_Packet_ForwardList(ptszMsgBuffer, pInt_Len, pppSt_ListUser, nCount, pSt_ProtocolHdr);
 }
 extern "C" bool ModuleProtocol_Packet_GetProxyRuleList(XCHAR* ptszMSGBuffer, int* pInt_MSGLen, SESSION_IPCONUT*** pppSt_IPCount, int nListCount)
 {

@@ -7,7 +7,9 @@ LIB = -lXEngine_BaseLib -lXEngine_Algorithm -lXEngine_Core -lXEngine_Cryption -l
       -lXEngine_ModuleConfigure -lXEngine_ModuleSession -lXEngine_ModuleProtocol -lXEngine_ModuleHelp \
 	  -ljsoncpp -lXEngine_InfoReport -lXEngine_Verification
 LIBEX = 
-OBJECTS = XEngine_Configure.o XEngine_Network.o XEngine_HTTPTask.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ForwardTask.o XEngine_ProxyTask.o XEngine_ServiceApp.o
+OBJECTS = XEngine_Configure.o XEngine_Network.o XEngine_HTTPTask.o XEngine_SocksTask.o XEngine_TunnelTask.o XEngine_ForwardTask.o XEngine_ProxyTask.o \
+		  ProxyHttp_Get.o ProxyHttp_Post.o \
+		  XEngine_ServiceApp.o
 
 ifeq ($(RELEASE),1)
 FLAGS = -c -D _RELEASE
@@ -60,6 +62,11 @@ XEngine_ForwardTask.o:./XEngine_ForwardTask.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_ForwardTask.cpp
 XEngine_ProxyTask.o:./XEngine_ProxyTask.cpp
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_ProxyTask.cpp
+
+ProxyHttp_Get.o:./ProxyHttp/ProxyHttp_Get.cpp
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ProxyHttp/ProxyHttp_Get.cpp
+ProxyHttp_Post.o:./ProxyHttp/ProxyHttp_Post.cpp
+	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./ProxyHttp/ProxyHttp_Post.cpp
 
 XEngine_ServiceApp.o:./XEngine_ServiceApp.cpp             
 	$(CC) $(DEBUG) $(FLAGS) $(UNICODE) $(PLATVER) $(LOADHDR) ./XEngine_ServiceApp.cpp   

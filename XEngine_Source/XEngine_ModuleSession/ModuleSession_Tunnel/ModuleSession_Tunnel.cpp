@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "ModuleSession_Tunnel.h"
+#include <new>
 /********************************************************************
 //    Created:     2024/09/06  16:29:12
 //    File Name:   D:\XEngine_ProxyServer\XEngine_Source\XEngine_ModuleSession\ModuleSession_Tunnel\ModuleSession_Tunnel.cpp
@@ -44,7 +45,7 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_Create(LPCXSTR lpszClientID)
         return false;
     }
 
-    PROXYTUNNEL_CLIENTINFO* pSt_TunnelInfo = new PROXYTUNNEL_CLIENTINFO;
+    PROXYTUNNEL_CLIENTINFO* pSt_TunnelInfo = new (std::nothrow) PROXYTUNNEL_CLIENTINFO;
     if (NULL == pSt_TunnelInfo)
     {
 		Session_IsErrorOccur = true;
@@ -53,7 +54,7 @@ bool CModuleSession_Tunnel::ModuleSession_Tunnel_Create(LPCXSTR lpszClientID)
     }
     memset(pSt_TunnelInfo, '\0', sizeof(PROXYTUNNEL_CLIENTINFO));
 
-    pSt_TunnelInfo->pStl_ListField = new list<xstring>;
+    pSt_TunnelInfo->pStl_ListField = new (std::nothrow) list<xstring>;
     if (NULL == pSt_TunnelInfo->pStl_ListField)
     {
 		Session_IsErrorOccur = true;

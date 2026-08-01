@@ -36,7 +36,7 @@ int Proxy_NamedTest()
 {
 	XSOCKET m_Socket;
 	LPCXSTR lpszServiceAddr = _X("127.0.0.1");
-	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5402))
+	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5404))
 	{
 		printf("连接失败！错误:%lX\n", XClient_GetLastError());
 		return 0;
@@ -190,7 +190,7 @@ int Proxy_AnonyTest()
 {
 	XSOCKET m_Socket;
 	LPCXSTR lpszServiceAddr = _X("127.0.0.1");
-	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5402))
+	if (!XClient_TCPSelect_Create(&m_Socket, lpszServiceAddr, 5403))
 	{
 		printf("连接失败！错误:%lX\n", XClient_GetLastError());
 		return 0;
@@ -236,7 +236,7 @@ int Proxy_AnonyTest()
 	BaseLib_Memory_FreeCStyle((XPPMEM)&ptszMsgBuffer);
 	//匿名转发请求
 	Json::Value st_JsonRoot;
-	st_JsonRoot["tszDstAddr"] = "127.0.0.1:5401";
+	st_JsonRoot["tszDstAddr"] = "127.0.0.1:5403";
 
 	st_ProtocolHdr.wHeader = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_HEADER;
 	st_ProtocolHdr.wTail = XENGIEN_COMMUNICATION_PACKET_PROTOCOL_TAIL;

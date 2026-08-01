@@ -1,3 +1,41 @@
+XEngine_ProxyServer V1.18.0.1001
+
+ci:增加问题自动修正检查提交的AI代理
+ci:增加问题和需求自动实现的AI代理
+ci:更新ci版本并且进行了多余的删除和优化
+增加:forward代理加密数据支持
+增加:http列举forward的客户端列表支持
+增加:http获取proxy代理客户端列表支持
+更新:依赖库
+更新:VS升级到2026版本
+修改:ci扫描的问题代码
+修改:分离了http代码,现在区分get和post
+修改:匹配了每个运行时库的编译选项
+修正:没有设置http发送缓冲区大小导致的问题
+修正:api名称处理错误
+
+ci:add mint build support and codeql-to-commit.yml
+ci:add agentic workflows for issue triage and auto fix
+ci:update last version and delete cppcheck.yml and improved codeql.yml
+added:crypt data for forward proxy
+added:list function support and list forward for http api
+added:get list for http with proxy
+update:depend library
+update:vs to 2026 version
+modify:ci scan code error
+modify:detach http post and get method to new code file
+modify:match runtime crt for every compiler choice
+fixed:does not set http send message buff size
+fixed:api name process failure
+======================================================================================
+XEngine_ProxyServer V1.17.0.1001
+
+更新:版本号错误
+修改:大小写区分错误
+
+update:version and fixed version error 
+modify:do not case-sensitive
+======================================================================================
 XEngine_ProxyServer V1.16.0.1001
 
 增加:验证模块

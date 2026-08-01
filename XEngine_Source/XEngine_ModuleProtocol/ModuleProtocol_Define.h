@@ -59,27 +59,27 @@ extern "C" bool ModuleProtocol_Packet_Comm(XCHAR* ptszMSGBuffer, int* pInt_MSGLe
   类型：整数型指针
   可空：N
   意思：输出封装大小
- 参数.三：pSt_ProtocolHdr
-  In/Out：In
-  类型：协议头
-  可空：N
-  意思：输入请求的头
- 参数.四：pppSt_ListUser
+ 参数.三：pppSt_ListUser
   In/Out：In
   类型：三级指针
   可空：N
   意思：输入要处理的列表
- 参数.五：nCount
+ 参数.四：nCount
   In/Out：In
   类型：整数型
   可空：N
   意思：输入列表个数
+ 参数.五：pSt_ProtocolHdr
+  In/Out：In
+  类型：协议头
+  可空：N
+  意思：输入请求的头
 返回值
   类型：逻辑型
   意思：是否成功
 备注：
 *********************************************************************/
-extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr, SESSION_FORWARD * **pppSt_ListUser, int nCount);
+extern "C" bool ModuleProtocol_Packet_ForwardList(XCHAR* ptszMsgBuffer, int* pInt_Len, SESSION_FORWARD * **pppSt_ListUser, int nCount, XENGINE_PROTOCOLHDR* pSt_ProtocolHdr = NULL);
 /********************************************************************
 函数名称：ModuleProtocol_Packet_GetProxyRuleList
 函数功能：代理转发规则列表信息
