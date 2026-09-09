@@ -3,7 +3,7 @@ name: MintLinux build workflows
 on:
   push:
     branches:
-      - 'master'
+      - 'develop'
 
 permissions:
   contents: read
@@ -12,30 +12,29 @@ jobs:
   build:
     runs-on: ${{ matrix.runner }}
     container:
-      image: ${{ matrix.name }}
+      image: ${{ matrix.name }}/${{ matrix.version }}-${{ matrix.arch }}:latest
       options: --platform ${{ matrix.platform }}
     strategy:
       matrix:
         include:
           - arch: amd64
             runner: ubuntu-24.04
+            name: linuxmintd
+            version: mint22
             platform: linux/amd64
-            artifact: x86-64
-            name: linuxmintd/mint22-amd64
-            version: 22
 
     steps:
       - name: Checkout main repository code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Checkout dependency repository (xengine)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: libxengine/libxengine
           path: libxengine
 
       - name: sub module checkout (opensource)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: libxengine/XEngine_OPenSource
           path: XEngine_Source/XEngine_DependLibrary
@@ -49,7 +48,7 @@ jobs:
             chmod 777 *
             sudo ./XEngine_LINEnv.sh -i 3
 
-      - name: make 
+      - name: make
         run: | 
             cd XEngine_Source
             make
@@ -60,12 +59,14 @@ jobs:
             make FLAGS=InstallAll
             make FLAGS=CleanAll
             cd ..
-
       - name: test
         run: |
             cd XEngine_Release
-            ./XEngine_CenterApp -t
-            ./XEngine_Http2App -t
-            ./XEngine_HttpApp -t
-            ./XEngine_SimpleApp -t
-            ./XEngine_WebSocketApp -t
+            ./XEngine_ProxyServiceApp -t
+
+      - name: Upload folder as artifact 
+        uses: actions/upload-artifact@v7
+        with:
+          name: XEngine_ProxyServiceApp-Mint_x86_64
+          path: XEngine_Release/
+          retention-days: 1
