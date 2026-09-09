@@ -20,7 +20,7 @@ jobs:
           - arch: amd64
             runner: ubuntu-24.04
             name: linuxmintd
-            version: mint22
+            version: mint22.3
             platform: linux/amd64
 
     steps:
@@ -44,6 +44,7 @@ jobs:
 
       - name: Set up Dependency ubuntu24.04 Environment
         run: |
+            cat /etc/os-release
             cd libxengine
             chmod 777 *
             sudo ./XEngine_LINEnv.sh -i 3
