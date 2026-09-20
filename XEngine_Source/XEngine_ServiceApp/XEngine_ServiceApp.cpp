@@ -135,7 +135,6 @@ int main(int argc, char** argv)
 	int nRet = 0;
 	LPCXSTR lpszHTTPMime = _X("./XEngine_Config/HttpMime.types");
 	LPCXSTR lpszHTTPCode = _X("./XEngine_Config/HttpCode.types");
-	XENGINE_LIBVERSION st_VERXEngine = {};
 	HELPCOMPONENTS_XLOG_CONFIGURE st_XLogConfig = {};
 	THREADPOOL_PARAMENT** ppSt_ListHTTPParam;
 	//初始化参数
