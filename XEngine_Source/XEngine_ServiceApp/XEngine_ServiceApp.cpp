@@ -389,7 +389,7 @@ int main(int argc, char** argv)
 		if (st_ServiceConfig.st_XTime.nProxyTimeout > 0)
 		{
 			xhProxyHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nProxyTimeout, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_ProxyHeart);
-			if (NULL == xhForwardHeart)
+			if (NULL == xhProxyHeart)
 			{
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化Proxy心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;
