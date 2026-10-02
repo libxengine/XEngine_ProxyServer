@@ -135,7 +135,6 @@ int main(int argc, char** argv)
 	int nRet = 0;
 	LPCXSTR lpszHTTPMime = _X("./XEngine_Config/HttpMime.types");
 	LPCXSTR lpszHTTPCode = _X("./XEngine_Config/HttpCode.types");
-	XENGINE_LIBVERSION st_VERXEngine = {};
 	HELPCOMPONENTS_XLOG_CONFIGURE st_XLogConfig = {};
 	THREADPOOL_PARAMENT** ppSt_ListHTTPParam;
 	//初始化参数
@@ -390,7 +389,7 @@ int main(int argc, char** argv)
 		if (st_ServiceConfig.st_XTime.nProxyTimeout > 0)
 		{
 			xhProxyHeart = SocketOpt_HeartBeat_InitEx(st_ServiceConfig.st_XTime.nProxyTimeout, st_ServiceConfig.st_XTime.nTimeCheck, Network_Callback_ProxyHeart);
-			if (NULL == xhForwardHeart)
+			if (NULL == xhProxyHeart)
 			{
 				XLOG_PRINT(xhLog, XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_ERROR, _X("启动服务中,初始化Proxy心跳服务失败,错误：%lX"), NetCore_GetLastError());
 				goto XENGINE_SERVICEAPP_EXIT;

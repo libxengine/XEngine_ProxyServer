@@ -12,7 +12,6 @@
 #include "framework.h"
 #include <tchar.h>
 #endif
-#endif //PCH_H
 #include <string.h>
 #include <string>
 #include <list>
@@ -46,3 +45,4 @@ extern XLONG Session_dwErrorCode;
 #pragma comment(lib,"XEngine_BaseLib/XEngine_BaseLib")
 #pragma comment(lib,"XEngine_BaseLib/XEngine_Algorithm")
 #endif
+#endif //PCH_H

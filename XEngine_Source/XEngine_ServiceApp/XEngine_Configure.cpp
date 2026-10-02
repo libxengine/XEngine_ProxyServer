@@ -32,32 +32,43 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 		return false;
 	}
 
-	for (int i = 0; i < argc; i++)
+	int i = 0;
+	while (i < argc)
 	{
 		if (0 == _tcsxcmp("-h", argv[i]))
 		{
 			XEngine_Configure_Help();
 			return false;
 		}
-		else if (0 == _tcsxcmp("-d", argv[i]))
+		else if (0 == _tcsxcmp("-d", argv[i]) && (i + 1) < argc)
 		{
-			pSt_Configure->bDeamon = _ttxoi(argv[++i]);
+			pSt_Configure->bDeamon = _ttxoi(argv[i + 1]);
+			i += 2;
+			continue;
 		}
-		else if (0 == _tcsxcmp("-ps", argv[i]))
+		else if (0 == _tcsxcmp("-ps", argv[i]) && (i + 1) < argc)
 		{
-			st_ServiceConfig.nSocksPort = _ttxoi(argv[++i]);
+			st_ServiceConfig.nSocksPort = _ttxoi(argv[i + 1]);
+			i += 2;
+			continue;
 		}
-		else if (0 == _tcsxcmp("-pt", argv[i]))
+		else if (0 == _tcsxcmp("-pt", argv[i]) && (i + 1) < argc)
 		{
-			st_ServiceConfig.nTunnelPort = _ttxoi(argv[++i]);
+			st_ServiceConfig.nTunnelPort = _ttxoi(argv[i + 1]);
+			i += 2;
+			continue;
 		}
-		else if (0 == _tcsxcmp("-pf", argv[i]))
+		else if (0 == _tcsxcmp("-pf", argv[i]) && (i + 1) < argc)
 		{
-			st_ServiceConfig.nForwardPort = _ttxoi(argv[++i]);
+			st_ServiceConfig.nForwardPort = _ttxoi(argv[i + 1]);
+			i += 2;
+			continue;
 		}
-		else if (0 == _tcsxcmp("-pp", argv[i]))
+		else if (0 == _tcsxcmp("-pp", argv[i]) && (i + 1) < argc)
 		{
-			st_ServiceConfig.nProxyPort = _ttxoi(argv[++i]);
+			st_ServiceConfig.nProxyPort = _ttxoi(argv[i + 1]);
+			i += 2;
+			continue;
 		}
 		else if (0 == _tcsxcmp("-v", argv[i]))
 		{
@@ -68,13 +79,15 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 		{
 			bIsTest = true;
 		}
-		else if (0 == _tcsxcmp("-lt", argv[i]))
+		else if (0 == _tcsxcmp("-lt", argv[i]) && (i + 1) < argc)
 		{
-			pSt_Configure->st_XLog.nLogType = _ttxoi(argv[++i]);
+			pSt_Configure->st_XLog.nLogType = _ttxoi(argv[i + 1]);
+			i += 2;
+			continue;
 		}
-		else if (0 == _tcsxcmp("-l", argv[i]))
+		else if (0 == _tcsxcmp("-l", argv[i]) && (i + 1) < argc)
 		{
-			LPCXSTR lpszLogLevel = argv[++i];
+			LPCXSTR lpszLogLevel = argv[i + 1];
 			if (0 == _tcsxcmp("debug", lpszLogLevel))
 			{
 				pSt_Configure->st_XLog.nLogLeave = XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_DEBUG;
@@ -87,7 +100,10 @@ bool XEngine_Configure_Parament(int argc, char** argv, XENGINE_SERVICECONFIG* pS
 			{
 				pSt_Configure->st_XLog.nLogLeave = XENGINE_HELPCOMPONENTS_XLOG_IN_LOGLEVEL_INFO;
 			}
+			i += 2;
+			continue;
 		}
+		i++;
 	}
 
 	return true;

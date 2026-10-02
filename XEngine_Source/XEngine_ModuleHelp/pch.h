@@ -12,7 +12,6 @@
 #include "framework.h"
 #include <tchar.h>
 #endif
-#endif //PCH_H
 #include <string.h>
 #include <string>
 #include <list>
@@ -45,3 +44,4 @@ extern XLONG APIHelp_dwErrorCode;
 #ifdef _MSC_BUILD
 #pragma comment(lib,"XEngine_BaseLib/XEngine_BaseLib")
 #endif
+#endif //PCH_H
