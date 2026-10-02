@@ -1,3 +1,27 @@
+XEngine_ProxyServer V1.19.0.1001
+
+ci:更新了依赖版本
+ci:删除了fedora 41和mint构建
+ci:增加了opensuse和fedora 44 构建支持
+ci:更新macos到26版本编译
+更新:vs使用了c++20版本
+更新:依赖库
+修改:新的http函数名称修改
+修改:启动参数处理逻辑
+修正:code ql 扫描问题
+修正:proxy的心跳初始化返回值不正确
+
+ci:update last version
+ci:delete fedora 41 and mint linux
+ci:add opensuse and fedora 44 and arm64 support
+ci:update macos to 26 from 15
+update:vs c++ version to c++20
+update:depend library
+modify:new function name for http
+modify:Potential fix for code scanning alert no. 22: For loop variable changed in body
+fixed:code ql scan problem
+fixed:proxy heart init return incorrect
+======================================================================================
 XEngine_ProxyServer V1.18.0.1001
 
 ci:增加问题自动修正检查提交的AI代理
